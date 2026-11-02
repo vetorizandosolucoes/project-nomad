@@ -1,81 +1,55 @@
-# Referência de medicamentos
+# Medicamentos
 
-A Referência de medicamentos é um banco de dados offline e pesquisável com as **bulas da FDA** (a agência dos Estados Unidos), com as informações oficiais de medicamentos com e sem receita. Depois de instalada, você pode procurar um medicamento pelo nome, partir de uma situação para chegar aos medicamentos que a tratam e comparar duas bulas lado a lado, tudo sem internet.
+A aba **Medicamentos** é uma lista offline dos medicamentos comercializados no Brasil. Ela vem pronta com o sistema, sem nada para instalar, e funciona sem internet.
 
-**As bulas estão em inglês e se referem a produtos vendidos nos EUA.** A tela, as situações e os remédios caseiros e naturais estão em português. Marcas, doses e disponibilidade podem ser diferentes no Brasil, e alguns medicamentos usados aqui, como a dipirona, podem não aparecer.
-
-É um complemento opcional. Uma instalação nova não vem com ele até você escolher instalar, porque os dados são grandes.
-
-> **Isto é informação de saúde, não aconselhamento médico.** A Referência de medicamentos mostra o texto da bula e relaciona situações a opções sem receita. Ela não substitui médico, farmacêutico ou enfermeiro. Siga sempre as instruções do produto que você tem em mãos e, em uma emergência real, procure ajuda profissional se puder.
-
-Na primeira vez que você abre a Referência de medicamentos em um navegador, esse aviso aparece em uma janela que precisa ser confirmada antes de a página carregar. A confirmação fica salva por navegador, então outro navegador ou dispositivo mostrará o aviso de novo.
+> **Isto é informação de saúde, não aconselhamento médico.** A lista mostra o que existe à venda, mas não diz qual medicamento é adequado para você. Ela não substitui médico, farmacêutico ou enfermeiro. Em uma emergência, ligue para o SAMU (192).
 
 ---
 
-## Como instalar
+## De onde vêm os dados
 
-Há duas formas de obter os dados, e o resultado é o mesmo.
+A base é a **lista de preços de medicamentos da CMED/Anvisa**, versão publicada em 09/10/2026. Entram só os produtos que a lista marca como comercializados em 2025, o que dá cerca de 6.300 produtos.
 
-**Pelo Explorador de conteúdo**, como parte de uma coleção:
+Alguns itens vendidos podem não aparecer, porque a lista cobre os medicamentos com preço regulado pela CMED. Produtos de notificação simplificada e homeopáticos, por exemplo, ficam de fora.
 
-1. Abra o **Explorador de conteúdo**.
-2. Escolha a categoria **Medicina (em inglês)**.
-3. Selecione o nível **Padrão**. O conteúdo aparece no cartão, incluindo a Referência de medicamentos da FDA.
-4. Confirme o download.
+---
 
-**Pela própria página da Referência de medicamentos.** Abra **Referência de medicamentos** na tela inicial. Se não houver dados instalados, aparece o painel "Ainda não há dados de medicamentos da FDA", com o botão **Baixar dados de medicamentos da FDA**, que inicia o mesmo processo.
+## O que você encontra
 
-Nos dois casos, o processo roda em duas etapas, em segundo plano:
+Para cada produto, a lista traz:
 
-- **Download** — o sistema baixa o conjunto de bulas da openFDA, com cerca de **1,7 GB** compactados, em várias partes. Se a conexão cair, ele continua de onde parou.
-- **Indexação** — o sistema coloca as bulas em um banco de pesquisa rápido e offline. Esta é a etapa mais longa, e os dados chegam a cerca de **8 a 10 GB** no disco.
+- nome comercial e princípio ativo;
+- laboratório e número do registro na Anvisa;
+- tipo: genérico, similar, novo, específico, biológico ou fitoterápico;
+- tarja e se o uso é restrito a hospitais;
+- classe terapêutica e apresentações.
 
-Você não precisa ficar acompanhando. Pode sair da página, e a pesquisa é ativada sozinha quando a indexação terminar. A página mostra o progresso das duas etapas.
+**A lista não traz o texto das bulas**, então não há dose nem avisos aqui. Leia a bula que acompanha o produto ou fale com um farmacêutico. A página de cada produto tem um link para procurar a bula no Bulário Eletrônico da Anvisa, que precisa de internet.
 
 ---
 
 ## Como usar
 
-Tudo fica no cartão **Referência de medicamentos** da tela inicial. Com os dados instalados, a página tem três abas.
+### Pesquisar
 
-### Pesquisar por medicamento
-
-Digite o nome do medicamento, comercial ou genérico, e o sistema mostra as bulas correspondentes: para que serve, dose, avisos e ingredientes, direto da bula oficial do fabricante.
-
-Os nomes genéricos mais comuns funcionam em português, como "ibuprofeno" ou "paracetamol". Se um nome não trouxer resultados, tente o nome em inglês ou o nome comercial usado nos EUA.
-
-Os resultados são **agrupados por princípio ativo**, em vez de centenas de produtos quase iguais. Uma pesquisa por um analgésico comum mostra um grupo por ingrediente, e não cada marca separadamente.
+Digite o nome comercial, o princípio ativo, o laboratório ou a classe, como "dipirona", "Advil" ou "antialérgico". Acentos e maiúsculas não fazem diferença, e você pode filtrar pelo tipo.
 
 ### Por situação
 
-Comece pelo problema, e não pelo produto. Escolha uma ou mais situações, como queimaduras, febre ou diarreia, e o sistema lista os medicamentos cujas bulas as mencionam.
+Escolha uma situação, como febre, azia ou diarreia, para ver os princípios ativos da classe terapêutica correspondente e os produtos de cada um. Produtos de uso hospitalar e de tarja preta ficam de fora.
 
-Ao escolher mais de uma situação, o sistema procura primeiro medicamentos que cubram **todas** e depois mostra os resultados de cada situação. Isso é útil quando há mais de um sintoma e você prefere um só produto, se existir.
-
-### Dados da FDA
-
-Mostra a origem e o estado dos dados: se estão baixados e indexados, e quantas bulas foram carregadas. Também é aqui que você refaz o download ou reinicia a indexação.
+Esse agrupamento foi feito a partir das classes terapêuticas e não passou por revisão clínica. Ele serve para saber o que existe e conversar com um profissional, não para escolher um tratamento.
 
 ---
 
-## Como comparar dois medicamentos
+## No chat de IA
 
-Use **Comparar avisos das bulas** para ver duas bulas lado a lado.
+Quando você pergunta sobre um sintoma ou medicamento, a IA consulta esta lista e cita a fonte. Ela lista as opções, mas não escolhe por você nem informa doses, porque o sistema não tem as bulas. Se a mensagem descrever uma possível emergência, ela orienta a procurar atendimento em vez de citar medicamentos.
 
-Isso coloca as seções de avisos dos dois fabricantes uma ao lado da outra. Essa função **não** calcula interações medicamentosas e não diz se uma combinação é segura. Saber se dois medicamentos podem ser tomados juntos é uma pergunta para um farmacêutico ou médico.
-
----
-
-## Como manter atualizada
-
-As bulas mudam com o tempo. Se as **atualizações automáticas de conteúdo** estiverem ativas (Configurações → Atualização do sistema), o sistema verifica de tempos em tempos se a openFDA publicou dados mais novos e atualiza a Referência de medicamentos sozinho.
-
-Com as atualizações automáticas desativadas, os dados continuam como no momento da instalação. Você sempre pode refazer o download na aba **Dados da FDA**.
+A IA pode errar. Confira a fonte e leia a bula.
 
 ---
 
-## Sobre o armazenamento
+## Como atualizar
 
-A Referência de medicamentos é o maior item da coleção Medicina → Padrão. Reserve cerca de **8 a 10 GB** de disco depois da indexação, além do download de 1,7 GB.
-
-Se o espaço for curto, o Explorador de conteúdo mostra o tamanho total de um nível antes de você confirmar.
+A lista é um arquivo que acompanha o sistema, e a CMED publica versões novas ao longo do ano. Para atualizar, é preciso gerar o arquivo de novo com o script `admin/scripts/build_br_medicines.py` e reconstruir a imagem.

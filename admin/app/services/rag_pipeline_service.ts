@@ -1,4 +1,5 @@
 import { ContextWindowService } from '#services/context_window_service'
+import { HealthLookupService } from '#services/health_lookup_service'
 import { NomadMdService } from '#services/nomad_md_service'
 import { OllamaService } from '#services/ollama_service'
 import { RagService } from '#services/rag_service'
@@ -23,6 +24,11 @@ import { resolveTasksModel } from '../utils/tasks_model.js'
 import { buildContextBlock, getContextLimitsForModel } from '../utils/rag_prompt.js'
 import { QUERIES_SCHEMA, pickQueries, resolveStructured } from '../utils/structured_output.js'
 
+function isAppDocumentation(doc: RetrievedChunk): boolean {
+  const source = String(doc.metadata?.source ?? '')
+  return source.includes('/docs/') || source.endsWith('README.md')
+}
+
 /**
  * Everything that happens between "a user sent a message" and "a payload goes
  * to Ollama": system-prompt assembly, history-aware query rewriting, retrieval,
@@ -45,7 +51,8 @@ export class RagPipelineService {
     private nomadMdService: NomadMdService,
     private contextWindowService: ContextWindowService,
     private tokenCalibration: TokenCalibrationService,
-    private relevanceJudge: RelevanceJudgeService
+    private relevanceJudge: RelevanceJudgeService,
+    private healthLookup: HealthLookupService
   ) {}
 
   /**
@@ -183,6 +190,37 @@ export class RagPipelineService {
       }
     }
 
+    // --- Health sources ----------------------------------------------------
+    //
+    // Drug labels are in MySQL and in English, so the vector search above never
+    // reaches them. Same opt-outs as retrieval, plus a scoped search: choosing one
+    // collection means the user asked to read only that.
+    let healthChunks: RetrievedChunk[] = []
+    if (!opts.oracleContext && !opts.skipRetrieval && !opts.collection && !opts.skipHealthLookup) {
+      const previousQuestions = history
+        .filter((msg) => msg.role === 'user')
+        .slice(-2)
+        .map((msg) => msg.content)
+      const health = await this.healthLookup.lookupSafely(query.content, previousQuestions)
+      if (health && health.urgency !== 'none') {
+        systemBlocks.push({
+          role: 'system',
+          content:
+            health.urgency === 'self-harm' ? SYSTEM_PROMPTS.health_self_harm : SYSTEM_PROMPTS.health_red_flag,
+        })
+        // Nothing from the library belongs under this answer, not even as a source.
+        relevantDocs = []
+        trace.retrieved = []
+      } else if (health && health.chunks.length > 0) {
+        healthChunks = health.chunks
+        systemBlocks.push({ role: 'system', content: SYSTEM_PROMPTS.health_context })
+        // The app's own manual only describes the screens, and it matches health
+        // words closely enough to crowd out the actual answer.
+        relevantDocs = relevantDocs.filter((doc) => !isAppDocumentation(doc))
+        trace.retrieved = [...healthChunks, ...relevantDocs]
+      }
+    }
+
     // --- Budgeted assembly -------------------------------------------------
     //
     // Everything above decided *what* is available; this decides what fits. The
@@ -192,7 +230,10 @@ export class RagPipelineService {
     const modelInfo = await this.ollamaService.getModelInfo(model).catch(() => undefined)
     const limits = getContextLimitsForModel(model, RAG_CONTEXT_LIMITS, modelInfo?.parameterSize)
     trace.contextLimits = limits
-    const candidateDocs = relevantDocs.slice(0, limits.maxResults)
+    const candidateDocs = [...healthChunks, ...relevantDocs].slice(
+      0,
+      Math.max(limits.maxResults, healthChunks.length)
+    )
 
     const contextWindow = await this.contextWindowService.windowFor(model)
     const ratio = await this.tokenCalibration.ratioFor(model)

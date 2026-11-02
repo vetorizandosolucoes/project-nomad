@@ -3,6 +3,10 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ChatMessage } from '../../../types/chat'
 
+function isHealthSource(source?: string): source is string {
+  return !!source && source.startsWith('/medicamentos')
+}
+
 export interface ChatMessageBubbleProps {
   message: ChatMessage
   // Offered on the latest answer when it was cut off at the length limit.
@@ -136,11 +140,23 @@ export default function ChatMessageBubble({ message, onContinue }: ChatMessageBu
           <ul className="space-y-0.5">
             {message.sources.map((src, idx) => (
               <li key={idx}>
-                {src.title}
+                {isHealthSource(src.source) ? (
+                  <a href={src.source} className="underline underline-offset-2">
+                    {src.title}
+                  </a>
+                ) : (
+                  src.title
+                )}
                 {src.date && <span className="text-text-secondary"> ({src.date})</span>}
               </li>
             ))}
           </ul>
+          {message.sources.some((src) => isHealthSource(src.source)) && (
+            <p className="mt-2 text-text-secondary">
+              Lista oficial da CMED/Anvisa, sem o texto das bulas. A IA pode errar: leia a bula e fale
+              com um médico ou farmacêutico antes de usar qualquer medicamento.
+            </p>
+          )}
         </div>
       )}
       <div

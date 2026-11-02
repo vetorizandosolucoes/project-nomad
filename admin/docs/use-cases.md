@@ -128,7 +128,7 @@ Algumas pessoas simplesmente preferem manter suas pesquisas e perguntas privadas
 Quando não é possível falar com um médico, ter informações médicas confiáveis pode ser muito importante.
 
 **O que você pode acessar:**
-- Referência de medicamentos, com as bulas da FDA (em inglês) e busca por nome ou situação
+- Medicamentos comercializados no Brasil, com busca por nome ou situação
 - Wikipédia: Medicina, em português
 - Guias de primeiros socorros
 - Referências de anatomia e fisiologia
@@ -138,7 +138,7 @@ Quando não é possível falar com um médico, ter informações médicas confi�
 
 **Conteúdo recomendado:**
 - Biblioteca em português (Wikipédia: Medicina)
-- Referência de medicamentos
+- Lista de medicamentos comercializados no Brasil
 - Guias de primeiros socorros e medicina de emergência (em inglês)
 
 ---

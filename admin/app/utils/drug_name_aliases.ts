@@ -2,7 +2,7 @@
  * Portuguese generic drug names mapped to the English names used in FDA labels, so a search
  * for "ibuprofeno" finds the labels for "ibuprofen". Only whole-query matches are mapped.
  */
-const PT_TO_EN: Record<string, string> = {
+export const DRUG_NAME_ALIASES: Record<string, string> = {
   'acido acetilsalicilico': 'aspirin',
   albendazol: 'albendazole',
   amoxicilina: 'amoxicillin',
@@ -54,5 +54,5 @@ export function resolveDrugNameAlias(query: string): string {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
-  return PT_TO_EN[key] ?? query
+  return DRUG_NAME_ALIASES[key] ?? query
 }

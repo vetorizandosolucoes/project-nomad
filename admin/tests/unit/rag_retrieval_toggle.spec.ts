@@ -125,7 +125,8 @@ function makeFakes(
     nomadMdService as any,
     contextWindowService as any,
     tokenCalibration as any,
-    relevanceJudge as any
+    relevanceJudge as any,
+    { lookupSafely: async () => null } as any
   )
 
   return { service, calls, args, judged }

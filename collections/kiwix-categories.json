@@ -158,15 +158,6 @@
               "description": "Enciclopédia de saúde do NIH — doenças, condições, medicamentos e suplementos",
               "url": "https://download.kiwix.org/zim/zimit/medlineplus.gov_en_all_2025-01.zim",
               "size_mb": 1800
-            },
-            {
-              "id": "openfda-drug-labels",
-              "type": "dataset",
-              "version": "2025-01",
-              "title": "FDA Drug Reference",
-              "description": "Bulas da FDA offline — pesquise pelo nome do medicamento",
-              "url": "https://api.fda.gov/download.json",
-              "size_mb": 1700
             }
           ]
         },

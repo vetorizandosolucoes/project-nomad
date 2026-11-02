@@ -11,6 +11,7 @@ import ChatsController from '#controllers/chats_controller'
 import ConditionsController from '#controllers/conditions_controller'
 import DocsController from '#controllers/docs_controller'
 import DrugReferenceController from '#controllers/drug_reference_controller'
+import MedicinesController from '#controllers/medicines_controller'
 import DownloadsController from '#controllers/downloads_controller'
 import EasySetupController from '#controllers/easy_setup_controller'
 import HomeController from '#controllers/home_controller'
@@ -843,15 +844,19 @@ router
   })
   .prefix('/api/benchmark')
 
-// Drug Reference v1 — offline FDA drug-label search.
-// Page GETs ungated (read-only views). The /api/drug-reference group mirrors
-// the /api/maps posture — no localNetworkOnly gate because the only disk write
-// is the background ingest job (server-side, triggered but not executed inline).
-// /drug-reference/interactions must precede /drug-reference/:id so the literal
-// path wins over the param route.
-router.get('/drug-reference', [DrugReferenceController, 'index'])
-router.get('/drug-reference/interactions', [DrugReferenceController, 'interactions'])
-router.get('/drug-reference/:id', [DrugReferenceController, 'show'])
+// Medicines sold in Brazil, read from the file bundled with the app.
+router.get('/medicamentos', [MedicinesController, 'index'])
+router.get('/medicamentos/:id', [MedicinesController, 'show'])
+router.get('/api/medicamentos/search', [MedicinesController, 'search'])
+router.get('/api/medicamentos/situacao/:slug', [MedicinesController, 'situation'])
+router.on('/drug-reference').redirectToPath('/medicamentos')
+router.on('/drug-reference/*').redirectToPath('/medicamentos')
+
+// Drug Reference v1 — offline FDA drug-label search. The pages were replaced by
+// /medicamentos; the API remains so an existing dataset can still be uninstalled.
+// The /api/drug-reference group mirrors the /api/maps posture — no localNetworkOnly
+// gate because the only disk write is the background ingest job (server-side,
+// triggered but not executed inline).
 router
   .group(() => {
     documented(router.get('/search', [DrugReferenceController, 'search']), {
@@ -897,8 +902,10 @@ router
 // detail. Read-only page GETs, ungated like the /drug-reference page GETs; the
 // /api/conditions group only reads drug_labels (no disk write), so it mirrors
 // the ungated /api/drug-reference posture.
-router.get('/conditions', [ConditionsController, 'index'])
-router.get('/conditions/:slug', [ConditionsController, 'show'])
+router.on('/conditions').redirectToPath('/medicamentos')
+router.get('/conditions/:slug', ({ params, response }) =>
+  response.redirect(`/medicamentos?situacao=${encodeURIComponent(params.slug)}`)
+)
 router
   .group(() => {
     documented(router.get('/drugs', [ConditionsController, 'drugsApi']), {

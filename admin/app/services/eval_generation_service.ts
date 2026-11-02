@@ -326,7 +326,10 @@ export class EvalGenerationService {
 
     for (let attempt = 0; attempt < repeats; attempt++) {
       try {
-        const trace = await this.pipeline.buildPrompt(messages, options.model, pipelineOptions)
+        const trace = await this.pipeline.buildPrompt(messages, options.model, {
+          ...pipelineOptions,
+          skipHealthLookup: true,
+        })
         retrievedDocIds = uniqueDocIds(trace.retrieved)
         injectedChunks = trace.injected.length
         const context = trace.injected.map((c) => c.text).join('\n\n')

@@ -2068,6 +2068,18 @@ export class RagService {
     }
   }
 
+  /**
+   * Replace the indexed copy of the bundled docs after they change. The docs are
+   * otherwise embedded once, so the AI keeps citing the text from that first run.
+   */
+  public async reindexNomadDocs(): Promise<{ success: boolean; message: string }> {
+    const { readmePath, docsDir } = this._nomadDocsRoots()
+    const entries = await listDirectoryContentsRecursive(docsDir)
+    const sources = [readmePath, ...entries.filter((entry) => entry.type === 'file').map((entry) => entry.key)]
+    await this.purgeIndexedSources(sources)
+    return this.discoverNomadDocs(true)
+  }
+
   public async discoverNomadDocs(force?: boolean): Promise<{ success: boolean; message: string }> {
     try {
       const { readmePath: README_PATH, docsDir: DOCS_DIR } = this._nomadDocsRoots()

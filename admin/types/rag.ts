@@ -117,6 +117,8 @@ export type PipelineOptions = {
    *  system prompts only. Set from the `rag.enabled` KV setting. Opt-out by
    *  design: the eval harness omits it and therefore always retrieves. */
   skipRetrieval?: boolean
+  /** Leave the drug labels out of the context, for measuring vector retrieval alone. */
+  skipHealthLookup?: boolean
   /** Override where the retrieved-context block sits. Defaults to RAG_PLACEMENT;
    *  the eval harness sets it explicitly to compare the two orderings. */
   ragPlacement?: RagPlacement

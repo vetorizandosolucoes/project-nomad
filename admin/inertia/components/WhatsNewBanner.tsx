@@ -19,7 +19,7 @@ const WHATS_NEW = {
   title: "Novidades da v1.34",
   highlights: [
     'Pacotes de criadores — instale pacotes de vídeos selecionados dos seus criadores favoritos e assista totalmente offline.',
-    'Medication Reference - offline FDA drug-label lookup for quick, reliable medication information.',
+    'Medicamentos — lista offline dos medicamentos comercializados no Brasil.',
     'Benchmark Score v2 — um novo modelo de pontuação, com telemetria em tempo real durante o teste e sua pontuação revelada no final.',
     'NOMAD.md — dê ao seu assistente de IA instruções permanentes que ele seguirá em todas as conversas.',
     'Coleções da Base de conhecimento — agrupe o que o assistente pesquisa por assunto, para que as respostas fiquem no tema.',

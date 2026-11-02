@@ -98,7 +98,7 @@ export class DocsService {
     'getting-started': 'Primeiros passos',
     'use-cases': 'Casos de uso',
     'supply-depot-apps': 'Aplicativos da Loja',
-    'drug-reference': 'Referência de medicamentos',
+    'drug-reference': 'Medicamentos',
     'updates': 'Atualizações',
     'faq': 'Perguntas frequentes',
     'about': 'Sobre',
