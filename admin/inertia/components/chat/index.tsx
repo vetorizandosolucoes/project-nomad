@@ -272,7 +272,7 @@ export default function Chat({
     (newModel: string) => {
       if (newModel === selectedModel) return
       // No active chat session yet → no conversation to lose, no popup needed.
-      // Just update the dropdown silently; the next "New Chat" will use it.
+      // Just update the dropdown silently; the next "Novo chat" will use it.
       if (!activeSessionId) {
         setSelectedModel(newModel)
         return
@@ -402,7 +402,7 @@ export default function Chat({
       if (!sessionId) {
         let newSession: Awaited<ReturnType<typeof api.createChatSession>> | undefined
         try {
-          newSession = await api.createChatSession('New Chat', selectedModel)
+          newSession = await api.createChatSession('Novo chat', selectedModel)
         } catch {
           newSession = undefined
         }

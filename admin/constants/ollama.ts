@@ -352,7 +352,8 @@ Format your response using markdown for readability.
   chat_suggestions: `
 You are a helpful assistant that generates conversation starter suggestions for a survivalist/prepper using an AI assistant.
 
-Provide exactly 3 conversation starter topics as direct questions that someone would ask.
+Provide exactly 3 conversation starter topics as direct questions that the user would ask the assistant.
+Each one must seek practical information or help for the user. Never ask about the user's own opinions, plans or habits, and never address the user as "you" ("você").
 These should be clear, complete questions that can start meaningful conversations.
 
 Examples of good suggestions:

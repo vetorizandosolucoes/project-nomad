@@ -387,7 +387,7 @@ export class ChatService {
       try {
         await this.updateSession(sessionId, { title: truncateTitle(userMessage) })
       } catch {
-        // Silently fail - session keeps "New Chat" title
+        // Silently fail - session keeps "Novo chat" title
       }
     }
   }
