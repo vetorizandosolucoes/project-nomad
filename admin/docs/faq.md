@@ -115,7 +115,7 @@ Ele testa o desempenho do hardware e gera uma pontuação geral — uma média p
 Vá para o **[Benchmark do sistema →](/settings/benchmark)** para executar.
 
 ### O que é o acesso antecipado?
-Ele permite receber versões candidatas, com recursos novos, antes da versão estável. Ative ou desative em **Configurações → Atualização do sistema**. Essas versões podem ter erros; se prefere estabilidade, fique no canal estável.
+No projeto original, ele permite receber versões candidatas antes da versão estável. Não se aplica a esta versão personalizada, que não recebe essas atualizações.
 
 ---
 
@@ -244,13 +244,13 @@ As senhas do Kolibri são gerenciadas à parte:
 ## Atualizações e manutenção
 
 ### Como atualizo o sistema?
-Veja o **[guia de atualizações](/docs/updates)**. Atenção: esta versão personalizada usa uma imagem local do painel, e a atualização pelo sistema pode não se aplicar a ela ou trazer de volta a versão original, em inglês.
+Aplicativos e conteúdo são atualizados normalmente; veja o **[guia de atualizações](/docs/updates)**. O painel desta versão personalizada não recebe as atualizações do projeto original, porque usa uma imagem local com a tradução e a marca.
 
 ### Devo atualizar com frequência?
 Sim, enquanto tiver internet. As atualizações trazem correções de erros, novos recursos, melhorias de segurança e de desempenho.
 
 ### O sistema pode se atualizar sozinho?
-Sim. Software, aplicativos e conteúdo podem se atualizar sozinhos. As atualizações automáticas **vêm desativadas**: você ativa o que quiser em **Configurações → Atualização do sistema** (e, nos aplicativos, em cada um na Loja de aplicativos). Elas só rodam na janela de horário escolhida, depois das verificações de segurança, e nunca aplicam versões principais.
+Aplicativos e conteúdo, sim. As atualizações automáticas **vêm desativadas**: você ativa o que quiser em **Configurações → Atualização do sistema** (e, nos aplicativos, em cada um na Loja de aplicativos). Elas só rodam na janela de horário escolhida, depois das verificações de segurança, e nunca aplicam versões principais.
 
 ### Como atualizo o conteúdo (Wikipédia etc.)?
 O conteúdo é atualizado separadamente do software:
@@ -286,7 +286,7 @@ sudo bash /opt/project-nomad/stop_nomad.sh
 ```bash
 sudo bash /opt/project-nomad/update_nomad.sh
 ```
-*Observação: isso atualiza só a Central de Comando, não os aplicativos. Atualize os aplicativos pela interface. Nesta versão personalizada, veja o aviso no [guia de atualizações](/docs/updates) antes de usar.*
+*Observação: nesta versão personalizada, isso atualiza os serviços de apoio e reinicia a Central de Comando, mas mantém o painel na mesma versão. Atualize os aplicativos pela interface.*
 
 **Desinstalar:**
 ```bash

@@ -266,7 +266,7 @@ export class RunExtractPmtilesJob {
         return {
           job: existing,
           created: false,
-          message: `Extract job already exists for these params`,
+          message: `Já existe uma tarefa de extração para estes parâmetros`,
         }
       }
       // Stale (completed/failed) — remove so we can re-dispatch under the same deterministic id

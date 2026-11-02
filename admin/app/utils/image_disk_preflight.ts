@@ -71,7 +71,7 @@ export async function checkImageDiskSpace(params: {
 
     if (free < required) {
       return {
-        reason: `Insufficient disk space: ${gib(free)} free, ${gib(required)} required`,
+        reason: `Espaço em disco insuficiente: ${gib(free)} livres, ${gib(required)} necessários`,
         severity: 'failure',
       }
     }

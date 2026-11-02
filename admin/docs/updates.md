@@ -17,13 +17,12 @@ Há três coisas que podem ser atualizadas, e você controla cada uma separadame
 ## Atualizar manualmente
 
 1. Vá para **[Configurações → Atualização do sistema](/settings/update)**.
-2. Se houver uma atualização de software, clique para instalar. O download é feito e o sistema reinicia (geralmente de 2 a 5 minutos).
-3. Atualize os aplicativos no cartão de cada um, na [Loja de aplicativos](/supply-depot), em **Gerenciar › Atualizar**.
-4. Gerencie o conteúdo em **Configurações → Gerenciador de conteúdo** e **Explorador de conteúdo**, onde é possível baixar versões mais novas das bibliotecas e dos mapas.
+2. Atualize os aplicativos no cartão de cada um, na [Loja de aplicativos](/supply-depot), em **Gerenciar › Atualizar**.
+3. Gerencie o conteúdo em **Configurações → Gerenciador de conteúdo** e **Explorador de conteúdo**, onde é possível baixar versões mais novas das bibliotecas e dos mapas.
 
-Se a atualização de software ou de um aplicativo falhar, a versão anterior continua funcionando, e o servidor não sai do ar.
+Se a atualização de um aplicativo falhar, a versão anterior continua funcionando, e o servidor não sai do ar.
 
-> **Atenção nesta versão personalizada:** o painel usa uma imagem local com a tradução e a marca. Uma atualização do software pelo sistema pode não se aplicar a ela ou substituí-la pela versão original, em inglês.
+> **Software nesta versão personalizada:** o painel usa uma imagem local com a tradução e a marca, então não recebe as atualizações do projeto original, e essa opção fica desativada. Para atualizá-lo, é preciso trazer as mudanças do projeto original para o código desta versão e reconstruir a imagem. Aplicativos e conteúdo não são afetados.
 
 ---
 
@@ -40,7 +39,7 @@ Vale para os três tipos:
 
 ### Software (núcleo)
 
-Quando ativado, o sistema atualiza o próprio núcleo para versões mais novas dentro da mesma versão principal, na janela escolhida, depois de um **período de espera** configurável. Se as atualizações falharem repetidamente, o recurso é desativado e você é avisado.
+Não está disponível nesta versão personalizada, pelo motivo explicado acima.
 
 ### Aplicativos
 

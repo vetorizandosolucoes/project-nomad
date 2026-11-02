@@ -10,6 +10,7 @@ import { SystemService } from '#services/system_service'
 import { SystemUpdateService } from '#services/system_update_service'
 import { ContainerRegistryService } from '#services/container_registry_service'
 import { isNewerVersion, parseMajorVersion } from '../utils/version.js'
+import { IS_CUSTOM_BUILD } from '../../constants/misc.js'
 import { isWithinWindow as isWithinWindowUtil } from '../utils/update_window.js'
 import {
   checkImageDiskSpace,
@@ -279,14 +280,14 @@ export class AutoUpdateService {
 
     // 1. Sidecar must be present to perform the update.
     if (!this.systemUpdateService.isSidecarAvailable()) {
-      blockers.push({ reason: 'Update sidecar is not available', severity: 'failure' })
+      blockers.push({ reason: 'O serviço de atualização não está disponível', severity: 'failure' })
     }
 
     // 2. No system update already running.
     const updateStatus = this.systemUpdateService.getUpdateStatus()
     if (updateStatus && !['idle', 'complete', 'error'].includes(updateStatus.stage)) {
       blockers.push({
-        reason: `A system update is already in progress (stage: ${updateStatus.stage})`,
+        reason: `Já há uma atualização do sistema em andamento (etapa: ${updateStatus.stage})`,
         severity: 'skip',
       })
     }
@@ -384,7 +385,7 @@ export class AutoUpdateService {
     }
 
     if (!config.enabled) {
-      return { ...base, outcome: 'disabled', reason: 'Auto-update is disabled' }
+      return { ...base, outcome: 'disabled', reason: 'A atualização automática está desativada' }
     }
 
     const withinWindow = this.isWithinWindow(config, now)
@@ -392,7 +393,7 @@ export class AutoUpdateService {
       return {
         ...base,
         outcome: 'outside-window',
-        reason: `Outside update window (${config.windowStart}-${config.windowEnd})`,
+        reason: `Fora da janela de atualização (${config.windowStart}-${config.windowEnd})`,
       }
     }
 
@@ -405,7 +406,7 @@ export class AutoUpdateService {
         ...base,
         withinWindow,
         outcome: 'eligibility-error',
-        reason: `Failed to determine eligible version: ${error.message}`,
+        reason: `Não foi possível determinar a versão elegível: ${error.message}`,
       }
     }
 
@@ -414,7 +415,7 @@ export class AutoUpdateService {
         ...base,
         withinWindow,
         outcome: 'no-eligible',
-        reason: 'No eligible minor/patch update available (or still in cool-off)',
+        reason: 'Nenhuma atualização menor elegível (ou ainda em espera)',
       }
     }
 
@@ -442,7 +443,7 @@ export class AutoUpdateService {
       eligibleTarget,
       preflight,
       outcome: 'ready',
-      reason: `Ready to update to ${eligibleTarget.tag}`,
+      reason: `Pronto para atualizar para ${eligibleTarget.tag}`,
     }
   }
 
@@ -462,6 +463,10 @@ export class AutoUpdateService {
    * outcome to the KVStore (for the UI) and applying failure backoff.
    */
   async attempt(): Promise<{ updated: boolean; reason: string }> {
+    if (IS_CUSTOM_BUILD) {
+      return { updated: false, reason: 'Esta versão personalizada não recebe atualizações do projeto original' }
+    }
+
     const decision = await this.evaluate()
 
     switch (decision.outcome) {

@@ -202,7 +202,7 @@ export class DownloadModelJob {
       return {
         job: inFlight,
         created: false,
-        message: `Download already in progress for model ${params.modelName}`,
+        message: `Já há um download em andamento para o modelo ${params.modelName}`,
       }
     }
 
@@ -221,7 +221,7 @@ export class DownloadModelJob {
       return {
         job,
         created: true,
-        message: `Dispatched model download job for ${params.modelName}`,
+        message: `Download do modelo adicionado à fila: ${params.modelName}`,
       }
     } catch (error) {
       if (error.message.includes('job already exists')) {
@@ -229,7 +229,7 @@ export class DownloadModelJob {
         return {
           job: active,
           created: false,
-          message: `Job already exists for model ${params.modelName}`,
+          message: `Já existe uma tarefa para o modelo ${params.modelName}`,
         }
       }
       throw error

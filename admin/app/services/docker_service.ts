@@ -125,7 +125,7 @@ export class DockerService {
             logger.info('[DockerService] Kiwix on legacy glob config — running migration instead of restart.')
             await this.migrateKiwixToLibraryMode()
             this.invalidateServicesStatusCache()
-            return { success: true, message: 'Kiwix migrated to library mode successfully.' }
+            return { success: true, message: 'Kiwix migrado para o modo biblioteca com sucesso.' }
           }
         }
 

@@ -12,6 +12,7 @@ import {
   SystemInformationResponse,
 } from '../../types/system.js'
 import { SERVICE_NAMES } from '../../constants/service_names.js'
+import { IS_CUSTOM_BUILD } from '../../constants/misc.js'
 import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import path, { join } from 'node:path'
@@ -669,6 +670,10 @@ export class SystemService {
   }> {
     try {
       const currentVersion = SystemService.getAppVersion()
+      if (IS_CUSTOM_BUILD) {
+        return { success: true, updateAvailable: false, currentVersion, latestVersion: currentVersion }
+      }
+
       const cachedUpdateAvailable = await KVStore.getValue('system.updateAvailable')
       const cachedLatestVersion = await KVStore.getValue('system.latestVersion')
 

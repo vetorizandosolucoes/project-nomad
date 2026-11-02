@@ -423,7 +423,7 @@ export default class SystemController {
             if (conflicts.length) {
                 return response.status(409).send({
                     success: false,
-                    message: `Port conflict: ${conflicts
+                    message: `Conflito de porta: ${conflicts
                         .map((c) => `${c.port} (in use by ${c.usedBy})`)
                         .join(', ')}.`,
                     portConflicts: conflicts,
@@ -485,7 +485,7 @@ export default class SystemController {
             return response.status(404).send({ error: `Serviço ${payload.service_name} não encontrado` })
         }
         if (service.is_custom) {
-            return response.status(403).send({ error: 'Custom apps are removed via delete.' })
+            return response.status(403).send({ error: 'Aplicativos personalizados são removidos pela opção Desinstalar.' })
         }
         if (service.is_dependency_service) {
             return response.status(403).send({ error: 'Serviços de dependência não podem ser desinstalados diretamente.' })
@@ -758,7 +758,7 @@ export default class SystemController {
             if (external.length) {
                 return response.status(409).send({
                     success: false,
-                    message: `Port conflict: ${external
+                    message: `Conflito de porta: ${external
                         .map((c) => `${c.port} (in use by ${c.usedBy})`)
                         .join(', ')}.`,
                     portConflicts: external,

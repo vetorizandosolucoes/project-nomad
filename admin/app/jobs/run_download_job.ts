@@ -379,7 +379,7 @@ export class RunDownloadJob {
       return {
         job,
         created: true,
-        message: `Dispatched download job for URL ${params.url}`,
+        message: `Download adicionado à fila: ${params.url}`,
       }
     } catch (error) {
       if (error.message.includes('job already exists')) {
@@ -387,7 +387,7 @@ export class RunDownloadJob {
         return {
           job: existing,
           created: false,
-          message: `Job already exists for URL ${params.url}`,
+          message: `Já existe uma tarefa para a URL ${params.url}`,
         }
       }
       throw error

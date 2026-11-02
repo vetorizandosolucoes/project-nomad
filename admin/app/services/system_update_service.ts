@@ -3,6 +3,7 @@ import { readFileSync, existsSync } from 'fs'
 import { writeFile } from 'fs/promises'
 import { join } from 'path'
 import KVStore from '#models/kv_store'
+import { IS_CUSTOM_BUILD } from '../../constants/misc.js'
 
 interface UpdateStatus {
   stage: 'idle' | 'starting' | 'pulling' | 'pulled' | 'recreating' | 'complete' | 'error'
@@ -30,6 +31,13 @@ export class SystemUpdateService {
     targetTag?: string
     requester?: string
   }): Promise<{ success: boolean; message: string }> {
+    if (IS_CUSTOM_BUILD) {
+      return {
+        success: false,
+        message: 'Esta versão personalizada não recebe atualizações do projeto original.',
+      }
+    }
+
     try {
       const currentStatus = this.getUpdateStatus()
       if (currentStatus && !['idle', 'complete', 'error'].includes(currentStatus.stage)) {

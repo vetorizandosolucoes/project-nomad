@@ -188,7 +188,7 @@ export class DownloadService {
         if (queueName === DownloadModelJob.queue) {
           const modelName = job.data.modelName
           if (!modelName) {
-            return { success: false, message: 'Cannot retry: model name not found in job data' }
+            return { success: false, message: 'Não é possível tentar de novo: nome do modelo não encontrado na tarefa' }
           }
           // Remove the old failed job first, then dispatch a fresh one. The
           // model jobId is a hash of the model name, so dispatching first meant
@@ -203,7 +203,7 @@ export class DownloadService {
         // For file downloads (zim, map, etc.), re-dispatch with original params
         const params = job.data as RunDownloadJobParams
         if (!params.url || !params.filepath) {
-          return { success: false, message: 'Cannot retry: missing URL or filepath in job data' }
+          return { success: false, message: 'Não é possível tentar de novo: faltam a URL ou o caminho na tarefa' }
         }
 
         // Remove the old failed job, then dispatch a fresh one

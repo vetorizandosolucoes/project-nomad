@@ -288,7 +288,7 @@ export class EmbedFileJob {
           `[EmbedFileJob] Context-length overflow persisted for ${fileName} after truncation; not retrying.`
         )
         normalizedError = new UnrecoverableError(
-          error instanceof Error ? error.message : 'Embedding input exceeds the model context length'
+          error instanceof Error ? error.message : 'O texto a indexar excede o limite de contexto do modelo'
         )
       }
 
@@ -405,7 +405,7 @@ export class EmbedFileJob {
             job: existing,
             created: false,
             jobId: initialJobId,
-            message: `Embedding job already exists for: ${params.fileName}`,
+            message: `Já existe uma tarefa de indexação para: ${params.fileName}`,
           }
         }
         try {
@@ -447,7 +447,7 @@ export class EmbedFileJob {
           job: existing,
           created: false,
           jobId: initialJobId,
-          message: `Embedding job already exists for: ${params.fileName}`,
+          message: `Já existe uma tarefa de indexação para: ${params.fileName}`,
         }
       }
       throw error

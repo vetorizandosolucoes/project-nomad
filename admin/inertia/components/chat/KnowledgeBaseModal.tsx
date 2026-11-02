@@ -812,7 +812,7 @@ export default function KnowledgeBaseModal({
               columns={[
                 {
                   accessor: 'source',
-                  title: renderSortHeader('File Name', 'name', sort, setSort),
+                  title: renderSortHeader('Nome do arquivo', 'name', sort, setSort),
                   render(record) {
                     if (record.isCollectionHeader) {
                       const key = record.collection ?? UNCATEGORIZED_COLLECTION_KEY
@@ -876,7 +876,7 @@ export default function KnowledgeBaseModal({
                 },
                 {
                   accessor: 'size',
-                  title: renderSortHeader('Size', 'size', sort, setSort),
+                  title: renderSortHeader('Tamanho', 'size', sort, setSort),
                   className: 'whitespace-nowrap',
                   render(record) {
                     if (record.bucket === 'admin_docs' || record.size === null) {
@@ -887,7 +887,7 @@ export default function KnowledgeBaseModal({
                 },
                 {
                   accessor: 'uploadedAt',
-                  title: renderSortHeader('Uploaded', 'uploadedAt', sort, setSort),
+                  title: renderSortHeader('Enviado em', 'uploadedAt', sort, setSort),
                   className: 'whitespace-nowrap',
                   render(record) {
                     if (record.bucket === 'admin_docs' || !record.uploadedAt) {

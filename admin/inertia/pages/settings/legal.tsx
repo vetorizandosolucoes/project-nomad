@@ -86,7 +86,7 @@ export default function LegalPage() {
 
           {/* Conteúdo Disclaimer */}
           <section className="mb-10">
-            <h2 className="text-2xl font-semibold mb-4">Conteúdo Disclaimer</h2>
+            <h2 className="text-2xl font-semibold mb-4">Aviso sobre o conteúdo</h2>
             <p className="text-text-primary mb-3">
               O Project NOMAD oferece ferramentas para baixar e acessar conteúdo de terceiros, incluindo Wikipédia, Wikibooks, referências médicas, plataformas educacionais e outros recursos públicos.
             </p>
@@ -117,13 +117,13 @@ export default function LegalPage() {
 
           {/* Data Storage Notice */}
           <section className="mb-10">
-            <h2 className="text-2xl font-semibold mb-4">Data Storage</h2>
+            <h2 className="text-2xl font-semibold mb-4">Armazenamento de dados</h2>
             <p className="text-text-primary mb-3">
               Todos os dados do sistema ficam armazenados localmente no seu dispositivo:
             </p>
             <ul className="list-disc list-inside space-y-2 text-text-primary">
               <li><strong>Pasta de instalação:</strong> /opt/project-nomad</li>
-              <li><strong>Downloaded Conteúdo:</strong> /opt/project-nomad/storage</li>
+              <li><strong>Conteúdo baixado:</strong> /opt/project-nomad/storage</li>
               <li><strong>Dados do aplicativo:</strong> armazenados em volumes do Docker no seu sistema</li>
             </ul>
             <p className="text-text-primary mt-3">

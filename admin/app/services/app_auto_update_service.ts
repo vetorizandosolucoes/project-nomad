@@ -125,7 +125,7 @@ export class AppAutoUpdateService {
    */
   appEligibility(service: Service, cooloffHours: number, now: DateTime): AppEligibility {
     if (!service.available_update_version) {
-      return { eligible: false, reason: 'Up to date', cooloffRemainingHours: null }
+      return { eligible: false, reason: 'Em dia', cooloffRemainingHours: null }
     }
     if (service.auto_update_disabled_reason) {
       return {
@@ -141,19 +141,19 @@ export class AppAutoUpdateService {
     if (currentTag === 'latest') {
       return {
         eligible: false,
-        reason: 'Pinned to :latest — cannot version-check',
+        reason: 'Fixado em :latest — não dá para comparar versões',
         cooloffRemainingHours: null,
       }
     }
     if (parseMajorVersion(service.available_update_version) !== parseMajorVersion(currentTag)) {
       return {
         eligible: false,
-        reason: 'Major version — manual update required',
+        reason: 'Versão principal — atualize manualmente',
         cooloffRemainingHours: null,
       }
     }
     if (!isNewerVersion(service.available_update_version, currentTag)) {
-      return { eligible: false, reason: 'Up to date', cooloffRemainingHours: null }
+      return { eligible: false, reason: 'Em dia', cooloffRemainingHours: null }
     }
     if (!service.available_update_first_seen_at) {
       return { eligible: false, reason: 'Cool-off pending', cooloffRemainingHours: cooloffHours }
@@ -165,14 +165,14 @@ export class AppAutoUpdateService {
       const rounded = Math.ceil(remaining)
       return {
         eligible: false,
-        reason: `In cool-off (${rounded}h remaining)`,
+        reason: `Em espera (faltam ${rounded}h)`,
         cooloffRemainingHours: rounded,
       }
     }
 
     return {
       eligible: true,
-      reason: `Eligible → ${service.available_update_version}`,
+      reason: `Pronto para atualizar → ${service.available_update_version}`,
       cooloffRemainingHours: 0,
     }
   }
@@ -217,7 +217,7 @@ export class AppAutoUpdateService {
 
     if (service.installation_status !== 'idle') {
       blockers.push({
-        reason: `App has an operation in progress (status: ${service.installation_status})`,
+        reason: `O aplicativo tem uma operação em andamento (status: ${service.installation_status})`,
         severity: 'skip',
       })
     }
@@ -245,17 +245,17 @@ export class AppAutoUpdateService {
     const now = DateTime.now()
 
     if (!config.enabled) {
-      return { updated: 0, reason: 'App auto-update is disabled' }
+      return { updated: 0, reason: 'A atualização automática de aplicativos está desativada' }
     }
     if (!isWithinWindow(config.windowStart, config.windowEnd, now)) {
-      const reason = `Outside update window (${config.windowStart}-${config.windowEnd})`
+      const reason = `Fora da janela de atualização (${config.windowStart}-${config.windowEnd})`
       await this.recordRun(reason)
       return { updated: 0, reason }
     }
 
     const eligible = await this.getEligibleApps(config, now)
     if (eligible.length === 0) {
-      const reason = 'No eligible app updates (all current, in cool-off, or major-only)'
+      const reason = 'Nenhuma atualização elegível (tudo em dia, em espera ou só versões principais)'
       await this.recordRun(reason)
       return { updated: 0, reason }
     }

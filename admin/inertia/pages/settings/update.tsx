@@ -12,6 +12,7 @@ import Switch from '~/components/inputs/Switch'
 import { useMutation } from '@tanstack/react-query'
 import { useNotifications } from '~/context/NotificationContext'
 import { useSystemSetting } from '~/hooks/useSystemSetting'
+import { IS_CUSTOM_BUILD } from '../../../constants/misc'
 import CoreAutoUpdateSection from '~/components/updates/CoreAutoUpdateSection'
 import AppAutoUpdateSection from '~/components/updates/AppAutoUpdateSection'
 import ContentAutoUpdateSection from '~/components/updates/ContentAutoUpdateSection'
@@ -282,12 +283,18 @@ export default function SystemUpdatePage(props: { system: Props }) {
               {!isUpdating && (
                 <>
                   <h2 className="text-2xl font-bold text-desert-green mb-2">
-                    {versionInfo.updateAvailable ? 'Atualização disponível' : 'Sistema atualizado'}
+                    {IS_CUSTOM_BUILD
+                      ? 'Versão personalizada'
+                      : versionInfo.updateAvailable
+                        ? 'Atualização disponível'
+                        : 'Sistema atualizado'}
                   </h2>
                   <p className="text-desert-stone-dark mb-6">
-                    {versionInfo.updateAvailable
-                      ? `Uma nova versão (${versionInfo.latestVersion}) está disponível para a sua instalação.`
-                      : 'Seu sistema está na versão mais recente!'}
+                    {IS_CUSTOM_BUILD
+                      ? 'O painel desta instalação foi traduzido e tem a sua marca, por isso não recebe as atualizações do projeto original. Aplicativos e conteúdo continuam se atualizando normalmente, nas opções abaixo.'
+                      : versionInfo.updateAvailable
+                        ? `Uma nova versão (${versionInfo.latestVersion}) está disponível para a sua instalação.`
+                        : 'Seu sistema está na versão mais recente!'}
                   </p>
                 </>
               )}
@@ -347,7 +354,7 @@ export default function SystemUpdatePage(props: { system: Props }) {
                   </p>
                 </div>
               )}
-              {!isUpdating && (
+              {!isUpdating && !IS_CUSTOM_BUILD && (
                 <div className="flex justify-center gap-4">
                   <StyledButton
                     variant="primary"
@@ -370,6 +377,7 @@ export default function SystemUpdatePage(props: { system: Props }) {
                 </div>
               )}
             </div>
+            {!IS_CUSTOM_BUILD && (
             <div className="border-t bg-surface-primary p-6">
               <h3 className="text-lg font-semibold text-desert-green mb-4">
                 O que acontece durante uma atualização?
@@ -424,7 +432,10 @@ export default function SystemUpdatePage(props: { system: Props }) {
                 </div>
               )}
             </div>
+            )}
           </div>
+          {!IS_CUSTOM_BUILD && (
+          <>
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <Alert
               type="info"
@@ -452,6 +463,8 @@ export default function SystemUpdatePage(props: { system: Props }) {
             />
           </div>
           <CoreAutoUpdateSection />
+          </>
+          )}
           <AppAutoUpdateSection />
           <ContentAutoUpdateSection />
           <ContentUpdatesSection />

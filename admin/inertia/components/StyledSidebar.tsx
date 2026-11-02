@@ -105,7 +105,8 @@ const StyledSidebar: React.FC<StyledSidebarProps> = ({ title, items }) => {
     <>
       <button
         type="button"
-        className="absolute left-4 top-4 z-50 xl:hidden"
+        aria-label="Abrir menu"
+        className="ml-4 mt-4 self-start xl:hidden"
         onClick={() => setSidebarOpen(true)}
       >
         <IconMenu2 aria-hidden="true" className="size-8" />

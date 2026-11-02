@@ -78,7 +78,7 @@ export default class ConditionsController {
       const params = await request.validateUsing(conditionDrugsValidator)
 
       if (params.slug && params.q) {
-        return response.badRequest({ error: 'Provide either slug or q, not both' })
+        return response.badRequest({ error: 'Informe slug ou q, não os dois' })
       }
 
       const filterOpts = {
@@ -104,7 +104,7 @@ export default class ConditionsController {
         return remediesOn ? result : { ...result, remedies: [] }
       }
 
-      return response.badRequest({ error: 'Provide a slug or q query parameter' })
+      return response.badRequest({ error: 'Informe o parâmetro slug ou q' })
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.warn(`[ConditionsController] drugsApi failed: ${msg}`)

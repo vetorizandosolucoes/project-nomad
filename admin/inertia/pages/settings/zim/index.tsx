@@ -198,7 +198,7 @@ export default function ZimPage() {
             columns={[
               {
                 accessor: 'title',
-                title: renderSortHeader('Title', 'name'),
+                title: renderSortHeader('Título', 'name'),
                 render: (record) => (
                   <span className="font-medium">
                     {record.title || record.name}
@@ -216,7 +216,7 @@ export default function ZimPage() {
               },
               {
                 accessor: 'size_bytes',
-                title: renderSortHeader('Size', 'size'),
+                title: renderSortHeader('Tamanho', 'size'),
                 render: (record) => (
                   <span className="text-text-secondary tabular-nums">
                     {record.size_bytes ? formatBytes(record.size_bytes, 1) : '—'}

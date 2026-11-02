@@ -145,7 +145,7 @@ export class ContentAutoUpdateService {
     now: DateTime
   ): ContentEligibility {
     if (!resource.available_update_version) {
-      return { eligible: false, reason: 'Up to date', cooloffRemainingHours: null }
+      return { eligible: false, reason: 'Em dia', cooloffRemainingHours: null }
     }
     if (resource.auto_update_disabled_reason) {
       return {
@@ -155,7 +155,7 @@ export class ContentAutoUpdateService {
       }
     }
     if (!(resource.available_update_version > resource.version)) {
-      return { eligible: false, reason: 'Up to date', cooloffRemainingHours: null }
+      return { eligible: false, reason: 'Em dia', cooloffRemainingHours: null }
     }
     if (!resource.available_update_first_seen_at) {
       return { eligible: false, reason: 'Cool-off pending', cooloffRemainingHours: cooloffHours }
@@ -167,14 +167,14 @@ export class ContentAutoUpdateService {
       const rounded = Math.ceil(remaining)
       return {
         eligible: false,
-        reason: `In cool-off (${rounded}h remaining)`,
+        reason: `Em espera (faltam ${rounded}h)`,
         cooloffRemainingHours: rounded,
       }
     }
 
     return {
       eligible: true,
-      reason: `Eligible → ${resource.available_update_version}`,
+      reason: `Pronto para atualizar → ${resource.available_update_version}`,
       cooloffRemainingHours: 0,
     }
   }
@@ -256,10 +256,10 @@ export class ContentAutoUpdateService {
     const now = DateTime.now()
 
     if (!config.enabled) {
-      return { started: 0, reason: 'Content auto-update is disabled' }
+      return { started: 0, reason: 'A atualização automática de conteúdo está desativada' }
     }
     if (!isWithinWindow(config.windowStart, config.windowEnd, now)) {
-      const reason = `Outside update window (${config.windowStart}-${config.windowEnd})`
+      const reason = `Fora da janela de atualização (${config.windowStart}-${config.windowEnd})`
       await this.recordRun(reason)
       return { started: 0, reason }
     }
@@ -397,12 +397,12 @@ export class ContentAutoUpdateService {
   async attemptDrugDataset(): Promise<{ started: number; reason: string }> {
     const config = await this.getConfig()
     if (!config.enabled) {
-      return { started: 0, reason: 'Content auto-update is disabled' }
+      return { started: 0, reason: 'A atualização automática de conteúdo está desativada' }
     }
     if (!isWithinWindow(config.windowStart, config.windowEnd, DateTime.now())) {
       return {
         started: 0,
-        reason: `Outside update window (${config.windowStart}-${config.windowEnd})`,
+        reason: `Fora da janela de atualização (${config.windowStart}-${config.windowEnd})`,
       }
     }
 

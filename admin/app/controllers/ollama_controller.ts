@@ -80,13 +80,13 @@ export default class OllamaController {
       const rawPayload = request.input('payload')
       if (typeof rawPayload !== 'string') {
         await cleanupUploadedImages()
-        return response.status(422).send({ message: 'Multipart chat requests require a JSON payload.' })
+        return response.status(422).send({ message: 'Pedidos de chat com anexos precisam de dados em JSON.' })
       }
       try {
         multipartPayload = JSON.parse(rawPayload)
       } catch {
         await cleanupUploadedImages()
-        return response.status(422).send({ message: 'The multipart chat payload is not valid JSON.' })
+        return response.status(422).send({ message: 'Os dados do pedido de chat não são um JSON válido.' })
       }
     }
     // A multipart chat carries the collection inside the JSON payload rather than
@@ -411,7 +411,7 @@ export default class OllamaController {
 
     const ollamaService = await Service.query().where('service_name', SERVICE_NAMES.OLLAMA).first()
     if (!ollamaService) {
-      return response.status(404).send({ success: false, message: 'Ollama service record not found.' })
+      return response.status(404).send({ success: false, message: 'Registro do serviço Ollama não encontrado.' })
     }
 
     // Clear path: null or empty URL removes remote config. If a local nomad_ollama container

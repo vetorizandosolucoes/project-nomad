@@ -164,7 +164,7 @@ export default function ContentUpdatesSection() {
                 },
                 {
                   accessor: 'resource_type',
-                  title: 'Digite',
+                  title: 'Tipo',
                   render: (record) => (
                     <span
                       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${record.resource_type === 'zim'

@@ -53,7 +53,7 @@ export default function SettingsPage(props: {
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-desert-green mb-2">Informações do sistema</h1>
             <p className="text-desert-stone-dark">
-              Monitoramento e diagnóstico em tempo real • Last updated: {new Date().toLocaleString()} •
+              Monitoramento e diagnóstico em tempo real • Atualizado em {new Date().toLocaleString()} •
               Atualizando os dados a cada 30 segundos
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function SettingsPage(props: {
                   { label: 'Núcleos físicos', value: info?.cpu.physicalCores },
                   {
                     label: 'Virtualização',
-                    value: info?.cpu.virtualization ? 'Enabled' : 'Disabled',
+                    value: info?.cpu.virtualization ? 'Ativada' : 'Desativada',
                   },
                 ]}
               />

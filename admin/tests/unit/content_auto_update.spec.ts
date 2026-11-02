@@ -61,7 +61,7 @@ test('newer version but still inside cool-off → not eligible', () => {
     NOW
   )
   assert.equal(v.eligible, false)
-  assert.match(v.reason, /cool-off/i)
+  assert.match(v.reason, /Em espera/i)
 })
 
 test('newer version past cool-off → eligible', () => {
