@@ -760,7 +760,7 @@ export default function KnowledgeBaseModal({
                   icon="IconSettings"
                   onClick={() => setManageCollectionsOpen(true)}
                 >
-                  Gerenciar Collections
+                  Gerenciar coleções
                 </StyledButton>
                 <StyledButton
                   variant="danger"

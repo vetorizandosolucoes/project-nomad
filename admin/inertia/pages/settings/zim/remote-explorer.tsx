@@ -87,9 +87,9 @@ export default function ZimRemoteExplorer() {
   // language wants that on every visit, not once per session.
   const [language, setLanguage] = useState<string>(() => {
     try {
-      return localStorage.getItem('nomad:zim-library-language') || 'eng'
+      return localStorage.getItem('nomad:zim-library-language') || 'por'
     } catch {
-      return 'eng'
+      return 'por'
     }
   })
   const [browseUrl, setBrowseUrl] = useState<string | null>(null)

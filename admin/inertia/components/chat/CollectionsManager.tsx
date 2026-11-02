@@ -55,7 +55,7 @@ export default function CollectionsManager({ onClose }: CollectionsManagerProps)
   return (
     <StyledModal
       open={true}
-      title="Gerenciar Collections"
+      title="Gerenciar coleções"
       onClose={onClose}
       cancelText="Fechar"
       onCancel={onClose}

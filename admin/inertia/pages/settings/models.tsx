@@ -272,7 +272,7 @@ export default function ModelsPage(props: {
 
   return (
     <SettingsLayout>
-      <Head title={`Configurações de ${aiAssistantName}`} />
+      <Head title={`Configurações do ${aiAssistantName}`} />
       <div className="xl:pl-72 w-full">
         <main className="px-4 py-6 md:px-8">
           <h1 className="text-4xl font-semibold mb-4">{aiAssistantName}</h1>

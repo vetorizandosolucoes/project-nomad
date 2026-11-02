@@ -32,8 +32,8 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
     ...(aiAssistantInstallStatus.isInstalled ? [{ name: aiAssistantName, href: '/settings/models', icon: IconWand, current: false }] : []),
     { name: 'Loja de aplicativos', href: '/supply-depot', icon: IconBox, current: false },
     { name: 'Benchmark', href: '/settings/benchmark', icon: IconChartBar, current: false },
-    { name: 'Conteúdo Explorer', href: '/settings/zim/remote-explorer', icon: IconZoom, current: false },
-    { name: 'Conteúdo Manager', href: '/settings/zim', icon: IconFolder, current: false },
+    { name: 'Explorador de conteúdo', href: '/settings/zim/remote-explorer', icon: IconZoom, current: false },
+    { name: 'Gerenciador de conteúdo', href: '/settings/zim', icon: IconFolder, current: false },
     ...(creatorPacksConfigured ? [{ name: 'Pacotes de criadores', href: '/settings/creator-packs', icon: IconMovie, current: false }] : []),
     { name: 'Gerenciador de mapas', href: '/settings/maps', icon: IconMapRoute, current: false },
     {

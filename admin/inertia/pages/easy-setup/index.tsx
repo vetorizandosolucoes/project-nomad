@@ -842,7 +842,7 @@ export default function EasySetupWizard(props: {
                   onClick={() => router.visit('/supply-depot')}
                   className="flex-shrink-0"
                 >
-                  Abrir Supply Depot
+                  Abrir a Loja de aplicativos
                 </StyledButton>
               </div>
             </div>

@@ -303,7 +303,7 @@ export default function ChatInterface({
               value={input}
               onChange={handleInput}
               onKeyDown={handleKeyDown}
-              placeholder={`Digite sua mensagem para ${aiAssistantName}... (Shift+Enter para nova linha)`}
+              placeholder={`Digite sua mensagem para o ${aiAssistantName}... (Shift+Enter para nova linha)`}
               className="w-full resize-none rounded-lg border border-border-default px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-desert-green focus:border-transparent disabled:bg-surface-secondary disabled:text-text-muted"
               rows={1}
               disabled={isLoading}

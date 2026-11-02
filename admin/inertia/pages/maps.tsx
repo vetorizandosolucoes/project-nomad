@@ -123,7 +123,7 @@ export default function Maps(props: {
 
             <Link href="/settings/maps" className="mr-4">
               <StyledButton variant="primary" icon="IconSettings">
-                Gerenciar Map Regions
+                Gerenciar regiões do mapa
               </StyledButton>
             </Link>
           </div>

@@ -22,7 +22,7 @@ export const LINK_TILE_COLORS = [
   {
     id: 'green',
     swatch: 'bg-desert-green',
-    label: 'Green',
+    label: 'Verde',
     border: 'border-desert-green/70',
     bg: 'bg-desert-green/10',
     marker: 'text-desert-green',
@@ -30,7 +30,7 @@ export const LINK_TILE_COLORS = [
   {
     id: 'olive',
     swatch: 'bg-desert-olive',
-    label: 'Olive',
+    label: 'Oliva',
     border: 'border-desert-olive/70',
     bg: 'bg-desert-olive/10',
     marker: 'text-desert-olive',
@@ -38,7 +38,7 @@ export const LINK_TILE_COLORS = [
   {
     id: 'orange',
     swatch: 'bg-desert-orange',
-    label: 'Orange',
+    label: 'Laranja',
     border: 'border-desert-orange/70',
     bg: 'bg-desert-orange/10',
     marker: 'text-desert-orange',
@@ -46,7 +46,7 @@ export const LINK_TILE_COLORS = [
   {
     id: 'red',
     swatch: 'bg-desert-red',
-    label: 'Red',
+    label: 'Vermelho',
     border: 'border-desert-red/70',
     bg: 'bg-desert-red/10',
     marker: 'text-desert-red',
@@ -54,7 +54,7 @@ export const LINK_TILE_COLORS = [
   {
     id: 'sand',
     swatch: 'bg-desert-sand',
-    label: 'Sand',
+    label: 'Areia',
     border: 'border-desert-sand/70',
     bg: 'bg-desert-sand/20',
     marker: 'text-desert-stone-dark',
@@ -62,7 +62,7 @@ export const LINK_TILE_COLORS = [
   {
     id: 'stone',
     swatch: 'bg-desert-stone',
-    label: 'Stone',
+    label: 'Pedra',
     border: 'border-desert-stone/70',
     bg: 'bg-desert-stone/10',
     marker: 'text-desert-stone-dark',

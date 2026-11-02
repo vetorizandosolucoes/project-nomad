@@ -21,6 +21,23 @@ import ViewMapMarkerPopup from './ViewMapMarkerPopup'
 import MapMarkerFormPopup from './MapMarkerFormPopup'
 import ScaleUnitToggle from './ScaleUnitSelector'
 
+// MapLibre's own control labels and tooltips, which default to English.
+const MAP_LOCALE = {
+  'FullscreenControl.Enter': 'Entrar em tela cheia',
+  'FullscreenControl.Exit': 'Sair da tela cheia',
+  'Map.Title': 'Mapa',
+  'Marker.Title': 'Marcador',
+  'NavigationControl.ResetBearing': 'Apontar para o norte',
+  'NavigationControl.ZoomIn': 'Aproximar',
+  'NavigationControl.ZoomOut': 'Afastar',
+  'Popup.Close': 'Fechar',
+  'ScaleControl.Feet': 'pés',
+  'ScaleControl.Meters': 'm',
+  'ScaleControl.Kilometers': 'km',
+  'ScaleControl.Miles': 'mi',
+  'ScaleControl.NauticalMiles': 'nm',
+}
+
 type ScaleUnit = 'imperial' | 'metric' | 'nautical'
 
 type MapCommand = {
@@ -368,6 +385,7 @@ export default function MapComponent({
           cursor={isDraggingMap ? 'grabbing' : 'crosshair'}
           mapStyle={`${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/maps/styles`}
           mapLib={maplibregl}
+          locale={MAP_LOCALE}
           initialViewState={initialViewState}
           onMoveEnd={(e) => {
             // Persist the view so a refresh restores where the user was, not the default.

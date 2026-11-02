@@ -6,7 +6,6 @@ import { DateTime } from 'luxon'
 import { inject } from '@adonisjs/core'
 import { OllamaService } from './ollama_service.js'
 import { SYSTEM_PROMPTS } from '../../constants/ollama.js'
-import { toTitleCase } from '../utils/misc.js'
 import { resolveTasksModel } from '../utils/tasks_model.js'
 import {
   SUGGESTIONS_SCHEMA,
@@ -118,7 +117,7 @@ export class ChatService {
 
         const structured = resolveStructured(content, pickSuggestions, response.structured === true)
         if (structured.ok) {
-          return structured.value.map((s) => toTitleCase(s))
+          return structured.value
         }
         if (structured.reason === 'constrained-parse-failed') {
           // The grammar was applied and the model broke it anyway, so what came back
@@ -153,11 +152,9 @@ export class ChatService {
         }
         
         // Filter out empty strings and limit to 3 suggestions
-        const filtered =  suggestions
+        return suggestions
           .filter((s) => s.length > 0)
           .slice(0, 3)
-
-        return filtered.map((s) => toTitleCase(s))
       } else {
         // Empty content after the <think> split means the model produced reasoning and
         // nothing else. Log it rather than silently returning no chips.

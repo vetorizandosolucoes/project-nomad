@@ -7,7 +7,7 @@ export const FALLBACK_RECOMMENDED_OLLAMA_MODELS: NomadOllamaModel[] = [
   {
     name: 'llama3.1',
     description:
-      'Llama 3.1 is a new state-of-the-art model from Meta available in 8B, 70B and 405B parameter sizes.',
+      'O Llama 3.1 é um modelo avançado da Meta, disponível nos tamanhos 8B, 70B e 405B.',
     estimated_pulls: '109.3M',
     id: '9fe9c575-e77e-4a51-a743-07359458ee71',
     first_seen: '2026-01-28T23:37:31.000+00:00',
@@ -26,7 +26,7 @@ export const FALLBACK_RECOMMENDED_OLLAMA_MODELS: NomadOllamaModel[] = [
   {
     name: 'deepseek-r1',
     description:
-      'DeepSeek-R1 is a family of open reasoning models with performance approaching that of leading models, such as O3 and Gemini 2.5 Pro.',
+      'O DeepSeek-R1 é uma família de modelos abertos de raciocínio, com desempenho próximo ao de modelos líderes como O3 e Gemini 2.5 Pro.',
     estimated_pulls: '77.2M',
     id: '0b566560-68a6-4964-b0d4-beb3ab1ad694',
     first_seen: '2026-01-28T23:37:31.000+00:00',
@@ -44,7 +44,7 @@ export const FALLBACK_RECOMMENDED_OLLAMA_MODELS: NomadOllamaModel[] = [
   },
   {
     name: 'llama3.2',
-    description: "Meta's Llama 3.2 goes small with 1B and 3B models.",
+    description: 'O Llama 3.2, da Meta, tem versões pequenas, de 1B e 3B.',
     estimated_pulls: '54.7M',
     id: 'c9a1bc23-b290-4501-a913-f7c9bb39c3ad',
     first_seen: '2026-01-28T23:37:31.000+00:00',
@@ -177,12 +177,12 @@ export const RAG_MIN_FINAL_SCORE = 0.62
  * later cannot invalidate a value someone has already saved.
  */
 export const RAG_MIN_RELEVANCE_PRESETS = [
-  { value: 0, label: 'Off — use every passage retrieved' },
-  { value: 0.55, label: 'Lenient' },
-  { value: RAG_MIN_FINAL_SCORE, label: 'Balanced (recommended)' },
+  { value: 0, label: 'Desativado — usar todos os trechos encontrados' },
+  { value: 0.55, label: 'Flexível' },
+  { value: RAG_MIN_FINAL_SCORE, label: 'Equilibrado (recomendado)' },
   // The last floor that costs no recall on the golden set. Stricter than this
   // starts dropping answers, which is a choice to offer, not one to default to.
-  { value: 0.66, label: 'Strict' },
+  { value: 0.66, label: 'Rigoroso' },
 ] as const
 
 /**
@@ -307,14 +307,16 @@ export const DEFAULT_RESPONSE_STYLE: ResponseStyle = 'auto'
  * Context Window and Knowledge Base Relevance selects above it are ordered.
  */
 export const RESPONSE_STYLE_PRESETS: { value: ResponseStyle; label: string }[] = [
-  { value: 'auto', label: 'Auto (recommended)' },
-  { value: 'focused', label: 'Focused (factual, repeatable)' },
-  { value: 'creative', label: 'Creative (varied, exploratory)' },
-  { value: 'off', label: 'Backend defaults (send nothing)' },
+  { value: 'auto', label: 'Automático (recomendado)' },
+  { value: 'focused', label: 'Focado (factual, consistente)' },
+  { value: 'creative', label: 'Criativo (variado, exploratório)' },
+  { value: 'off', label: 'Padrão do servidor (não enviar nada)' },
 ]
 
 export const SYSTEM_PROMPTS = {
   default: `
+ Always respond in Brazilian Portuguese, unless the user writes in another language or asks for one.
+
  Format all responses using markdown for better readability. Vanilla markdown or GitHub-flavored markdown is preferred.
  - Use **bold** and *italic* for emphasis.
  - Use code blocks with language identifiers for code snippets.
@@ -342,6 +344,9 @@ HOW TO ANSWER:
 4. Do not fabricate specifics (numbers, names, procedures) that are neither supported by
    the context nor part of your reliable knowledge.
 
+Answer in Brazilian Portuguese, even when the context is in English, unless the user writes
+in another language or asks for one.
+
 Format your response using markdown for readability.
 `,
   chat_suggestions: `
@@ -351,9 +356,9 @@ Provide exactly 3 conversation starter topics as direct questions that someone w
 These should be clear, complete questions that can start meaningful conversations.
 
 Examples of good suggestions:
-- "How do I purify water in an emergency?"
-- "What are the best foods for long-term storage?"
-- "Help me create a 72-hour emergency kit"
+- "Como purificar água em uma emergência?"
+- "Quais são os melhores alimentos para guardar por muito tempo?"
+- "Me ajude a montar um kit de emergência para 72 horas"
 
 Do NOT use:
 - Follow-up questions seeking clarification
@@ -362,11 +367,11 @@ Do NOT use:
 - Statements that are not suggestions themselves, such as praise for asking the question
 - Direct questions or commands to the user
 
-The suggestions should be in title case.
+Write the suggestions in Brazilian Portuguese, in sentence case.
 
 Respond with JSON: {"suggestions": ["...", "...", "..."]}
 `,
-  title_generation: `You are a title generator. Given the start of a conversation, generate a concise, descriptive title under 50 characters.
+  title_generation: `You are a title generator. Given the start of a conversation, generate a concise, descriptive title under 50 characters, in the language of the conversation.
 
 Respond with JSON: {"title": "..."}`,
   relevance_check: `You check whether search results are about what a user asked.

@@ -11,7 +11,7 @@ export interface WikipediaSelectorProps {
   selectedOptionId: string | null // for wizard (pending selection)
   onSelect: (optionId: string) => void
   disabled?: boolean
-  showSubmitButton?: boolean // true for Conteúdo Explorer, false for wizard
+  showSubmitButton?: boolean // true for Explorador de conteúdo, false for wizard
   onSubmit?: () => void
   isSubmitting?: boolean
 }
@@ -156,7 +156,7 @@ const WikipediaSelector: React.FC<WikipediaSelectorProps> = ({
         })}
       </div>
 
-      {/* Submit button for Conteúdo Explorer mode */}
+      {/* Submit button for Explorador de conteúdo mode */}
       {showSubmitButton && selectedOptionId && (selectedOptionId !== currentSelection?.optionId || isFailed) && (
         <div className="mt-4 flex justify-end">
           <StyledButton
