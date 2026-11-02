@@ -432,7 +432,7 @@ export class EmbedFileJob {
         job,
         created: true,
         jobId: job.id ?? initialJobId,
-        message: `File queued for embedding: ${params.fileName}`,
+        message: `Arquivo na fila de processamento: ${params.fileName}`,
       }
     } catch (error) {
       if (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 // Fading Image Component
-const FadingImage = ({  alt = "Fading image", className = "" }) => {
+const FadingImage = ({  alt = "Imagem em transição", className = "" }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [shouldShow, setShouldShow] = useState(true);
 
@@ -31,7 +31,7 @@ const FadingImage = ({  alt = "Fading image", className = "" }) => {
       isVisible ? 'opacity-100' : 'opacity-0'
     }`}>
       <img
-        src="/nomad-primary.svg"
+        src="/vetorizando-logo.png"
         alt={alt}
         className={`w-64 h-64 object-contain ${className}`}
       />

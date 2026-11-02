@@ -24,11 +24,11 @@ export default function DebugInfoModal({ open, onClose }: DebugInfoModalProps) {
         const browserLine = `Browser: ${navigator.userAgent}`
         setDebugText(text + '\n' + browserLine)
       } else {
-        setDebugText('Failed to load debug info. Please try again.')
+        setDebugText('Não foi possível carregar as informações de depuração. Tente novamente.')
       }
       setLoading(false)
     }).catch(() => {
-      setDebugText('Failed to load debug info. Please try again.')
+      setDebugText('Não foi possível carregar as informações de depuração. Tente novamente.')
       setLoading(false)
     })
   }, [open])
@@ -52,20 +52,19 @@ export default function DebugInfoModal({ open, onClose }: DebugInfoModalProps) {
     <StyledModal
       open={open}
       onClose={onClose}
-      title="Debug Info"
+      title="Informações de depuração"
       icon={<IconBug className="size-8 text-desert-green" />}
-      cancelText="Close"
+      cancelText="Fechar"
       onCancel={onClose}
     >
       <p className="text-sm text-gray-500 mb-3 text-left">
-        This is non-sensitive system info you can share when reporting issues.
-        No passwords, IPs, or API keys are included.
+        Estas são informações não sensíveis do sistema, que você pode compartilhar ao relatar problemas. Senhas, IPs e chaves de API não são incluídos.
       </p>
 
       <textarea
         id="debug-info-text"
         readOnly
-        value={loading ? 'Loading...' : debugText}
+        value={loading ? 'Carregando...' : debugText}
         rows={18}
         className="w-full font-mono text-xs text-black bg-gray-50 border border-gray-200 rounded-md p-3 resize-none focus:outline-none text-left"
       />
@@ -79,12 +78,12 @@ export default function DebugInfoModal({ open, onClose }: DebugInfoModalProps) {
           {copied ? (
             <>
               <IconCheck className="size-4" />
-              Copied!
+              Copiado!
             </>
           ) : (
             <>
               <IconCopy className="size-4" />
-              Copy to Clipboard
+              Copiar para a área de transferência
             </>
           )}
         </button>
@@ -95,7 +94,7 @@ export default function DebugInfoModal({ open, onClose }: DebugInfoModalProps) {
           rel="noopener noreferrer"
           className="text-sm text-desert-green hover:underline"
         >
-          Open a GitHub Issue
+          Abrir a GitHub Issue
         </a>
       </div>
     </StyledModal>

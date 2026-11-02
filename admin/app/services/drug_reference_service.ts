@@ -1,5 +1,6 @@
 import db from '@adonisjs/lucid/services/db'
 import logger from '@adonisjs/core/services/logger'
+import { resolveDrugNameAlias } from '../utils/drug_name_aliases.js'
 import { rm } from 'node:fs/promises'
 import type { Job } from 'bullmq'
 import { QueueService } from './queue_service.js'
@@ -74,7 +75,8 @@ export class DrugReferenceService {
     const limit = options.limit ?? 50
     const offset = options.offset ?? 0
     const scope = options.scope ?? 'name'
-    const normalized = normalizeDrugName(query, null) ?? query.trim()
+    const resolvedQuery = resolveDrugNameAlias(query)
+    const normalized = normalizeDrugName(resolvedQuery, null) ?? resolvedQuery.trim()
 
     if (!normalized || normalized.length === 0) return []
 
@@ -518,7 +520,7 @@ export class DrugReferenceService {
       return {
         job: undefined,
         created: false,
-        message: 'Nothing downloaded — run Download FDA data first.',
+        message: 'Nada foi baixado — use primeiro Baixar dados da FDA.',
         nothingDownloaded: true,
       }
     }
@@ -543,7 +545,7 @@ export class DrugReferenceService {
       return {
         job: undefined,
         created: false,
-        message: 'Nothing downloaded — run Download FDA data first.',
+        message: 'Nada foi baixado — use primeiro Baixar dados da FDA.',
         nothingDownloaded: true,
       }
     }
@@ -717,8 +719,8 @@ export class DrugReferenceService {
       success,
       rowsDropped,
       message: success
-        ? `Uninstalled FDA drug reference (${rowsDropped} labels removed).`
-        : `Uninstall completed with ${errors.length} issue(s): ${errors.join('; ')}`,
+        ? `Referência de medicamentos desinstalada (${rowsDropped} bulas removidas).`
+        : `Desinstalação concluída com ${errors.length} problema(s): ${errors.join('; ')}`,
     }
   }
 

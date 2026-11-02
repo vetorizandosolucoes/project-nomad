@@ -17,6 +17,6 @@ export default class NomadMdController {
     // Empty request strings arrive as undefined (AdonisJS null-coerces them);
     // treat that as an explicit "clear the file".
     await this.nomadMdService.write(content ?? '')
-    return response.status(200).json({ success: true, message: 'NOMAD.md saved successfully' })
+    return response.status(200).json({ success: true, message: 'NOMAD.md salvo com sucesso' })
   }
 }

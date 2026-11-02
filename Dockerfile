@@ -27,6 +27,8 @@ RUN npm ci --omit=dev
 FROM base AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules /app/node_modules
+# Cache-bust for the admin source copy (pass --build-arg SRC_REV=<timestamp>)
+ARG SRC_REV=0
 ADD admin/ ./
 # Regenerate the curated drug-reference data modules
 # (app/data/{conditions,natural_remedies,home_remedies}.ts) from their single
@@ -102,6 +104,7 @@ RUN echo "{\"version\":\"${VERSION}\"}" > /app/version.json
 
 # Copy docs and README for access within the container
 COPY admin/docs /app/docs
+COPY collections/ /app/collections/
 COPY README.md /app/README.md
 
 # Empty Calibre library, seeded into storage/books on Calibre-Web install

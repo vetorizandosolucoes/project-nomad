@@ -44,7 +44,7 @@ export default class ConditionsController {
     try {
       const condition = this.service.findCondition(slug)
       if (!condition) {
-        return response.notFound({ error: 'Condition not found' })
+        return response.notFound({ error: 'Situação não encontrada' })
       }
 
       const [result, drugRowCount, remediesOn] = await Promise.all([
@@ -64,7 +64,7 @@ export default class ConditionsController {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`[ConditionsController] show(${slug}) failed: ${msg}`)
-      return response.internalServerError({ error: 'Could not load condition' })
+      return response.internalServerError({ error: 'Não foi possível carregar a situação' })
     }
   }
 
@@ -94,7 +94,7 @@ export default class ConditionsController {
       if (params.slug) {
         const result = await this.service.drugsForSlug(params.slug, params.limit, filterOpts)
         if (!result) {
-          return response.notFound({ error: 'Condition not found' })
+          return response.notFound({ error: 'Situação não encontrada' })
         }
         return remediesOn ? result : { ...result, remedies: [] }
       }

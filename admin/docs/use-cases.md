@@ -1,201 +1,198 @@
-# What Can You Do With NOMAD?
+# O que você pode fazer com o sistema?
 
-NOMAD is designed to be your information lifeline when internet isn't available. Here's how different people use it.
-
----
-
-## Emergency Preparedness
-
-When disasters strike, internet and cell service often go down first. NOMAD keeps critical information at your fingertips.
-
-**What you can do:**
-- Look up first aid and emergency medical procedures
-- Access survival guides and emergency protocols
-- Find information about water purification, food storage, shelter building
-- Use offline maps to navigate when GPS services are degraded
-- Research plant identification, weather patterns, radio frequencies
-- Upload emergency plans and protocols to the Knowledge Base for quick AI-assisted reference
-
-**Recommended content:**
-- Medical Library ZIM collection
-- Survival/Prepper reference guides
-- Maps for your region and evacuation routes
-- Wikipedia (searchable for almost any topic)
+O sistema foi feito para ser a sua fonte de informação quando não há internet. Veja como pessoas diferentes o usam.
 
 ---
 
-## Homeschooling and Education
+## Preparação para emergências
 
-Teach your children anywhere, with or without internet. Complete curriculum available offline.
+Em desastres, a internet e o sinal de celular costumam ser os primeiros a cair. O sistema mantém as informações importantes ao seu alcance.
 
-**What you can do:**
-- Access Khan Academy's full course library (math, science, reading, history)
-- Track progress for multiple students
-- Supplement with Wikipedia for research projects
-- Use the AI as a patient tutor for any subject
-- Access classic literature through Project Gutenberg
-- Upload curriculum guides to the Knowledge Base so the AI can help answer curriculum-specific questions
+**O que você pode fazer:**
+- Consultar primeiros socorros e procedimentos médicos de emergência
+- Acessar guias de sobrevivência e protocolos de emergência
+- Encontrar informações sobre purificação de água, armazenamento de alimentos e construção de abrigos
+- Usar mapas offline quando os serviços de GPS estiverem instáveis
+- Pesquisar identificação de plantas, clima e frequências de rádio
+- Enviar planos e protocolos de emergência à Base de conhecimento para consulta rápida com a IA
 
-**Recommended content:**
-- Khan Academy courses via Kolibri
-- Wikipedia for Schools (curated for younger learners)
-- Project Gutenberg (classic books)
-- Educational ZIM collections
-
-**Tip:** Create separate Kolibri accounts for each child to track their individual progress.
+**Conteúdo recomendado:**
+- Biblioteca em português (medicina)
+- Coleções de medicina e de sobrevivência (em inglês)
+- Mapas da sua região e rotas de evacuação
+- Wikipédia em português
 
 ---
 
-## Off-Grid Living
+## Ensino em casa e educação
 
-Living away from reliable internet doesn't mean living without information.
+Ensine em qualquer lugar, com ou sem internet.
 
-**What you can do:**
-- Research DIY projects and repairs
-- Look up gardening, animal husbandry, food preservation
-- Access medical references for remote healthcare
-- Learn new skills through educational videos
-- Get AI help with planning and problem-solving
+**O que você pode fazer:**
+- Acessar cursos da Khan Academy (matemática, ciências, leitura, história)
+- Acompanhar o progresso de vários alunos
+- Usar a Wikipédia em trabalhos de pesquisa
+- Usar a IA como um tutor paciente em qualquer matéria
+- Acessar literatura clássica
+- Enviar guias de currículo à Base de conhecimento para a IA responder com base neles
 
-**Recommended content:**
-- How-to and DIY reference collections
-- Medical and first aid guides
-- Agricultural and homesteading references
-- Maps for your rural area
-- Practical skills courses in Kolibri
+**Conteúdo recomendado:**
+- Cursos da Khan Academy pelo Kolibri
+- Vikidia (enciclopédia para crianças e jovens)
+- Wikilivros e Wikiversidade
+- Wikisource (literatura em português)
 
----
-
-## Remote Work Sites
-
-Construction sites, research stations, ships, and remote facilities often lack reliable internet.
-
-**What you can do:**
-- Access technical references and documentation
-- Use AI for writing assistance and analysis
-- Upload technical manuals and SOPs to the Knowledge Base for document-aware AI responses
-- Look up regulations, standards, and procedures
-- Provide educational resources for workers
-- Maintain communication records with note-taking apps
-
-**Recommended content:**
-- Industry-specific technical references
-- Relevant Wikipedia categories
-- Maps of work areas
-- Documentation and compliance guides
+**Dica:** crie uma conta do Kolibri para cada criança, para acompanhar o progresso individual.
 
 ---
 
-## Travel and Expeditions
+## Vida fora da rede
 
-International travel, cruises, camping trips — stay informed anywhere.
+Morar longe de uma boa conexão não significa ficar sem informação.
 
-**What you can do:**
-- Access maps without expensive roaming data
-- Research destinations, history, and culture
-- Translate concepts with AI assistance
-- Identify plants, animals, and geological features
-- Access travel health information
+**O que você pode fazer:**
+- Pesquisar projetos e consertos
+- Consultar jardinagem, criação de animais e conservação de alimentos
+- Acessar referências médicas para locais afastados
+- Aprender novas habilidades com vídeos educativos
+- Pedir ajuda à IA para planejar e resolver problemas
 
-**Recommended content:**
-- Maps for destination countries/regions
-- Wikipedia in relevant languages
-- Medical/health references
-- Cultural and historical content
-
----
-
-## Privacy-Conscious Users
-
-Some people simply prefer to keep their searches and questions private.
-
-**What you can do:**
-- Search Wikipedia without being tracked
-- Ask AI questions that stay on your own hardware
-- Upload sensitive documents to the Knowledge Base — they never leave your server
-- Learn about sensitive topics privately
-- Keep your intellectual curiosity to yourself
-
-**How it works:**
-- All data stays on your server
-- No search history sent to companies
-- No AI conversations leave your network — the AI chat is built into the Command Center
-- All Knowledge Base processing happens locally
-- You control your own information
+**Conteúdo recomendado:**
+- Coleções de consertos e de agricultura (em inglês)
+- Guias médicos e de primeiros socorros
+- Mapas da sua região
+- Cursos de habilidades práticas no Kolibri
 
 ---
 
-## Medical Reference
+## Locais de trabalho remotos
 
-When you can't reach a doctor, having reliable medical information can be critical.
+Obras, estações de pesquisa, navios e instalações remotas costumam ter internet instável.
 
-**What you can access:**
-- NHS Medicines A-Z (drug information and interactions)
-- Medical Library (field medicine, emergency procedures)
-- First aid guides
-- Anatomy and physiology references
-- Disease and symptom information
+**O que você pode fazer:**
+- Acessar referências técnicas e documentação
+- Usar a IA para ajudar a escrever e analisar
+- Enviar manuais técnicos e procedimentos à Base de conhecimento, para respostas baseadas nos seus documentos
+- Consultar normas, padrões e procedimentos
+- Oferecer recursos educacionais à equipe
+- Manter registros com aplicativos de anotações
 
-**Important:** Medical references are for information only. They don't replace professional medical care. In emergencies, always seek professional help when possible.
-
-**Recommended content:**
-- Medical Essentials ZIM collection
-- NHS Medicines reference
-- First aid and emergency medicine guides
-
----
-
-## Academic Research
-
-Students and researchers can work without depending on university networks.
-
-**What you can do:**
-- Access Wikipedia's extensive article database
-- Use AI for research assistance and summarization
-- Upload research papers to the Knowledge Base for AI-assisted analysis and cross-referencing
-- Work on papers and projects offline
-- Cross-reference multiple sources
-- Take notes with built-in tools
-
-**Recommended content:**
-- Full Wikipedia
-- Academic and educational references
-- Subject-specific ZIM collections
-- Note-taking apps (FlatNotes)
+**Conteúdo recomendado:**
+- Referências técnicas do seu setor
+- Categorias relevantes da Wikipédia
+- Mapas das áreas de trabalho
+- Guias de documentação e conformidade
 
 ---
 
-## Setting Up for Your Use Case
+## Viagens e expedições
 
-### Step 1: Identify Your Needs
-What situations might you face without internet? What information would you need?
+Viagens internacionais, cruzeiros e acampamentos: fique informado em qualquer lugar.
 
-### Step 2: Prioritize Content
-Storage is limited. Focus on:
-1. Critical safety information (medical, emergency)
-2. Content matching your primary use case
-3. General reference (Wikipedia)
-4. Nice-to-have additions
+**O que você pode fazer:**
+- Acessar mapas sem gastar com roaming
+- Pesquisar destinos, história e cultura
+- Traduzir conceitos com a ajuda da IA
+- Identificar plantas, animais e formações geológicas
+- Consultar informações de saúde para viagens
 
-### Step 3: Upload Relevant Documents
-Add your own documents to the [Knowledge Base](/knowledge-base) — emergency plans, technical manuals, curriculum guides, or research papers. The AI can reference these when you ask questions.
-
-### Step 4: Download While You Can
-Keep your server updated while you have internet. You never know when you'll need to go offline.
-
-### Step 5: Practice
-Try using NOMAD before you need it. Familiarity with the tools makes them more useful in a crisis.
+**Conteúdo recomendado:**
+- Mapas dos países de destino
+- Wikivoyage e Wikipédia em português
+- Referências médicas
+- Conteúdo cultural e histórico
 
 ---
 
-## Need Something Specific?
+## Quem valoriza a privacidade
 
-NOMAD content is customizable. If you don't see what you need:
+Algumas pessoas simplesmente preferem manter suas pesquisas e perguntas privadas.
 
-1. **Browse [Content Explorer](/settings/zim/remote-explorer)** — Thousands of ZIM files including Wikipedia packages
-2. **Check [Content Manager](/settings/zim)** — Manage your installed content
-3. **Browse Kolibri channels** — Educational content for many subjects
-4. **Upload your own documents** — Add files to the [Knowledge Base](/knowledge-base) for AI-aware reference
-5. **Request features** — Let us know what content would help you on [Discord](https://discord.com/invite/crosstalksolutions)
+**O que você pode fazer:**
+- Pesquisar na Wikipédia sem ser rastreado
+- Fazer perguntas à IA que ficam no seu hardware
+- Enviar documentos sensíveis à Base de conhecimento, sem que saiam do servidor
+- Estudar assuntos delicados com privacidade
 
-Your offline server, your content choices.
+**Como funciona:**
+- Todos os dados ficam no seu servidor
+- Nenhum histórico de pesquisa é enviado a empresas
+- As conversas com a IA não saem da sua rede
+- Todo o processamento da Base de conhecimento é local
+- Você controla as suas informações
+
+---
+
+## Referência médica
+
+Quando não é possível falar com um médico, ter informações médicas confiáveis pode ser muito importante.
+
+**O que você pode acessar:**
+- Referência de medicamentos, com as bulas da FDA (em inglês) e busca por nome ou situação
+- Wikipédia: Medicina, em português
+- Guias de primeiros socorros
+- Referências de anatomia e fisiologia
+- Informações sobre doenças e sintomas
+
+**Importante:** as referências médicas são apenas informativas e não substituem o atendimento profissional. Em emergências, procure ajuda profissional sempre que possível. Como medicamentos e marcas variam entre países, confira sempre o produto que você tem em mãos.
+
+**Conteúdo recomendado:**
+- Biblioteca em português (Wikipédia: Medicina)
+- Referência de medicamentos
+- Guias de primeiros socorros e medicina de emergência (em inglês)
+
+---
+
+## Pesquisa acadêmica
+
+Estudantes e pesquisadores podem trabalhar sem depender da rede da universidade.
+
+**O que você pode fazer:**
+- Acessar a Wikipédia
+- Usar a IA para ajudar na pesquisa e em resumos
+- Enviar artigos à Base de conhecimento para análise e comparação com a IA
+- Trabalhar em textos e projetos offline
+- Comparar várias fontes
+- Fazer anotações com as ferramentas integradas
+
+**Conteúdo recomendado:**
+- Wikipédia completa em português
+- Referências acadêmicas e educacionais
+- Coleções ZIM por assunto
+- Aplicativos de anotações (Notas)
+
+---
+
+## Como configurar para o seu caso
+
+### Passo 1: identifique suas necessidades
+Em quais situações você pode ficar sem internet? De quais informações precisaria?
+
+### Passo 2: priorize o conteúdo
+O armazenamento é limitado. Foque em:
+1. Informações importantes de segurança (saúde, emergências)
+2. Conteúdo do seu uso principal
+3. Referência geral (Wikipédia)
+4. O que seria bom ter
+
+### Passo 3: envie documentos relevantes
+Adicione seus documentos à [Base de conhecimento](/knowledge-base): planos de emergência, manuais técnicos, guias de currículo ou artigos. A IA pode consultá-los quando você perguntar.
+
+### Passo 4: baixe enquanto pode
+Mantenha o servidor atualizado enquanto tem internet. Nunca se sabe quando será preciso ficar offline.
+
+### Passo 5: pratique
+Use o sistema antes de precisar dele. Conhecer as ferramentas as torna mais úteis em uma crise.
+
+---
+
+## Precisa de algo específico?
+
+O conteúdo é personalizável. Se não encontrou o que precisa:
+
+1. **Veja o [Explorador de conteúdo](/settings/zim/remote-explorer)** — milhares de arquivos ZIM, com filtro por idioma
+2. **Confira o [Gerenciador de conteúdo](/settings/zim)** — gerencie o conteúdo instalado
+3. **Veja os canais do Kolibri** — conteúdo educacional de muitas matérias
+4. **Envie seus próprios documentos** — adicione arquivos à [Base de conhecimento](/knowledge-base)
+
+Seu servidor offline, suas escolhas de conteúdo.

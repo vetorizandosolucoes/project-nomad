@@ -14,11 +14,11 @@ export default function EasySetupWizardComplete() {
 
   return (
     <AppLayout>
-      <Head title="Easy Setup Wizard Complete" />
+      <Head title="Configuração rápida concluída" />
       {!isOnline && (
         <Alert
-          title="No Internet Connection"
-          message="It looks like you're not connected to the internet. Installing apps and downloading content will require an internet connection."
+          title="Sem conexão com a internet"
+          message="Parece que você não está conectado à internet. Instalar aplicativos e baixar conteúdo exige conexão com a internet."
           type="warning"
           variant="solid"
           className="mb-8"
@@ -26,15 +26,15 @@ export default function EasySetupWizardComplete() {
       )}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-surface-primary rounded-md shadow-md p-6">
-          <StyledSectionHeader title="App Installation Activity" className=" mb-4" />
+          <StyledSectionHeader title="Atividade de instalação de aplicativos" className=" mb-4" />
           <InstallActivityFeed
             activity={installActivity}
             className="!shadow-none border-desert-stone-light border"
           />
           <ActiveDownloads withHeader />
           <Alert
-            title="Running in the Background"
-            message='Feel free to leave this page at any time - your app installs and downloads will continue in the background! Please note, the Information Library (if installed) may be unavailable until all initial downloads complete.'
+            title="Rodando em segundo plano"
+            message='Você pode sair desta página a qualquer momento — as instalações e os downloads continuam em segundo plano! A Biblioteca de informações (se instalada) pode ficar indisponível até que os downloads iniciais terminem.'
             type="info"
             variant="solid"
             className='mt-12'
@@ -42,7 +42,7 @@ export default function EasySetupWizardComplete() {
           <div className="flex justify-center mt-8 pt-4 border-t border-desert-stone-light">
             <div className="flex space-x-4">
               <StyledButton onClick={() => router.visit('/home')} icon="IconHome">
-                Go to Home
+                Ir para o início
               </StyledButton>
             </div>
           </div>

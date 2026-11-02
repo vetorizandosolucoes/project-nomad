@@ -29,7 +29,7 @@ export default function InfoTooltip({
         onMouseLeave={() => setIsVisible(false)}
         onFocus={() => setIsVisible(true)}
         onBlur={() => setIsVisible(false)}
-        aria-label="More information"
+        aria-label="Mais informações"
       >
         <IconInfoCircle className="w-4 h-4" />
       </button>

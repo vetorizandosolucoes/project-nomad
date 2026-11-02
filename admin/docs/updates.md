@@ -1,67 +1,65 @@
-# Keeping NOMAD Updated
+# Como manter o sistema atualizado
 
-NOMAD works best when it's kept current while you have internet, so it's ready with the latest software and content the next time you go offline. This page explains what can be updated, how to do it on demand, and how to let NOMAD handle it for you automatically.
-
----
-
-## The three kinds of updates
-
-There are three separate things that can be updated, and you control each one independently:
-
-1. **Software (the core)** — NOMAD itself: the Command Center, new features, bug fixes, and security improvements.
-2. **Apps** — the installable apps from the [Supply Depot](/supply-depot) (Kiwix, the AI Assistant, and any others you've added).
-3. **Content** — your offline material: Wikipedia and other Kiwix libraries, and downloaded map regions.
-
-You can update any of these on demand, or set any of them to update automatically.
+O sistema funciona melhor quando é atualizado enquanto você tem internet, para estar pronto com o software e o conteúdo mais recentes da próxima vez que ficar offline. Esta página explica o que pode ser atualizado e como fazer isso manual ou automaticamente.
 
 ---
 
-## Updating on demand
+## Os três tipos de atualização
 
-To check for and install updates yourself:
+Há três coisas que podem ser atualizadas, e você controla cada uma separadamente:
 
-1. Go to **[Settings → Check for Updates](/settings/update)**.
-2. If a software update is available, click to install it. NOMAD downloads the update and restarts (usually 2–5 minutes).
-3. Apps can be updated from their card in the [Supply Depot](/supply-depot) using **Manage › Update**.
-4. Content is managed from **Settings → Content Manager** and **Content Explorer**, where you can download newer versions of installed libraries and maps.
-
-If a software or app update ever fails, NOMAD is designed to recover gracefully — the previous working version keeps running, so your server stays up.
+1. **Software (o núcleo)** — o próprio sistema: a Central de Comando, novos recursos, correções de erros e melhorias de segurança.
+2. **Aplicativos** — os aplicativos instaláveis da [Loja de aplicativos](/supply-depot) (Kiwix, Assistente de IA e outros que você adicionou).
+3. **Conteúdo** — seu material offline: a Wikipédia, outras bibliotecas do Kiwix e as regiões de mapa baixadas.
 
 ---
 
-## Automatic updates
+## Atualizar manualmente
 
-NOMAD can keep itself current without you having to remember to check. **Automatic updates are opt-in and off by default** — nothing updates on its own until you turn it on. You manage all of it from **Settings → Updates**.
+1. Vá para **[Configurações → Atualização do sistema](/settings/update)**.
+2. Se houver uma atualização de software, clique para instalar. O download é feito e o sistema reinicia (geralmente de 2 a 5 minutos).
+3. Atualize os aplicativos no cartão de cada um, na [Loja de aplicativos](/supply-depot), em **Gerenciar › Atualizar**.
+4. Gerencie o conteúdo em **Configurações → Gerenciador de conteúdo** e **Explorador de conteúdo**, onde é possível baixar versões mais novas das bibliotecas e dos mapas.
 
-A few things are true across all three:
+Se a atualização de software ou de um aplicativo falhar, a versão anterior continua funcionando, e o servidor não sai do ar.
 
-- **You choose a time window.** Automatic updates only run during the hours you set, so they never interrupt you mid-use.
-- **Major versions are never automatic.** Only minor and patch updates apply on their own; a big version jump always waits for you to do it manually, on purpose.
-- **Safety checks come first.** Before applying anything, NOMAD confirms there's enough disk space and that no other update, download, or install is already in progress.
-- **Being offline is harmless.** If NOMAD can't reach the internet to check, it simply skips that round and tries again later.
-
-### Automatic software (core) updates
-
-Turn this on from **Settings → Updates**. When enabled, NOMAD updates its own core to newer releases within the same major version, during your chosen window, after a configurable **cool-off** period (so a brand-new release has time to prove itself before your server takes it). The same page shows the toggle, the window, the cool-off setting, and live status. If updates fail repeatedly for a real reason, NOMAD turns the feature back off and lets you know rather than retrying forever.
-
-### Automatic app updates
-
-App auto-updates are opt-in at **two levels**: a master switch in **Settings → Updates**, *and* a per-app toggle on each app's card in the [Supply Depot](/supply-depot). Both have to be on for an app to update itself. App updates share the same update window and cool-off as the core, apply only minor and patch versions, and back off automatically for any individual app that keeps failing.
-
-### Automatic content updates
-
-Installed Wikipedia/ZIM libraries and map regions can refresh themselves too. Because content downloads are large (often many gigabytes), content updates run on their **own dedicated overnight window** with a **bandwidth cap**, separate from the software and app schedule. NOMAD checks the upstream Kiwix and map catalogs directly, and when a Wikipedia library is replaced with a newer version, it keeps the AI Knowledge Base in sync automatically.
+> **Atenção nesta versão personalizada:** o painel usa uma imagem local com a tradução e a marca. Uma atualização do software pelo sistema pode não se aplicar a ela ou substituí-la pela versão original, em inglês.
 
 ---
 
-## Early Access Channel
+## Atualizações automáticas
 
-Want new features before they reach the stable release? Enable the **Early Access Channel** from the [Check for Updates](/settings/update) page to receive release-candidate builds. Early-access builds may contain rough edges — you can switch back to stable at any time.
+**As atualizações automáticas vêm desativadas.** Nada é atualizado sozinho até você ativar, em **Configurações → Atualização do sistema**.
+
+Vale para os três tipos:
+
+- **Você escolhe uma janela de horário.** As atualizações só rodam nos horários definidos.
+- **Versões principais nunca são automáticas.** Só atualizações menores e correções são aplicadas sozinhas.
+- **Há verificações de segurança.** Antes de aplicar, o sistema confere se há espaço em disco e se não há outra atualização, download ou instalação em andamento.
+- **Ficar offline não causa problema.** Sem internet, o sistema pula a verificação e tenta depois.
+
+### Software (núcleo)
+
+Quando ativado, o sistema atualiza o próprio núcleo para versões mais novas dentro da mesma versão principal, na janela escolhida, depois de um **período de espera** configurável. Se as atualizações falharem repetidamente, o recurso é desativado e você é avisado.
+
+### Aplicativos
+
+A atualização automática de aplicativos tem **dois níveis**: uma chave geral em **Configurações → Atualização do sistema** e uma chave no cartão de cada aplicativo, na [Loja de aplicativos](/supply-depot). As duas precisam estar ativadas. Usa a mesma janela e o mesmo período de espera do núcleo.
+
+### Conteúdo
+
+As bibliotecas da Wikipédia/ZIM e as regiões de mapa também podem se atualizar sozinhas. Como os downloads são grandes, o conteúdo tem **sua própria janela de horário** e um **limite de dados**. Quando uma biblioteca da Wikipédia é substituída por uma versão mais nova, a Base de conhecimento da IA é sincronizada automaticamente.
 
 ---
 
-## Before you go offline
+## Canal de acesso antecipado
 
-Whatever you choose, the habit that matters most is simple: **update while you still have internet.** Whether you do it by hand or let automatic updates handle it, make sure your software and content are current before you head somewhere without a connection. When you're offline, you'll have the last synced versions of everything ready to go.
+Para receber novos recursos antes da versão estável, ative o **acesso antecipado** na página de [atualização do sistema](/settings/update). Essas versões podem ter problemas, e você pode voltar para a estável quando quiser.
 
-**[Check for Updates →](/settings/update)** · **[See what's new in each version →](/docs/release-notes)**
+---
+
+## Antes de ficar offline
+
+O hábito mais importante é simples: **atualize enquanto ainda tem internet.** Quando ficar offline, você terá as últimas versões sincronizadas de tudo.
+
+**[Verificar atualizações →](/settings/update)**

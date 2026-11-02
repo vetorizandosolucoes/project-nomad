@@ -73,7 +73,7 @@ export default class DrugReferenceController {
     try {
       const label = await this.service.find(id)
       if (!label) {
-        return response.notFound({ error: 'Drug label not found' })
+        return response.notFound({ error: 'Bula não encontrada' })
       }
 
       // Reverse link — the other direction of the symbiotic relationship: which
@@ -88,7 +88,7 @@ export default class DrugReferenceController {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`[DrugReferenceController] show(${id}) failed: ${msg}`)
-      return response.internalServerError({ error: 'Could not load drug label' })
+      return response.internalServerError({ error: 'Não foi possível carregar a bula' })
     }
   }
 
@@ -126,7 +126,7 @@ export default class DrugReferenceController {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`[DrugReferenceController] status failed: ${msg}`)
-      return response.internalServerError({ error: 'Could not read ingest status' })
+      return response.internalServerError({ error: 'Não foi possível ler o status da indexação' })
     }
   }
 
@@ -187,7 +187,7 @@ export default class DrugReferenceController {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`[DrugReferenceController] download trigger failed: ${msg}`)
-      return response.internalServerError({ error: 'Could not trigger download' })
+      return response.internalServerError({ error: 'Não foi possível iniciar o download' })
     }
   }
 
@@ -207,7 +207,7 @@ export default class DrugReferenceController {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`[DrugReferenceController] ingest trigger failed: ${msg}`)
-      return response.internalServerError({ error: 'Could not trigger ingest' })
+      return response.internalServerError({ error: 'Não foi possível iniciar a indexação' })
     }
   }
 
@@ -227,7 +227,7 @@ export default class DrugReferenceController {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`[DrugReferenceController] reset-ingest failed: ${msg}`)
-      return response.internalServerError({ error: 'Could not reset ingest' })
+      return response.internalServerError({ error: 'Não foi possível reiniciar a indexação' })
     }
   }
 
@@ -252,7 +252,7 @@ export default class DrugReferenceController {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`[DrugReferenceController] uninstall failed: ${msg}`)
-      return response.internalServerError({ error: 'Could not uninstall drug reference' })
+      return response.internalServerError({ error: 'Não foi possível desinstalar a Referência de medicamentos' })
     }
   }
 

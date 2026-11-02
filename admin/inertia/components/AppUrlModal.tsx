@@ -33,7 +33,7 @@ export default function AppUrlModal({ open, service, onClose, onSaved, showError
   const trimmed = value.trim()
   const normalized = normalizeCustomUrl(value)
   const isInvalid = trimmed.length > 0 && !normalized
-  // What clicking "Open" will actually resolve to once saved.
+  // What clicking "Abrir" will actually resolve to once saved.
   const previewLink = service ? getServiceLink(service.ui_location || '', value) : ''
   const usingDefault = !normalized
 
@@ -44,40 +44,38 @@ export default function AppUrlModal({ open, service, onClose, onSaved, showError
     const result = await api.setServiceCustomUrl(service.service_name, trimmed ? trimmed : null)
     setSubmitting(false)
     if (!result?.success) {
-      showError('Failed to save custom URL.')
+      showError('Não foi possível salvar a URL personalizada.')
       return
     }
     onSaved()
   }
 
-  const appName = service?.friendly_name || service?.service_name || 'this app'
+  const appName = service?.friendly_name || service?.service_name || 'este aplicativo'
 
   return (
     <StyledModal
-      title="Set Custom URL"
+      title="Definir URL personalizada"
       open={open}
       onCancel={onClose}
       onClose={onClose}
-      cancelText="Cancel"
+      cancelText="Cancelar"
       onConfirm={handleSave}
       confirmVariant="primary"
-      confirmText="Save"
+      confirmText="Salvar"
       confirmIcon="IconCheck"
       confirmLoading={submitting}
       confirmDisabled={isInvalid}
     >
       <div className="space-y-4 text-sm">
         <p className="text-text-muted">
-          Set where <span className="font-medium text-text-primary">{appName}</span> opens from — useful
-          if you reach it through a reverse proxy or local DNS. Leave this empty to use the default
-          address ({service?.ui_location ? `host + port ${service.ui_location}` : 'host + port'}).
+          Defina de onde <span className="font-medium text-text-primary">{appName}</span> abre — útil se você o acessa por proxy reverso ou DNS local. Deixe vazio para usar o endereço padrão ({service?.ui_location ? `host + porta ${service.ui_location}` : 'host + porta'}).
         </p>
 
         <div>
           <div className="flex items-end gap-2">
             <Input
               name="customUrl"
-              label="Custom URL"
+              label="URL personalizada"
               placeholder="http://jellyfin.myhomelab.net"
               maxLength={255}
               value={value}
@@ -87,23 +85,22 @@ export default function AppUrlModal({ open, service, onClose, onSaved, showError
             />
             {value.length > 0 && (
               <StyledButton size="sm" variant="ghost" icon="IconX" onClick={() => setValue('')} className="mb-1.5">
-                Clear
+                Limpar
               </StyledButton>
             )}
           </div>
           {isInvalid ? (
             <p className="mt-1.5 text-xs text-red-500">
-              Enter a valid http(s) address (e.g. https://jellyfin.myhomelab.net). A bare host like
-              "jellyfin.lan" becomes http://jellyfin.lan.
+              Digite um endereço http(s) válido (por exemplo, https://jellyfin.minharede.net). Um host simples como "jellyfin.lan" vira http://jellyfin.lan.
             </p>
           ) : (
             <>
               <p className="mt-1.5 text-xs text-text-muted">
-                No scheme? We'll default to <span className="font-mono">http://</span>.</p>
+                Sem protocolo? Usaremos <span className="font-mono">http://</span>.</p>
               <p className="mt-1.5 text-xs text-text-muted">
                 Opens as:{' '}
                 <span className="font-mono break-all text-text-primary">{previewLink}</span>
-                {usingDefault ? ' (default)' : ''}
+                {usingDefault ? ' (padrão)' : ''}
               </p>
             </>
           )}

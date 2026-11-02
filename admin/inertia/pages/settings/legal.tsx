@@ -4,14 +4,14 @@ import SettingsLayout from '~/layouts/SettingsLayout'
 export default function LegalPage() {
   return (
     <SettingsLayout>
-      <Head title="Legal Notices | Project NOMAD" />
+      <Head title="Avisos legais" />
       <div className="xl:pl-72 w-full">
-        <main className="px-12 py-6 max-w-4xl">
-          <h1 className="text-4xl font-semibold mb-8">Legal Notices</h1>
+        <main className="px-4 py-6 md:px-8 max-w-4xl">
+          <h1 className="text-4xl font-semibold mb-8">Avisos legais</h1>
 
           {/* License Agreement */}
           <section className="mb-10">
-            <h2 className="text-2xl font-semibold mb-4">License Agreement</h2>
+            <h2 className="text-2xl font-semibold mb-4">Contrato de licença</h2>
             <p className="text-text-primary mb-3">Copyright 2024-2026 Crosstalk Solutions, LLC</p>
             <p className="text-text-primary mb-3">
               Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -32,39 +32,38 @@ export default function LegalPage() {
 
           {/* Third-Party Software */}
           <section className="mb-10">
-            <h2 className="text-2xl font-semibold mb-4">Third-Party Software Attribution</h2>
+            <h2 className="text-2xl font-semibold mb-4">Atribuição de software de terceiros</h2>
             <p className="text-text-primary mb-4">
-              Project NOMAD&trade; integrates the following open source projects. We are grateful to
-              their developers and communities:
+              Este sistema é baseado no Project NOMAD&trade; e integra os seguintes projetos de código aberto. Agradecemos aos seus desenvolvedores e comunidades:
             </p>
             <ul className="space-y-3 text-text-primary">
               <li>
-                <strong>Kiwix</strong> - Offline Wikipedia and content reader (GPL-3.0 License)
+                <strong>Kiwix</strong> - Leitor offline de Wikipédia e outros conteúdos (licença GPL-3.0)
                 <br />
                 <a href="https://kiwix.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://kiwix.org</a>
               </li>
               <li>
-                <strong>Kolibri</strong> - Offline learning platform by Learning Equality (MIT License)
+                <strong>Kolibri</strong> - Plataforma de aprendizado offline da Learning Equality (licença MIT)
                 <br />
                 <a href="https://learningequality.org/kolibri" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://learningequality.org/kolibri</a>
               </li>
               <li>
-                <strong>Ollama</strong> - Local large language model runtime (MIT License)
+                <strong>Ollama</strong> - Execução local de grandes modelos de linguagem (licença MIT)
                 <br />
                 <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://ollama.com</a>
               </li>
               <li>
-                <strong>CyberChef</strong> - Data analysis and encoding toolkit by GCHQ (Apache 2.0 License)
+                <strong>CyberChef</strong> - Ferramentas de análise e codificação de dados do GCHQ (licença Apache 2.0)
                 <br />
                 <a href="https://github.com/gchq/CyberChef" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://github.com/gchq/CyberChef</a>
               </li>
               <li>
-                <strong>FlatNotes</strong> - Self-hosted note-taking application (MIT License)
+                <strong>FlatNotes</strong> - Aplicativo de anotações auto-hospedado (licença MIT)
                 <br />
                 <a href="https://github.com/dullage/flatnotes" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://github.com/dullage/flatnotes</a>
               </li>
               <li>
-                <strong>Qdrant</strong> - Vector search engine for AI knowledge base (Apache 2.0 License)
+                <strong>Qdrant</strong> - Mecanismo de busca vetorial para a base de conhecimento da IA (licença Apache 2.0)
                 <br />
                 <a href="https://github.com/qdrant/qdrant" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://github.com/qdrant/qdrant</a>
               </li>
@@ -73,53 +72,46 @@ export default function LegalPage() {
 
           {/* Privacy Statement */}
           <section className="mb-10">
-            <h2 className="text-2xl font-semibold mb-4">Privacy Statement</h2>
+            <h2 className="text-2xl font-semibold mb-4">Declaração de privacidade</h2>
             <p className="text-text-primary mb-3">
-              Project NOMAD is designed with privacy as a core principle:
+              O Project NOMAD foi criado com a privacidade como princípio central:
             </p>
             <ul className="list-disc list-inside space-y-2 text-text-primary">
-              <li><strong>Zero Telemetry:</strong> NOMAD does not collect, transmit, or store any usage data, analytics, or telemetry.</li>
-              <li><strong>Local-First:</strong> All your data, downloaded content, AI conversations, and notes remain on your device.</li>
-              <li><strong>No Accounts Required:</strong> NOMAD operates without user accounts or authentication by default.</li>
-              <li><strong>Network Optional:</strong> An internet connection is only required to download content or updates. All installed features work fully offline.</li>
+              <li><strong>Sem telemetria:</strong> O sistema não coleta, transmite nem armazena dados de uso, análises ou telemetria.</li>
+              <li><strong>Local primeiro:</strong> todos os seus dados, conteúdos baixados, conversas com a IA e anotações ficam no seu dispositivo.</li>
+              <li><strong>Sem contas obrigatórias:</strong> o sistema funciona sem contas de usuário ou autenticação por padrão.</li>
+              <li><strong>Rede opcional:</strong> a conexão com a internet só é necessária para baixar conteúdo ou atualizações. Todos os recursos instalados funcionam totalmente offline.</li>
             </ul>
           </section>
 
-          {/* Content Disclaimer */}
+          {/* Conteúdo Disclaimer */}
           <section className="mb-10">
-            <h2 className="text-2xl font-semibold mb-4">Content Disclaimer</h2>
+            <h2 className="text-2xl font-semibold mb-4">Conteúdo Disclaimer</h2>
             <p className="text-text-primary mb-3">
-              Project NOMAD provides tools to download and access content from third-party sources
-              including Wikipedia, Wikibooks, medical references, educational platforms, and other
-              publicly available resources.
+              O Project NOMAD oferece ferramentas para baixar e acessar conteúdo de terceiros, incluindo Wikipédia, Wikibooks, referências médicas, plataformas educacionais e outros recursos públicos.
             </p>
             <p className="text-text-primary mb-3">
-              Crosstalk Solutions, LLC does not create, control, verify, or guarantee the accuracy,
-              completeness, or reliability of any third-party content. The inclusion of any content
-              does not constitute an endorsement.
+              A Crosstalk Solutions, LLC não cria, controla, verifica nem garante a precisão, a integridade ou a confiabilidade do conteúdo de terceiros. A inclusão de um conteúdo não significa endosso.
             </p>
             <p className="text-text-primary">
-              Users are responsible for evaluating the appropriateness and accuracy of any content
-              they download and use.
+              Cabe a quem usa avaliar a adequação e a precisão do conteúdo que baixa e utiliza.
             </p>
           </section>
 
           {/* Medical Disclaimer */}
           <section className="mb-10">
-            <h2 className="text-2xl font-semibold mb-4">Medical and Emergency Information Disclaimer</h2>
+            <h2 className="text-2xl font-semibold mb-4">Aviso sobre informações médicas e de emergência</h2>
             <p className="text-text-primary mb-3">
-              Some content available through NOMAD includes medical references, first aid guides,
-              and emergency preparedness information. This content is provided for general
-              informational purposes only.
+              Parte do conteúdo disponível inclui referências médicas, guias de primeiros socorros e informações de preparação para emergências. Esse conteúdo é apenas informativo.
             </p>
             <p className="text-text-primary mb-3 font-semibold">
-              This information is NOT a substitute for professional medical advice, diagnosis, or treatment.
+              Estas informações NÃO substituem aconselhamento, diagnóstico ou tratamento médico profissional.
             </p>
             <ul className="list-disc list-inside space-y-2 text-text-primary mb-3">
-              <li>Always seek the advice of qualified health providers with questions about medical conditions.</li>
-              <li>Never disregard professional medical advice or delay seeking it because of something you read in offline content.</li>
-              <li>In a medical emergency, call emergency services immediately if available.</li>
-              <li>Medical information may become outdated. Verify critical information with current professional sources when possible.</li>
+              <li>Sempre procure orientação de profissionais de saúde qualificados sobre condições médicas.</li>
+              <li>Nunca ignore a orientação médica profissional nem adie buscá-la por causa de algo que você leu no conteúdo offline.</li>
+              <li>Em uma emergência médica, ligue imediatamente para o serviço de emergência, se disponível.</li>
+              <li>As informações médicas podem ficar desatualizadas. Sempre que possível, confirme dados importantes em fontes profissionais atuais.</li>
             </ul>
           </section>
 
@@ -127,16 +119,15 @@ export default function LegalPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">Data Storage</h2>
             <p className="text-text-primary mb-3">
-              All data associated with Project NOMAD is stored locally on your device:
+              Todos os dados do sistema ficam armazenados localmente no seu dispositivo:
             </p>
             <ul className="list-disc list-inside space-y-2 text-text-primary">
-              <li><strong>Installation Directory:</strong> /opt/project-nomad</li>
-              <li><strong>Downloaded Content:</strong> /opt/project-nomad/storage</li>
-              <li><strong>Application Data:</strong> Stored in Docker volumes on your local system</li>
+              <li><strong>Pasta de instalação:</strong> /opt/project-nomad</li>
+              <li><strong>Downloaded Conteúdo:</strong> /opt/project-nomad/storage</li>
+              <li><strong>Dados do aplicativo:</strong> armazenados em volumes do Docker no seu sistema</li>
             </ul>
             <p className="text-text-primary mt-3">
-              You maintain full control over your data. Uninstalling NOMAD or deleting these
-              directories will permanently remove all associated data.
+              Você mantém controle total sobre seus dados. Desinstalar o sistema ou apagar estas pastas remove permanentemente todos os dados associados.
             </p>
           </section>
 

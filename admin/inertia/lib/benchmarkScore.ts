@@ -17,17 +17,17 @@ export function getScoreDisplay(type: BenchmarkType): {
   switch (type) {
     case 'system':
       return {
-        label: 'System Score',
+        label: 'Pontuação do sistema',
         isPartial: true,
-        cta: 'This is a partial result, not your NOMAD Score. Run a Full Benchmark to get your NOMAD Score.',
+        cta: 'Este é um resultado parcial, não a sua pontuação geral. Execute um benchmark completo para obter sua pontuação geral.',
       }
     case 'ai':
       return {
-        label: 'AI Score',
+        label: 'Pontuação de IA',
         isPartial: true,
-        cta: 'This is a partial result, not your NOMAD Score. Run a Full Benchmark to get your NOMAD Score.',
+        cta: 'Este é um resultado parcial, não a sua pontuação geral. Execute um benchmark completo para obter sua pontuação geral.',
       }
     default:
-      return { label: 'NOMAD Score', isPartial: false, cta: '' }
+      return { label: 'Pontuação geral', isPartial: false, cta: '' }
   }
 }

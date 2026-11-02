@@ -23,7 +23,7 @@ interface ChatInterfaceProps {
 // Sent as an ordinary turn, so it goes through retrieval, budgeting and
 // persistence like any other message. The cut-off answer is the newest turn in
 // history, which the budget keeps first.
-const CONTINUE_PROMPT = 'Continue exactly where you left off. Do not repeat what you already wrote.'
+const CONTINUE_PROMPT = 'Continue exatamente de onde parou. Não repita o que você já escreveu.'
 
 const MAX_VISION_IMAGES = 4
 const MAX_VISION_IMAGE_BYTES = 8 * 1024 * 1024
@@ -76,7 +76,7 @@ export default function ChatInterface({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if ((input.trim() || images.length > 0) && !isLoading) {
-      onSendMessage(input.trim() || 'Describe the attached image.', images)
+      onSendMessage(input.trim() || 'Descreva a imagem anexada.', images)
       setInput('')
       setImages([])
       if (imageInputRef.current) imageInputRef.current.value = ''
@@ -93,7 +93,7 @@ export default function ChatInterface({
 
     const availableSlots = MAX_VISION_IMAGES - images.length
     if (availableSlots <= 0) {
-      addNotification({ type: 'error', message: `You can attach up to ${MAX_VISION_IMAGES} images.` })
+      addNotification({ type: 'error', message: `Você pode anexar até ${MAX_VISION_IMAGES} imagens.` })
       return
     }
 
@@ -102,14 +102,14 @@ export default function ChatInterface({
       if (!SUPPORTED_VISION_TYPES.has(file.type)) {
         addNotification({
           type: 'error',
-          message: `${file.name} is not supported. Use JPEG, PNG, or WebP.`,
+          message: `${file.name} não é compatível. Use JPEG, PNG ou WebP.`,
         })
         continue
       }
       if (file.size > MAX_VISION_IMAGE_BYTES) {
         addNotification({
           type: 'error',
-          message: `${file.name} exceeds the 8 MB per-image limit.`,
+          message: `${file.name} ultrapassa o limite de 8 MB por imagem.`,
         })
         continue
       }
@@ -127,7 +127,7 @@ export default function ChatInterface({
     if (selected.length > availableSlots) {
       addNotification({
         type: 'error',
-        message: `Only the first ${availableSlots} selected image(s) were attached.`,
+        message: `Apenas as primeiras ${availableSlots} imagens selecionadas foram anexadas.`,
       })
     }
     setImages((current) => [...current, ...attachments])
@@ -160,16 +160,16 @@ export default function ChatInterface({
           <div className="h-full flex items-center justify-center">
             <div className="text-center max-w-md">
               <IconWand className="h-16 w-16 text-desert-green mx-auto mb-4 opacity-50" />
-              <h3 className="text-lg font-medium text-text-primary mb-2">Start a conversation</h3>
+              <h3 className="text-lg font-medium text-text-primary mb-2">Comece uma conversa</h3>
               <p className="text-text-muted text-sm">
-                Interact with your installed language models directly in the Command Center.
+                Converse com os modelos de linguagem instalados diretamente na Central de Comando.
               </p>
               {chatSuggestionsEnabled &&
                 chatSuggestions &&
                 chatSuggestions.length > 0 &&
                 !chatSuggestionsLoading && (
                   <div className="mt-8">
-                    <h4 className="text-sm font-medium text-text-secondary mb-2">Suggestions:</h4>
+                    <h4 className="text-sm font-medium text-text-secondary mb-2">Sugestões:</h4>
                     <div className="flex flex-col gap-2">
                       {chatSuggestions.map((suggestion, index) => (
                         <button
@@ -191,12 +191,11 @@ export default function ChatInterface({
                 )}
               {/* Display bouncing dots while loading suggestions */}
               {chatSuggestionsEnabled && chatSuggestionsLoading && (
-                <BouncingDots text="Thinking" containerClassName="mt-8" />
+                <BouncingDots text="Pensando" containerClassName="mt-8" />
               )}
               {!chatSuggestionsEnabled && (
                 <div className="mt-8 text-sm text-text-muted">
-                  Need some inspiration? Enable chat suggestions in settings to get started with
-                  example prompts.
+                  Precisa de inspiração? Ative as sugestões do chat nas configurações para começar com exemplos de perguntas.
                 </div>
               )}
             </div>
@@ -227,7 +226,7 @@ export default function ChatInterface({
               <div className="flex gap-4 justify-start">
                 <ChatAssistantAvatar />
                 <div className="max-w-[85%] sm:max-w-[70%] rounded-lg px-4 py-3 bg-surface-secondary text-text-primary">
-                  <BouncingDots text="Thinking" />
+                  <BouncingDots text="Pensando" />
                 </div>
               </div>
             )}
@@ -238,7 +237,7 @@ export default function ChatInterface({
       </div>
       <div className="border-t border-border-subtle bg-surface-primary px-6 py-4 flex-shrink-0 min-h-[90px]">
         {images.length > 0 && (
-          <div className="mb-3 flex flex-wrap gap-3" aria-label="Attached images">
+          <div className="mb-3 flex flex-wrap gap-3" aria-label="Imagens anexadas">
             {images.map((image) => (
               <div
                 key={image.id}
@@ -249,7 +248,7 @@ export default function ChatInterface({
                   type="button"
                   onClick={() => removeImage(image)}
                   className="absolute right-1 top-1 rounded-full bg-surface-primary/90 p-1 text-text-primary hover:bg-surface-primary"
-                  aria-label={`Remove ${image.name}`}
+                  aria-label={`Remover ${image.name}`}
                   disabled={isLoading}
                 >
                   <IconX className="h-3.5 w-3.5" aria-hidden="true" />
@@ -284,7 +283,7 @@ export default function ChatInterface({
                   ? 'bg-border-default text-text-muted cursor-not-allowed'
                   : 'border border-border-default text-text-secondary hover:bg-surface-secondary'
               )}
-              aria-label="Attach images"
+              aria-label="Anexar imagens"
             >
               <IconPhoto className="h-6 w-6" aria-hidden="true" />
             </button>
@@ -304,7 +303,7 @@ export default function ChatInterface({
               value={input}
               onChange={handleInput}
               onKeyDown={handleKeyDown}
-              placeholder={`Type your message to ${aiAssistantName}... (Shift+Enter for new line)`}
+              placeholder={`Digite sua mensagem para ${aiAssistantName}... (Shift+Enter para nova linha)`}
               className="w-full resize-none rounded-lg border border-border-default px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-desert-green focus:border-transparent disabled:bg-surface-secondary disabled:text-text-muted"
               rows={1}
               disabled={isLoading}

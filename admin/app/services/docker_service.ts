@@ -95,7 +95,7 @@ export class DockerService {
       if (!service || !service.installed) {
         return {
           success: false,
-          message: `Service ${serviceName} not found or not installed`,
+          message: `Serviço ${serviceName} não encontrado ou não instalado`,
         }
       }
 
@@ -104,7 +104,7 @@ export class DockerService {
       if (!container) {
         return {
           success: false,
-          message: `Container for service ${serviceName} not found`,
+          message: `Contêiner do serviço ${serviceName} não encontrado`,
         }
       }
 
@@ -114,7 +114,7 @@ export class DockerService {
         this.invalidateServicesStatusCache()
         return {
           success: true,
-          message: `Service ${serviceName} stopped successfully`,
+          message: `Serviço ${serviceName} parado com sucesso`,
         }
       }
 
@@ -134,7 +134,7 @@ export class DockerService {
 
         return {
           success: true,
-          message: `Service ${serviceName} restarted successfully`,
+          message: `Serviço ${serviceName} reiniciado com sucesso`,
         }
       }
 
@@ -142,7 +142,7 @@ export class DockerService {
         if (container.State === 'running') {
           return {
             success: true,
-            message: `Service ${serviceName} is already running`,
+            message: `O serviço ${serviceName} já está em execução`,
           }
         }
 
@@ -151,7 +151,7 @@ export class DockerService {
 
         return {
           success: true,
-          message: `Service ${serviceName} started successfully`,
+          message: `Serviço ${serviceName} iniciado com sucesso`,
         }
       }
 
@@ -163,7 +163,7 @@ export class DockerService {
       logger.error({ err: error }, `[DockerService] Error controlling service ${serviceName}`)
       return {
         success: false,
-        message: `Failed to ${action} service ${serviceName}. Check server logs for details.`,
+        message: `Não foi possível executar ${action} no serviço ${serviceName}. Veja os registros do servidor.`,
       }
     }
   }
@@ -286,14 +286,14 @@ export class DockerService {
     if (!service) {
       return {
         success: false,
-        message: `Service ${serviceName} not found`,
+        message: `Serviço ${serviceName} não encontrado`,
       }
     }
 
     if (service.installed) {
       return {
         success: false,
-        message: `Service ${serviceName} is already installed`,
+        message: `O serviço ${serviceName} já está instalado`,
       }
     }
 
@@ -301,7 +301,7 @@ export class DockerService {
     if (service.installation_status === 'installing') {
       return {
         success: false,
-        message: `Service ${serviceName} installation is already in progress`,
+        message: `A instalação do serviço ${serviceName} já está em andamento`,
       }
     }
 
@@ -309,7 +309,7 @@ export class DockerService {
     if (this.activeInstallations.has(serviceName)) {
       return {
         success: false,
-        message: `Service ${serviceName} installation is already in progress`,
+        message: `A instalação do serviço ${serviceName} já está em andamento`,
       }
     }
 
@@ -341,7 +341,7 @@ export class DockerService {
 
     return {
       success: true,
-      message: `Service ${serviceName} installation initiated successfully. You can receive updates via server-sent events.`,
+      message: `Instalação do serviço ${serviceName} iniciada com sucesso.`,
     }
   }
 
@@ -360,7 +360,7 @@ export class DockerService {
       if (!service) {
         return {
           success: false,
-          message: `Service ${serviceName} not found`,
+          message: `Serviço ${serviceName} não encontrado`,
         }
       }
 
@@ -368,7 +368,7 @@ export class DockerService {
       if (this.activeInstallations.has(serviceName)) {
         return {
           success: false,
-          message: `Service ${serviceName} installation is already in progress`,
+          message: `A instalação do serviço ${serviceName} já está em andamento`,
         }
       }
 
@@ -482,14 +482,14 @@ export class DockerService {
 
       return {
         success: true,
-        message: `Service ${serviceName} force reinstall initiated successfully. You can receive updates via server-sent events.`,
+        message: `Reinstalação forçada do serviço ${serviceName} iniciada com sucesso.`,
       }
     } catch (error: any) {
       logger.error({ err: error }, `[DockerService] Force reinstall failed for ${serviceName}`)
       await this._cleanupFailedInstallation(serviceName)
       return {
         success: false,
-        message: `Failed to force reinstall service ${serviceName}. Check server logs for details.`,
+        message: `Não foi possível reinstalar à força o serviço ${serviceName}. Veja os registros do servidor.`,
       }
     }
   }
@@ -1025,18 +1025,18 @@ export class DockerService {
       const containers = await this.docker.listContainers({ all: true })
       const container = containers.find((c) => c.Names.includes(`/${serviceName}`))
       if (!container) {
-        return { success: false, message: `Container for service ${serviceName} not found` }
+        return { success: false, message: `Contêiner do serviço ${serviceName} não encontrado` }
       }
 
       const dockerContainer = this.docker.getContainer(container.Id)
       await dockerContainer.remove({ force: true })
 
-      return { success: true, message: `Service ${serviceName} container removed successfully` }
+      return { success: true, message: `Contêiner do serviço ${serviceName} removido com sucesso` }
     } catch (error: any) {
       logger.error({ err: error }, `[DockerService] Error removing service container ${serviceName}`)
       return {
         success: false,
-        message: `Failed to remove service ${serviceName} container. Check server logs for details.`,
+        message: `Não foi possível remover o contêiner do serviço ${serviceName}. Veja os registros do servidor.`,
       }
     }
   }
@@ -1740,20 +1740,20 @@ export class DockerService {
     try {
       const service = await Service.query().where('service_name', serviceName).first()
       if (!service) {
-        return { success: false, message: `Service ${serviceName} not found` }
+        return { success: false, message: `Serviço ${serviceName} não encontrado` }
       }
       if (!service.installed) {
-        return { success: false, message: `Service ${serviceName} is not installed` }
+        return { success: false, message: `O serviço ${serviceName} não está instalado` }
       }
       if (this.activeInstallations.has(serviceName)) {
-        return { success: false, message: `Service ${serviceName} already has an operation in progress` }
+        return { success: false, message: `O serviço ${serviceName} já tem uma operação em andamento` }
       }
       // DB-level guard mirrors the install path. Unlike the in-memory Set above, this survives a
       // page reload and is visible to other clients, so a second Update click (or one from another
       // tab) is rejected cleanly instead of racing two updateContainer runs into Docker 304/400
       // errors (stop/rename on a container the first run already moved).
       if (service.installation_status === 'installing') {
-        return { success: false, message: `Service ${serviceName} already has an update in progress` }
+        return { success: false, message: `O serviço ${serviceName} já tem uma atualização em andamento` }
       }
 
       this.activeInstallations.add(serviceName)
@@ -1832,7 +1832,7 @@ export class DockerService {
 
       if (!existingContainer) {
         this.activeInstallations.delete(serviceName)
-        return { success: false, message: `Container for ${serviceName} not found` }
+        return { success: false, message: `Contêiner de ${serviceName} não encontrado` }
       }
 
       const oldContainer = this.docker.getContainer(existingContainer.Id)
@@ -1948,7 +1948,7 @@ export class DockerService {
         this._broadcast(serviceName, 'update-rollback', `Failed to create new container: ${createError.message}. Rolling back...`)
         await rollbackToOld()
         this.activeInstallations.delete(serviceName)
-        return { success: false, message: `Failed to create updated container: ${createError.message}` }
+        return { success: false, message: `Não foi possível criar o contêiner atualizado: ${createError.message}` }
       }
 
       // Step 5: Start new container. If the start itself throws (bad device/GPU config,
@@ -1972,7 +1972,7 @@ export class DockerService {
         this.activeInstallations.delete(serviceName)
         return {
           success: false,
-          message: `Update failed: new container did not start (${startError.message}). Rolled back to previous version.`,
+          message: `A atualização falhou: o novo contêiner não iniciou (${startError.message}). A versão anterior foi restaurada.`,
         }
       }
 
@@ -2004,7 +2004,7 @@ export class DockerService {
           'update-complete',
           `Successfully updated ${serviceName} to ${targetVersion}`
         )
-        return { success: true, message: `Service ${serviceName} updated to ${targetVersion}` }
+        return { success: true, message: `Serviço ${serviceName} atualizado para ${targetVersion}` }
       } else {
         // Unhealthy — rollback
         this._broadcast(
@@ -2025,7 +2025,7 @@ export class DockerService {
         this.activeInstallations.delete(serviceName)
         return {
           success: false,
-          message: `Update failed: new container did not stay running. Rolled back to previous version.`,
+          message: `A atualização falhou: o novo contêiner não continuou em execução. A versão anterior foi restaurada.`,
         }
       }
     } catch (error: any) {
@@ -2036,7 +2036,7 @@ export class DockerService {
         'Update failed. Check server logs for details.'
       )
       logger.error({ err: error }, `[DockerService] Update failed for ${serviceName}`)
-      return { success: false, message: 'Update failed. Check server logs for details.' }
+      return { success: false, message: 'A atualização falhou. Veja os registros do servidor.' }
     } finally {
       // Always clear the in-progress flag we set above, on every exit path (success, rollback,
       // not-found, or thrown error). The success path already persisted the new image/version on
@@ -2128,7 +2128,7 @@ export class DockerService {
       const containers = await this.docker.listContainers({ all: true })
       const container = containers.find((c) => c.Names.includes(`/${serviceName}`))
 
-      if (!container) return { success: true, message: 'No container found — nothing to remove' }
+      if (!container) return { success: true, message: 'Nenhum contêiner encontrado — nada a remover' }
 
       const imageRef = container.Image
       const c = this.docker.getContainer(container.Id)
@@ -2145,7 +2145,7 @@ export class DockerService {
       }
 
       this.invalidateServicesStatusCache()
-      return { success: true, message: `Container ${serviceName} removed` }
+      return { success: true, message: `Contêiner ${serviceName} removido` }
     } catch (error: any) {
       logger.error({ err: error }, `[DockerService] removeCustomAppContainer failed for ${serviceName}`)
       return { success: false, message: error.message }
@@ -2164,7 +2164,7 @@ export class DockerService {
   ): Promise<{ success: boolean; message: string }> {
     const service = await Service.query().where('service_name', serviceName).first()
     if (!service || !service.installed) {
-      return { success: false, message: `Service ${serviceName} not found or not installed` }
+      return { success: false, message: `Serviço ${serviceName} não encontrado ou não instalado` }
     }
 
     // Container/image removal is shared with custom-app deletion — the lookup is by container
@@ -2177,7 +2177,7 @@ export class DockerService {
     await service.save()
     this.invalidateServicesStatusCache()
 
-    return { success: true, message: `Service ${serviceName} uninstalled` }
+    return { success: true, message: `Serviço ${serviceName} desinstalado` }
   }
 
   /** Find a container by its managed service name (`/serviceName`), or null. */
@@ -2213,7 +2213,7 @@ export class DockerService {
   ): Promise<{ success: boolean; logs?: string; message?: string }> {
     try {
       const info = await this._findContainerByName(serviceName)
-      if (!info) return { success: false, message: `No container found for ${serviceName}` }
+      if (!info) return { success: false, message: `Nenhum contêiner encontrado para ${serviceName}` }
 
       const container = this.docker.getContainer(info.Id)
       const inspect = await container.inspect()
@@ -2247,7 +2247,7 @@ export class DockerService {
   }> {
     try {
       const info = await this._findContainerByName(serviceName)
-      if (!info) return { success: false, message: `No container found for ${serviceName}` }
+      if (!info) return { success: false, message: `Nenhum contêiner encontrado para ${serviceName}` }
       if (info.State !== 'running') return { success: true, running: false }
 
       const container = this.docker.getContainer(info.Id)
@@ -2329,7 +2329,7 @@ export class DockerService {
     opts: { forcePull?: boolean } = {}
   ): Promise<{ success: boolean; message: string }> {
     const service = await Service.query().where('service_name', serviceName).first()
-    if (!service) return { success: false, message: `Service ${serviceName} not found` }
+    if (!service) return { success: false, message: `Serviço ${serviceName} não encontrado` }
 
     const containerConfig = this._parseContainerConfig(service.container_config)
     const oldInfo = await this._findContainerByName(serviceName)
@@ -2398,7 +2398,7 @@ export class DockerService {
       service.installation_status = 'idle'
       await service.save()
       this.invalidateServicesStatusCache()
-      return { success: true, message: `Service ${serviceName} reconfigured successfully` }
+      return { success: true, message: `Serviço ${serviceName} reconfigurado com sucesso` }
     } catch (error: any) {
       logger.error({ err: error }, `[DockerService] recreateCustomAppContainer failed for ${serviceName}`)
       // Roll back: discard the failed new container and restore the renamed original.
@@ -2419,7 +2419,7 @@ export class DockerService {
         logger.error({ err: rollbackError }, `[DockerService] rollback failed for ${serviceName}`)
       }
       this.invalidateServicesStatusCache()
-      return { success: false, message: `Reconfigure failed and was rolled back: ${error.message}` }
+      return { success: false, message: `A reconfiguração falhou e foi desfeita: ${error.message}` }
     }
   }
 

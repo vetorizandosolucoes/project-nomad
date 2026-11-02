@@ -340,7 +340,7 @@ export class MapService implements IMapService {
       return { filename, size }
     } catch (error: any) {
       logger.error({ err: error }, '[MapService] Preflight check failed for URL')
-      return { message: 'Preflight check failed. Please verify the URL is valid and accessible.' }
+      return { message: 'A verificação prévia falhou. Confira se a URL é válida e acessível.' }
     }
   }
 

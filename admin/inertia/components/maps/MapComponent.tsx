@@ -188,7 +188,7 @@ export default function MapComponent({
 
   const confirmDiscardMarkerChanges = useCallback(() => {
     if (!hasUnsavedMarkerChanges) return true
-    return window.confirm('Discard unsaved marker changes?')
+    return window.confirm('Descartar as alterações não salvas do marcador?')
   }, [hasUnsavedMarkerChanges])
 
   useEffect(() => {

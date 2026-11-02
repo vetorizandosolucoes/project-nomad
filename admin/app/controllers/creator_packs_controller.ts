@@ -21,7 +21,7 @@ export default class CreatorPacksController {
       return { configured, packs, downloads }
     } catch (error: any) {
       logger.error('[CreatorPacksController] Failed to list creator packs:', error?.message || error)
-      return response.status(500).send({ message: 'Failed to load creator packs' })
+      return response.status(500).send({ message: 'Não foi possível carregar os pacotes de criadores' })
     }
   }
 
@@ -32,18 +32,18 @@ export default class CreatorPacksController {
     switch (result.code) {
       case 'dispatched':
         return response.status(202).send({
-          message: 'Pack download started',
+          message: 'Download do pacote iniciado',
           filename: result.filename,
         })
       case 'already_installed':
-        return { message: 'Pack is already installed' }
+        return { message: 'O pacote já está instalado' }
       case 'already_downloading':
-        return { message: 'Pack download is already in progress' }
+        return { message: 'O download do pacote já está em andamento' }
       case 'not_found':
-        return response.status(404).send({ message: `Creator pack not found: ${packId}` })
+        return response.status(404).send({ message: `Pacote de criador não encontrado: ${packId}` })
       case 'not_configured':
         return response.status(503).send({
-          message: 'Creator Packs are not configured on this server',
+          message: 'Os pacotes de criadores não estão configurados neste servidor',
         })
     }
   }
@@ -54,9 +54,9 @@ export default class CreatorPacksController {
 
     switch (result.code) {
       case 'uninstalled':
-        return { message: 'Pack uninstalled', filename: result.filename }
+        return { message: 'Pacote desinstalado', filename: result.filename }
       case 'not_installed':
-        return response.status(404).send({ message: `Creator pack is not installed: ${packId}` })
+        return response.status(404).send({ message: `O pacote de criador não está instalado: ${packId}` })
     }
   }
 }

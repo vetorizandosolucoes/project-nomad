@@ -197,7 +197,7 @@ export class DownloadService {
           // Matches the file-download branch below.
           await job.remove().catch(() => {})
           await DownloadModelJob.dispatch({ modelName })
-          return { success: true, message: `Retrying download for model ${modelName}` }
+          return { success: true, message: `Tentando de novo o download do modelo ${modelName}` }
         }
 
         // For file downloads (zim, map, etc.), re-dispatch with original params
@@ -209,11 +209,11 @@ export class DownloadService {
         // Remove the old failed job, then dispatch a fresh one
         await job.remove().catch(() => {})
         await RunDownloadJob.dispatch(params)
-        return { success: true, message: `Retrying download for ${params.url}` }
+        return { success: true, message: `Tentando de novo o download de ${params.url}` }
       }
     }
 
-    return { success: false, message: 'Failed job not found. It may have already been dismissed.' }
+    return { success: false, message: 'Tarefa com falha não encontrada. Ela pode já ter sido dispensada.' }
   }
 
   async cancelJob(jobId: string): Promise<{ success: boolean; message: string }> {
@@ -246,7 +246,7 @@ export class DownloadService {
       return await this._cancelDrugDownloadJob()
     }
 
-    return { success: true, message: 'Job not found (may have already completed)' }
+    return { success: true, message: 'Tarefa não encontrada (pode já ter terminado)' }
   }
 
   /**
@@ -267,10 +267,10 @@ export class DownloadService {
     const queue = this.queueService.getQueue(DownloadDrugDataJob.queue)
     try {
       await queue.obliterate({ force: true })
-      return { success: true, message: 'Drug data download cancelled' }
+      return { success: true, message: 'Download dos dados de medicamentos cancelado' }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
-      return { success: false, message: `Could not cancel drug data download: ${msg}` }
+      return { success: false, message: `Não foi possível cancelar o download dos dados de medicamentos: ${msg}` }
     }
   }
 
@@ -298,7 +298,7 @@ export class DownloadService {
       }
     }
 
-    return { success: true, message: 'Extract cancelled and partial file deleted' }
+    return { success: true, message: 'Extração cancelada e arquivo parcial apagado' }
   }
 
   /** Cancel a content download (zim, map, pmtiles, etc.) */
@@ -344,7 +344,7 @@ export class DownloadService {
       }
     }
 
-    return { success: true, message: 'Download cancelled and partial file deleted' }
+    return { success: true, message: 'Download cancelado e arquivo parcial apagado' }
   }
 
   /** Cancel an Ollama model download — mirrors the file cancel pattern but skips file cleanup */
@@ -382,7 +382,7 @@ export class DownloadService {
     // expected behavior is to retain partial blobs so a re-pull resumes from where it left
     // off. If the user wants to reclaim that space, they can re-pull and let it complete,
     // or delete the partially-downloaded model from the AI Settings page.
-    return { success: true, message: 'Model download cancelled' }
+    return { success: true, message: 'Download do modelo cancelado' }
   }
 
   /** Wait up to 4s (250ms intervals) for the job to reach a terminal state */

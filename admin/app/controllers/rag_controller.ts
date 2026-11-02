@@ -18,7 +18,7 @@ export default class RagController {
   public async upload({ request, response }: HttpContext) {
     const uploadedFile = request.file('file')
     if (!uploadedFile) {
-      return response.status(400).json({ error: 'No file uploaded' })
+      return response.status(400).json({ error: 'Nenhum arquivo enviado' })
     }
 
     const collection = sanitizeCollectionName(request.input('collection', null))
@@ -61,7 +61,7 @@ export default class RagController {
     const status = await EmbedFileJob.getStatus(fullPath)
 
     if (!status.exists) {
-      return response.status(404).json({ error: 'Job not found for this file' })
+      return response.status(404).json({ error: 'Tarefa não encontrada para este arquivo' })
     }
 
     return response.status(200).json(status)
@@ -211,7 +211,7 @@ export default class RagController {
   public async cleanupFailedJobs({ response }: HttpContext) {
     const result = await EmbedFileJob.cleanupFailedJobs()
     return response.status(200).json({
-      message: `Cleaned up ${result.cleaned} failed job${result.cleaned !== 1 ? 's' : ''}${result.filesDeleted > 0 ? `, deleted ${result.filesDeleted} file${result.filesDeleted !== 1 ? 's' : ''}` : ''}.`,
+      message: `Tarefas com falha removidas: ${result.cleaned}${result.filesDeleted > 0 ? `; arquivos apagados: ${result.filesDeleted}` : ''}.`,
       ...result,
     })
   }
@@ -219,7 +219,7 @@ export default class RagController {
   public async cancelAllJobs({ response }: HttpContext) {
     const result = await EmbedFileJob.cancelAllJobs()
     return response.status(200).json({
-      message: `Cancelled ${result.cancelled} job${result.cancelled !== 1 ? 's' : ''}${result.filesDeleted > 0 ? `, deleted ${result.filesDeleted} file${result.filesDeleted !== 1 ? 's' : ''}` : ''}.`,
+      message: `Tarefas canceladas: ${result.cancelled}${result.filesDeleted > 0 ? `; arquivos apagados: ${result.filesDeleted}` : ''}.`,
       ...result,
     })
   }
@@ -235,7 +235,7 @@ export default class RagController {
       return response.status(200).json(syncResult)
     } catch (error) {
       logger.error({ err: error }, '[RagController] Error scanning and syncing storage')
-      return response.status(500).json({ error: 'Error scanning and syncing storage' })
+      return response.status(500).json({ error: 'Erro ao verificar e sincronizar o armazenamento' })
     }
   }
 
@@ -245,7 +245,7 @@ export default class RagController {
       return response.status(200).json(result)
     } catch (error) {
       logger.error({ err: error }, '[RagController] Error during re-embed all')
-      return response.status(500).json({ error: 'Error during re-embed all' })
+      return response.status(500).json({ error: 'Erro ao recalcular tudo' })
     }
   }
 
@@ -255,7 +255,7 @@ export default class RagController {
       return response.status(200).json(result)
     } catch (error) {
       logger.error({ err: error }, '[RagController] Error during reset and rebuild')
-      return response.status(500).json({ error: 'Error during reset and rebuild' })
+      return response.status(500).json({ error: 'Erro ao reinicializar e reconstruir' })
     }
   }
 
@@ -281,7 +281,7 @@ export default class RagController {
     const { source } = await request.validateUsing(fileSourceSchema)
     const result = await this.ragService.readFileContent(source)
     if (!result) {
-      return response.status(404).json({ error: 'File not found or not viewable' })
+      return response.status(404).json({ error: 'Arquivo não encontrado ou sem visualização' })
     }
     return response.status(200).json(result)
   }
@@ -290,7 +290,7 @@ export default class RagController {
     const { source } = await request.validateUsing(fileSourceSchema)
     const filePath = await this.ragService.resolveDownloadPath(source)
     if (!filePath) {
-      return response.status(404).json({ error: 'File not found' })
+      return response.status(404).json({ error: 'Arquivo não encontrado' })
     }
     const fileName = filePath.split(/[/\\]/).at(-1) ?? 'download'
     return response.attachment(filePath, fileName)

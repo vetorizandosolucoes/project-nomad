@@ -90,7 +90,7 @@ export class CollectionUpdateService {
       return {
         updates: [],
         checked_at: new Date().toISOString(),
-        error: 'Failed to check for content updates. Please try again later.',
+        error: 'Não foi possível verificar atualizações de conteúdo. Tente novamente mais tarde.',
       }
     }
   }
@@ -111,7 +111,7 @@ export class CollectionUpdateService {
     if (existingJob) {
       return {
         success: false,
-        error: `A download is already in progress for ${update.resource_id}`,
+        error: `Já há um download em andamento para ${update.resource_id}`,
       }
     }
 
@@ -136,7 +136,7 @@ export class CollectionUpdateService {
     })
 
     if (!result || !result.job) {
-      return { success: false, error: 'Failed to dispatch download job' }
+      return { success: false, error: 'Não foi possível iniciar o download' }
     }
 
     logger.info(

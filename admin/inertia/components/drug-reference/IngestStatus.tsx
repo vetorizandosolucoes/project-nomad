@@ -112,33 +112,33 @@ function PhaseBlock({
 /** Download-phase explainer copy. */
 function downloadExplainer(d: DrugDownloadStatus): string {
   if (d.state === 'failed') {
-    return 'The download failed — it retries automatically; if it stays failed, press "Download FDA data" to restart. Finished parts are kept and resume where they left off.'
+    return 'O download falhou — ele tenta de novo automaticamente; se continuar falhando, clique em "Baixar dados da FDA" para reiniciar. As partes concluídas são mantidas e o download continua de onde parou.'
   }
   if (d.state === 'completed') {
-    return 'All parts are on disk. Indexing them into search next.'
+    return 'Todas as partes estão no disco. Próximo passo: indexar para a pesquisa.'
   }
   if (d.state === 'running') {
     return d.totalParts > 0
-      ? `Pulling part ${d.partsDone + 1} of ${d.totalParts} — ~1.7 GB total across all parts.`
-      : 'Reading the openFDA download manifest…'
+      ? `Baixando a parte ${d.partsDone + 1} de ${d.totalParts} — cerca de 1,7 GB no total.`
+      : 'Lendo o manifesto de download da openFDA…'
   }
-  return 'Not started.'
+  return 'Não iniciado.'
 }
 
 /** Ingest-phase explainer copy. */
 function ingestExplainer(i: DrugIngestPhaseStatus, rowCount: number): string {
   if (i.state === 'failed') {
-    return 'Indexing failed — press "Ingest into search" to retry from the downloaded files (no re-download). Already-indexed labels are kept (the refresh is idempotent).'
+    return 'A indexação falhou — clique em "Indexar para pesquisa" para tentar de novo a partir dos arquivos baixados (sem baixar de novo). Bulas já indexadas são mantidas.'
   }
   if (i.state === 'completed') {
-    return `${rowCount.toLocaleString()} labels are now searchable offline.`
+    return `${rowCount.toLocaleString()} bulas agora podem ser pesquisadas offline.`
   }
   if (i.state === 'running') {
     return i.totalParts > 0
-      ? `Writing part ${i.partsDone + 1} of ${i.totalParts} into the offline database.`
-      : 'Writing labels into the offline database.'
+      ? `Gravando a parte ${i.partsDone + 1} de ${i.totalParts} no banco de dados offline.`
+      : 'Gravando as bulas no banco de dados offline.'
   }
-  return 'Waiting for downloaded data.'
+  return 'Aguardando os dados baixados.'
 }
 
 /**
@@ -207,18 +207,18 @@ export default function IngestStatus({ status, onRefresh, pollIntervalMs = 3000 
   const downloadTiming =
     status.phase === 'downloading' && elapsedMs !== null ? (
       <div className="flex flex-wrap items-center gap-x-3 text-xs text-text-secondary tabular-nums">
-        <span>Elapsed {fmtDuration(elapsedMs)}</span>
-        {dlBytes && <span>{dlBytes} this part</span>}
+        <span>Decorrido {fmtDuration(elapsedMs)}</span>
+        {dlBytes && <span>{dlBytes} nesta parte</span>}
       </div>
     ) : null
 
   const ingestTiming =
     status.phase === 'ingesting' && elapsedMs !== null ? (
       <div className="flex flex-wrap items-center gap-x-3 text-xs text-text-secondary tabular-nums">
-        <span>Elapsed {fmtDuration(elapsedMs)}</span>
+        <span>Decorrido {fmtDuration(elapsedMs)}</span>
         {etaMs !== null && (
           <span>
-            ~{fmtDuration(etaMs)} left <span className="text-text-muted">(estimate)</span>
+            ~{fmtDuration(etaMs)} restantes <span className="text-text-muted">(estimativa)</span>
           </span>
         )}
       </div>
@@ -228,7 +228,7 @@ export default function IngestStatus({ status, onRefresh, pollIntervalMs = 3000 
     <div className="text-left space-y-4">
       {/* Download phase */}
       <PhaseBlock
-        title="Download FDA data"
+        title="Baixar dados da FDA"
         state={download.state}
         pct={dlPct}
         explainer={downloadExplainer(download)}
@@ -239,7 +239,7 @@ export default function IngestStatus({ status, onRefresh, pollIntervalMs = 3000 
 
       {/* Ingest phase */}
       <PhaseBlock
-        title="Ingest into search"
+        title="Indexar para pesquisa"
         state={ingest.state}
         pct={ingPct}
         explainer={ingestExplainer(ingest, status.rowCount)}
@@ -251,7 +251,7 @@ export default function IngestStatus({ status, onRefresh, pollIntervalMs = 3000 
                 {ingest.records.toLocaleString()}
               </span>
               {expected > 0 && (
-                <span className="text-text-muted"> of ~{expected.toLocaleString()} labels</span>
+                <span className="text-text-muted"> de ~{expected.toLocaleString()} bulas</span>
               )}
             </span>
           ) : undefined
@@ -263,14 +263,13 @@ export default function IngestStatus({ status, onRefresh, pollIntervalMs = 3000 
       {/* Reassurance while busy */}
       {busy && (
         <p className="text-xs text-text-muted">
-          Runs in the background — you can leave this page and it keeps going. Search turns on
-          automatically when ingest finishes.
+          Roda em segundo plano — você pode sair desta página. A pesquisa é ativada automaticamente quando a indexação terminar.
         </p>
       )}
 
       {/* Ready footer */}
       {status.phase === 'ready' && status.lastUpdated && (
-        <p className="text-xs text-text-secondary">FDA data version {status.lastUpdated}.</p>
+        <p className="text-xs text-text-secondary">Versão dos dados da FDA {status.lastUpdated}.</p>
       )}
     </div>
   )

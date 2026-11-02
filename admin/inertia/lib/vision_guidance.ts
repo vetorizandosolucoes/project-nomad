@@ -1,15 +1,15 @@
 import type { ModelVisionCapability } from '../../types/ollama.js'
 
 const TEMPORARY_IMAGE_NOTICE =
-  'Images are sent only with this request. They are not saved and will disappear after you send them or reload this page.'
+  'As imagens são enviadas apenas com esta solicitação. Elas não são salvas e somem depois do envio ou ao recarregar esta página.'
 
 export function visionAttachmentGuidance(capability: ModelVisionCapability): string {
   if (capability === 'unsupported') {
-    return 'This model cannot use images. Choose a model marked “Supports images” in Models & Settings.'
+    return 'Este modelo não aceita imagens. Escolha um modelo marcado como "Aceita imagens" em Modelos e configurações.'
   }
 
   if (capability === 'unknown') {
-    return `NOMAD cannot confirm whether this model accepts images. You can try an image, but the request will fail if the model is text-only. ${TEMPORARY_IMAGE_NOTICE}`
+    return `O sistema não consegue confirmar se este modelo aceita imagens. Você pode tentar, mas a solicitação falhará se o modelo só aceitar texto. ${TEMPORARY_IMAGE_NOTICE}`
   }
 
   return TEMPORARY_IMAGE_NOTICE

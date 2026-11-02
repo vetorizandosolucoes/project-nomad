@@ -398,7 +398,7 @@ export class ChatService {
   async deleteAllSessions() {
     try {
       await ChatSession.query().delete()
-      return { success: true, message: 'All chat sessions deleted' }
+      return { success: true, message: 'Todas as conversas foram excluídas' }
     } catch (error) {
       logger.error(
         `[ChatService] Failed to delete all sessions: ${

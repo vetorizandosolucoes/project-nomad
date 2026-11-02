@@ -4,7 +4,7 @@ import api from '~/lib/api'
 export const CREATOR_PACKS_KEY = 'creator-packs'
 
 /**
- * Shared, cached source of Creator Packs state for every surface (Content
+ * Shared, cached source of Creator Packs state for every surface (Conteúdo
  * Explorer block, settings page, settings nav gate, Easy Setup wizard step).
  *
  * `configured` reflects whether this build carries the release-injected app key.

@@ -21,7 +21,7 @@ export interface CreatorPacksSectionProps {
 }
 
 /**
- * Install-on-click grid of Creator Packs + confirm modals. Shared by the Content
+ * Install-on-click grid of Creator Packs + confirm modals. Shared by the Conteúdo
  * Explorer block and the /settings/creator-packs page. Renders NOTHING when the
  * build isn't configured (fork / key unset) — a fork never sees a broken install
  * button. The Easy Setup wizard does NOT use this (it needs selection semantics,
@@ -44,13 +44,13 @@ const CreatorPacksSection: React.FC<CreatorPacksSectionProps> = ({ allowUninstal
     setInstalling(true)
     try {
       await api.installCreatorPack(packToInstall.id)
-      addNotification({ message: `Started installing "${packToInstall.name}"`, type: 'success' })
+      addNotification({ message: `Instalação de "${packToInstall.name}" iniciada`, type: 'success' })
       invalidateCreatorPacks()
       invalidateDownloads()
       setPackToInstall(null)
     } catch (error) {
-      console.error('Error installing creator pack:', error)
-      addNotification({ message: 'An error occurred while starting the install.', type: 'error' })
+      console.error('Erro ao instalar o pacote de criadores:', error)
+      addNotification({ message: 'Ocorreu um erro ao iniciar a instalação.', type: 'error' })
     } finally {
       setInstalling(false)
     }
@@ -61,13 +61,13 @@ const CreatorPacksSection: React.FC<CreatorPacksSectionProps> = ({ allowUninstal
     setUninstalling(true)
     try {
       await api.uninstallCreatorPack(packToUninstall.id)
-      addNotification({ message: `Uninstalled "${packToUninstall.name}"`, type: 'success' })
+      addNotification({ message: `"${packToUninstall.name}" desinstalado`, type: 'success' })
       invalidateCreatorPacks()
       invalidateDownloads()
       setPackToUninstall(null)
     } catch (error) {
-      console.error('Error uninstalling creator pack:', error)
-      addNotification({ message: 'An error occurred while uninstalling.', type: 'error' })
+      console.error('Erro ao desinstalar o pacote de criadores:', error)
+      addNotification({ message: 'Ocorreu um erro ao desinstalar.', type: 'error' })
     } finally {
       setUninstalling(false)
     }
@@ -80,9 +80,9 @@ const CreatorPacksSection: React.FC<CreatorPacksSectionProps> = ({ allowUninstal
           <IconMovie className="w-6 h-6 text-text-primary" />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-text-primary">Creator Packs</h3>
+          <h3 className="text-xl font-semibold text-text-primary">Pacotes de criadores</h3>
           <p className="text-sm text-text-muted">
-            Branded video collections from creators, for offline viewing
+            Coleções de vídeos de criadores, para assistir offline
           </p>
         </div>
       </div>
@@ -99,16 +99,16 @@ const CreatorPacksSection: React.FC<CreatorPacksSectionProps> = ({ allowUninstal
           ))}
         </div>
       ) : (
-        <p className="text-text-muted mt-4">No creator packs available.</p>
+        <p className="text-text-muted mt-4">Nenhum pacote de criadores disponível.</p>
       )}
 
       <StyledModal
         open={!!packToInstall}
-        title={packToInstall ? `Install ${packToInstall.name}?` : 'Install Creator Pack'}
+        title={packToInstall ? `Instalar ${packToInstall.name}?` : 'Instalar pacote de criadores'}
         onClose={() => !installing && setPackToInstall(null)}
         onCancel={() => setPackToInstall(null)}
         onConfirm={handleConfirmInstall}
-        confirmText={packToInstall?.available_update_version ? 'Update pack' : 'Install pack'}
+        confirmText={packToInstall?.available_update_version ? 'Atualizar pacote' : 'Instalar pacote'}
         confirmIcon="IconDownload"
         confirmLoading={installing}
         icon={<IconMovie className="w-6 h-6" />}
@@ -116,12 +116,11 @@ const CreatorPacksSection: React.FC<CreatorPacksSectionProps> = ({ allowUninstal
         {packToInstall && (
           <div className="space-y-3 text-text-secondary">
             <p>
-              {packToInstall.video_count} videos from {packToInstall.creator}, about{' '}
-              {formatBytes(packToInstall.size_mb * 1024 * 1024, 0)}. It will download in the
-              background and appear in Kiwix when ready.
+              {packToInstall.video_count} vídeos de {packToInstall.creator}, cerca de{' '}
+              {formatBytes(packToInstall.size_mb * 1024 * 1024, 0)}. O download ocorre em segundo plano e o pacote aparece no Kiwix quando estiver pronto.
             </p>
             <p className="text-sm text-text-muted">
-              Licensed content — personal use, not for redistribution.{' '}
+              Conteúdo licenciado — uso pessoal, proibida a redistribuição.{' '}
               <a
                 href={LICENSE_URL}
                 target="_blank"
@@ -129,7 +128,7 @@ const CreatorPacksSection: React.FC<CreatorPacksSectionProps> = ({ allowUninstal
                 className="text-desert-green underline hover:no-underline"
                 onClick={(e) => e.stopPropagation()}
               >
-                View license
+                Ver licença
               </a>
             </p>
           </div>
@@ -138,11 +137,11 @@ const CreatorPacksSection: React.FC<CreatorPacksSectionProps> = ({ allowUninstal
 
       <StyledModal
         open={!!packToUninstall}
-        title={packToUninstall ? `Uninstall ${packToUninstall.name}?` : 'Uninstall Creator Pack'}
+        title={packToUninstall ? `Desinstalar ${packToUninstall.name}?` : 'Desinstalar pacote de criadores'}
         onClose={() => !uninstalling && setPackToUninstall(null)}
         onCancel={() => setPackToUninstall(null)}
         onConfirm={handleConfirmUninstall}
-        confirmText="Uninstall pack"
+        confirmText="Desinstalar pacote"
         confirmIcon="IconTrash"
         confirmVariant="danger"
         confirmLoading={uninstalling}
@@ -150,9 +149,8 @@ const CreatorPacksSection: React.FC<CreatorPacksSectionProps> = ({ allowUninstal
       >
         {packToUninstall && (
           <p className="text-text-secondary">
-            This removes the downloaded videos (
-            {formatBytes(packToUninstall.size_mb * 1024 * 1024, 0)}) from this NOMAD. You can
-            reinstall the pack anytime.
+            Isso remove os vídeos baixados (
+            {formatBytes(packToUninstall.size_mb * 1024 * 1024, 0)}) deste sistema. Você pode reinstalar o pacote quando quiser.
           </p>
         )}
       </StyledModal>

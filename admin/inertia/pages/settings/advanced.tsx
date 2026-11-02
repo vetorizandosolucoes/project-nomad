@@ -30,10 +30,10 @@ export default function AdvancedPage(props: {
     try {
       const url = new URL(value)
       if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-        return 'Test URL must use http or https.'
+        return 'A URL de teste precisa usar http ou https.'
       }
     } catch {
-      return 'Test URL must be a valid URL (e.g. "https://example.com").'
+      return 'A URL de teste precisa ser válida (por exemplo, "https://example.com").'
     }
     return null
   }
@@ -43,13 +43,13 @@ export default function AdvancedPage(props: {
       return await api.updateSetting('system.internetStatusTestUrl', value)
     },
     onSuccess: () => {
-      addNotification({ message: 'Setting updated successfully.', type: 'success' })
+      addNotification({ message: 'Configuração atualizada com sucesso.', type: 'success' })
     },
     onError: (error: any) => {
       const msg =
         error?.response?.data?.message ||
         error?.message ||
-        'There was an error updating the setting. Please try again.'
+        'Houve um erro ao atualizar a configuração. Tente novamente.'
       setTestUrlError(msg)
       addNotification({ message: msg, type: 'error' })
     },
@@ -68,29 +68,26 @@ export default function AdvancedPage(props: {
 
   return (
     <SettingsLayout>
-      <Head title="Advanced Settings | Project NOMAD" />
+      <Head title="Configurações avançadas" />
       <div className="xl:pl-72 w-full">
-        <main className="px-12 py-6">
-          <h1 className="text-4xl font-semibold mb-4">Advanced</h1>
+        <main className="px-4 py-6 md:px-8">
+          <h1 className="text-4xl font-semibold mb-4">Avançado</h1>
           <p className="text-text-muted mb-4">
-            Advanced configuration for operators. These settings are optional — the defaults work
-            for most deployments.
+            Configuração avançada para administradores. Estas opções são opcionais — o padrão funciona na maioria das instalações.
           </p>
 
-          <StyledSectionHeader title="Connectivity" className="mt-8 mb-4" />
+          <StyledSectionHeader title="Conectividade" className="mt-8 mb-4" />
           <div className="bg-surface-primary rounded-lg border-2 border-border-subtle p-6">
             <p className="text-sm text-text-secondary mb-4">
-              NOMAD periodically checks whether it can reach the internet. By default it probes
-              Cloudflare's utility endpoint with a few fallbacks. Set a custom endpoint below if your
-              network blocks the defaults. Leave blank to use the built-in defaults.
+              O sistema verifica periodicamente se consegue acessar a internet. Por padrão, ele testa o endereço da Cloudflare, com algumas alternativas. Defina um endereço personalizado abaixo se a sua rede bloquear os padrões. Deixe em branco para usar os padrões.
             </p>
 
             {internetStatusTestUrlEnvOverride && (
               <Alert
                 type="info"
                 variant="bordered"
-                title="Managed by environment variable"
-                message="The INTERNET_STATUS_TEST_URL environment variable is set and takes precedence over this setting. Remove it to manage the test URL here."
+                title="Gerenciado por variável de ambiente"
+                message="A variável de ambiente INTERNET_STATUS_TEST_URL está definida e tem prioridade sobre esta configuração. Remova-a para gerenciar o endereço de teste aqui."
                 className="!mb-4"
               />
             )}
@@ -99,8 +96,8 @@ export default function AdvancedPage(props: {
               <div className="flex-1">
                 <Input
                   name="internetStatusTestUrl"
-                  label="Internet Status Test URL"
-                  helpText="A single http(s) URL used to check connectivity. Any HTTP response counts as online."
+                  label="URL de teste do status da internet"
+                  helpText="Uma única URL http(s) usada para verificar a conexão. Qualquer resposta HTTP conta como online."
                   placeholder="https://1.1.1.1/cdn-cgi/trace"
                   value={internetStatusTestUrl}
                   disabled={internetStatusTestUrlEnvOverride}
@@ -119,7 +116,7 @@ export default function AdvancedPage(props: {
                 disabled={updateTestUrlMutation.isPending || internetStatusTestUrlEnvOverride}
                 className="mb-0.5"
               >
-                Save
+                Salvar
               </StyledButton>
             </div>
           </div>

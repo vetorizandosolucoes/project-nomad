@@ -54,10 +54,10 @@ export default function GpuPassthroughAlert({
     try {
       const response = await api.forceReinstallService('nomad_ollama')
       if (!response || !response.success) {
-        throw new Error(response?.message || 'Force reinstall failed')
+        throw new Error(response?.message || 'A reinstalação forçada falhou')
       }
       addNotification({
-        message: `${assistantName} is being reinstalled with GPU support. This page will reload shortly.`,
+        message: `${assistantName} está sendo reinstalado com suporte a GPU. Esta página será recarregada em instantes.`,
         type: 'success',
       })
       try {
@@ -66,7 +66,7 @@ export default function GpuPassthroughAlert({
       setTimeout(() => window.location.reload(), 5000)
     } catch (error) {
       addNotification({
-        message: `Failed to reinstall: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        message: `Não foi possível reinstalar: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         type: 'error',
       })
       setReinstalling(false)
@@ -76,20 +76,18 @@ export default function GpuPassthroughAlert({
   const openReinstallModal = () => {
     openModal(
       <StyledModal
-        title={`Reinstall ${assistantName}?`}
+        title={`Reinstalar ${assistantName}?`}
         onConfirm={() => {
           closeAllModals()
           reinstall()
         }}
         onCancel={closeAllModals}
         open={true}
-        confirmText="Reinstall"
-        cancelText="Cancel"
+        confirmText="Reinstalar"
+        cancelText="Cancelar"
       >
         <p className="text-text-primary">
-          This will recreate the {assistantName} container with GPU support enabled. Your
-          downloaded models will be preserved. The service will be briefly unavailable during
-          reinstall.
+          Isso vai recriar o contêiner de {assistantName} com suporte a GPU ativado. Os modelos baixados são mantidos. O serviço fica indisponível por alguns instantes durante a reinstalação.
         </p>
       </StyledModal>,
       'gpu-health-force-reinstall-modal'
@@ -111,22 +109,22 @@ export default function GpuPassthroughAlert({
     )
   }
 
-  const vendorName = isAmd ? 'an AMD' : 'an NVIDIA'
+  const vendorName = isAmd ? 'AMD' : 'NVIDIA'
   const message = needsHsaOverride
-    ? `Your system has an AMD GPU, but ${assistantName} is running on CPU only. Reinstalling won't fix this: the GPU${gpuHealth.amdGfxTarget ? ` (${gpuHealth.amdGfxTarget})` : ''} isn't on ROCm's supported list and needs a GFX version override.`
-    : `Your system has ${vendorName} GPU, but ${assistantName} can't access it. AI is running on CPU only, which is significantly slower.`
+    ? `Seu sistema tem uma GPU AMD, mas ${assistantName} está rodando só na CPU. Reinstalar não resolve: a GPU${gpuHealth.amdGfxTarget ? ` (${gpuHealth.amdGfxTarget})` : ''} não está na lista de suporte do ROCm e precisa de uma substituição de versão GFX.`
+    : `Seu sistema tem uma GPU ${vendorName}, mas ${assistantName} não consegue acessá-la. A IA está rodando só na CPU, o que é bem mais lento.`
 
   return (
     <Alert
       type="warning"
       variant="bordered"
-      title={`GPU Not Accessible to ${assistantName}`}
+      title={`GPU inacessível para ${assistantName}`}
       message={message}
       className={className}
       dismissible={true}
       onDismiss={handleDismiss}
       buttonProps={{
-        children: needsHsaOverride ? 'Fix: Set GFX Override' : `Fix: Reinstall ${assistantName}`,
+        children: needsHsaOverride ? 'Corrigir: definir substituição GFX' : `Corrigir: reinstalar ${assistantName}`,
         icon: needsHsaOverride ? 'IconTool' : 'IconRefresh',
         variant: 'action',
         size: 'sm',
@@ -167,7 +165,7 @@ function HsaOverrideModal({
       onSaved()
     } catch (error) {
       addNotification({
-        message: `Failed to save the GFX override: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        message: `Não foi possível salvar a substituição da GFX: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         type: 'error',
       })
       setSaving(false)
@@ -176,40 +174,38 @@ function HsaOverrideModal({
 
   return (
     <StyledModal
-      title="Set AMD GFX Override"
+      title="Definir substituição GFX da AMD"
       onConfirm={save}
       onCancel={onCancel}
       open={true}
-      confirmText="Save and Reinstall"
-      cancelText="Cancel"
+      confirmText="Salvar e reinstalar"
+      cancelText="Cancelar"
       confirmLoading={saving}
       confirmDisabled={!valid || saving}
     >
       <div className="space-y-4 text-text-primary">
         <p>
-          ROCm ships GPU kernels for a fixed list of AMD chips. Integrated Radeon GPUs outside
-          that list run on CPU unless ROCm treats them as a supported chip, set through
-          HSA_OVERRIDE_GFX_VERSION.
+          O ROCm traz kernels de GPU para uma lista fixa de chips AMD. GPUs Radeon integradas fora dessa lista rodam na CPU, a menos que o ROCm as trate como um chip compatível, o que é definido em HSA_OVERRIDE_GFX_VERSION.
         </p>
         <ul className="list-disc pl-5 space-y-1">
           <li>Radeon 780M / 760M (gfx1103): 11.0.0</li>
-          <li>Radeon 680M / 660M and other RDNA 2 iGPUs (gfx1031 to gfx1036): 10.3.0</li>
+          <li>Radeon 680M / 660M e outras iGPUs RDNA 2 (gfx1031 a gfx1036): 10.3.0</li>
         </ul>
         <p className="text-sm text-text-secondary">
-          Detected GPU: {gpuHealth.amdGfxTarget ?? 'not reported by Ollama'}. Current override:{' '}
+          GPU detectada: {gpuHealth.amdGfxTarget ?? 'não informada pelo Ollama'}. Substituição atual:{' '}
           {gpuHealth.currentHsaOverride ?? 'none'}.
           {gpuHealth.suggestedHsaOverride
-            ? ` Recommended for this GPU: ${gpuHealth.suggestedHsaOverride}.`
+            ? ` Recomendado para esta GPU: ${gpuHealth.suggestedHsaOverride}.`
             : ''}
         </p>
         <Input
           name="amdHsaOverride"
-          label="GFX version override"
+          label="Substituição da versão GFX"
           placeholder="11.0.0"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           error={value.trim() !== '' && !valid}
-          helpText={`Saving recreates the ${assistantName} container with this override. Downloaded models are preserved.`}
+          helpText={`Salvar recria o contêiner de ${assistantName} com esta substituição. Os modelos baixados são mantidos.`}
         />
       </div>
     </StyledModal>

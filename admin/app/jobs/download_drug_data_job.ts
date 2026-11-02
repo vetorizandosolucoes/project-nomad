@@ -62,7 +62,7 @@ export class DownloadDrugDataJob {
     if (existing) {
       const state = await existing.getState()
       if (state === 'active' || state === 'waiting' || state === 'delayed') {
-        return { job: existing, created: false, message: 'Drug data download already running' }
+        return { job: existing, created: false, message: 'O download dos dados de medicamentos já está em andamento' }
       }
       try {
         await existing.remove()
@@ -83,12 +83,12 @@ export class DownloadDrugDataJob {
           removeOnFail: { count: 5 },
         }
       )
-      return { job, created: true, message: 'Drug data download dispatched' }
+      return { job, created: true, message: 'Download dos dados de medicamentos iniciado' }
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error)
       if (msg.includes('job already exists')) {
         const stillThere = await queue.getJob(this.jobId)
-        return { job: stillThere, created: false, message: 'Drug data download already running' }
+        return { job: stillThere, created: false, message: 'O download dos dados de medicamentos já está em andamento' }
       }
       throw error
     }

@@ -35,7 +35,7 @@ export class SystemUpdateService {
       if (currentStatus && !['idle', 'complete', 'error'].includes(currentStatus.stage)) {
         return {
           success: false,
-          message: `Update already in progress (stage: ${currentStatus.stage})`,
+          message: `Já há uma atualização em andamento (etapa: ${currentStatus.stage})`,
         }
       }
 
@@ -58,13 +58,13 @@ export class SystemUpdateService {
 
       return {
         success: true,
-        message: 'System update initiated. The admin container will restart during the process.',
+        message: 'Atualização do sistema iniciada. O contêiner do painel será reiniciado durante o processo.',
       }
     } catch (error) {
       logger.error({ err: error }, '[SystemUpdateService] Failed to request system update')
       return {
         success: false,
-        message: 'Failed to request system update. Check server logs for details.',
+        message: 'Não foi possível solicitar a atualização do sistema. Veja os registros do servidor.',
       }
     }
   }
@@ -75,7 +75,7 @@ export class SystemUpdateService {
         return {
           stage: 'idle',
           progress: 0,
-          message: 'No update in progress',
+          message: 'Nenhuma atualização em andamento',
           timestamp: new Date().toISOString(),
         }
       }

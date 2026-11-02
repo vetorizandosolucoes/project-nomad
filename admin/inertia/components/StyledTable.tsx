@@ -43,7 +43,7 @@ function StyledTable<T extends { [key: string]: any }>({
   tableBodyClassName = '',
   tableBodyStyle = {},
   data = [],
-  noDataText = 'No records found',
+  noDataText = 'Nenhum registro encontrado',
   onRowClick,
   columns = [],
   className = '',
@@ -140,7 +140,7 @@ function StyledTable<T extends { [key: string]: any }>({
                       >
                         <button
                           className="text-text-muted hover:text-text-primary focus:outline-none"
-                          aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
+                          aria-label={isExpanded ? 'Recolher linha' : 'Expandir linha'}
                         >
                           <svg
                             className={classNames(

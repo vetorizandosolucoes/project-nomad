@@ -4,67 +4,71 @@ import ChatButton from '~/components/chat/ChatButton'
 import ChatModal from '~/components/chat/ChatModal'
 import useServiceInstalledStatus from '~/hooks/useServiceInstalledStatus'
 import { SERVICE_NAMES } from '../../constants/service_names'
-import { Link, router } from '@inertiajs/react'
-import { IconArrowLeft } from '@tabler/icons-react'
+import { Link } from '@inertiajs/react'
+import {
+  IconApps,
+  IconBook,
+  IconHome,
+  IconMapRoute,
+  IconSettings,
+} from '@tabler/icons-react'
 import classNames from 'classnames'
+
+const NAV_ITEMS = [
+  { label: 'Início', href: '/home', match: '/home', icon: IconHome },
+  { label: 'Aplicativos', href: '/supply-depot', match: '/supply-depot', icon: IconApps },
+  { label: 'Mapas', href: '/maps', match: '/maps', icon: IconMapRoute },
+  { label: 'Documentação', href: '/docs/home', match: '/docs', icon: IconBook },
+  { label: 'Configurações', href: '/settings/system', match: '/settings', icon: IconSettings },
+]
 
 export default function AppLayout({
   children,
-  compact = false,
 }: {
   children: React.ReactNode
-  /**
-   * Compact header for focused tool pages (e.g. Drug Reference): a small inline
-   * logo + title instead of the full-height branding block, so the tool's own
-   * controls sit near the top of the viewport instead of ~230px down.
-   */
+  /** Kept for existing callers: every page now shares the same compact top bar. */
   compact?: boolean
 }) {
   const [isChatOpen, setIsChatOpen] = useState(false)
   const aiAssistantInstalled = useServiceInstalledStatus(SERVICE_NAMES.OLLAMA)
+  const path = window.location.pathname
 
   return (
     <div className="min-h-screen flex flex-col">
-      {
-        window.location.pathname !== '/home' && (
-          <Link
-            href="/home"
-            className={classNames(
-              'absolute left-4 flex items-center',
-              compact ? 'top-4' : 'top-60 md:top-48'
-            )}
-          >
-            <IconArrowLeft className="mr-2" size={24} />
-            <p className="text-lg text-text-secondary">Back to Home</p>
+      <header className="sticky top-0 z-40 border-b border-border-subtle bg-surface-primary/85 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-7xl items-center gap-4 px-4 py-2.5">
+          <Link href="/home" className="flex shrink-0 items-center gap-2.5">
+            <img src="/vetorizando-icon.png" alt="" className="h-9 w-auto object-contain" />
+            <span className="hidden text-sm font-semibold leading-tight text-text-primary sm:block">
+              Vetorizando Soluções
+              <span className="block text-xs font-normal text-text-muted">Central de Comando</span>
+            </span>
           </Link>
-        )}
-      <div
-        className={classNames(
-          'flex cursor-pointer items-center justify-center',
-          compact ? 'gap-3 p-3 flex-row' : 'gap-2 p-2 flex-col'
-        )}
-        onClick={() => router.visit('/home')}
-      >
-        <img
-          src="/nomad-primary.svg"
-          alt="Project NOMAD Logo"
-          className={compact ? 'h-12 w-12 object-contain' : 'h-40 w-40 object-contain'}
-        />
-        <h1
-          className={classNames(
-            'font-bold text-desert-green',
-            compact ? 'text-2xl' : 'text-5xl'
-          )}
-        >
-          Command Center
-        </h1>
-      </div>
-      <hr className={
-        classNames(
-          "text-desert-green font-semibold h-[1.5px] bg-desert-green border-none",
-          !compact && window.location.pathname !== '/home' ? "mt-12 md:mt-0" : "mt-0"
-        )} />
-      <div className="flex-1 w-full bg-desert">{children}</div>
+          <nav aria-label="Navegação principal" className="ml-auto flex min-w-0 items-center gap-1 overflow-x-auto">
+            {NAV_ITEMS.map((item) => {
+              const active = path.startsWith(item.match)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? 'page' : undefined}
+                  className={classNames(
+                    'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                    active
+                      ? 'bg-desert-green text-white'
+                      : 'text-text-secondary hover:bg-desert-green-lighter hover:text-text-primary'
+                  )}
+                >
+                  <item.icon size={18} aria-hidden="true" />
+                  <span className="hidden md:inline">{item.label}</span>
+                  <span className="sr-only md:hidden">{item.label}</span>
+                </Link>
+              )
+            })}
+          </nav>
+        </div>
+      </header>
+      <main className="mx-auto w-full max-w-7xl flex-1">{children}</main>
       <Footer />
 
       {aiAssistantInstalled && (

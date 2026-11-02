@@ -112,14 +112,14 @@ function renderStatePill(record: KbFileGroup): React.ReactNode {
         <span
           className={`${base} text-green-700 bg-green-50 border-green-200 dark:text-green-300 dark:bg-green-950/40 dark:border-green-800`}
         >
-          Indexed
+          Indexado
         </span>
       )
     case 'pending_decision':
     case 'browse_only':
       return (
         <span className={`${base} text-text-secondary bg-surface-secondary border-border-subtle`}>
-          Not Indexed
+          Não indexado
         </span>
       )
     case 'failed':
@@ -127,7 +127,7 @@ function renderStatePill(record: KbFileGroup): React.ReactNode {
         <span
           className={`${base} text-red-700 bg-red-50 border-red-200 dark:text-red-300 dark:bg-red-950/40 dark:border-red-800`}
         >
-          Failed
+          Falhou
         </span>
       )
     case 'stalled':
@@ -135,7 +135,7 @@ function renderStatePill(record: KbFileGroup): React.ReactNode {
         <span
           className={`${base} text-amber-700 bg-amber-50 border-amber-200 dark:text-amber-300 dark:bg-amber-950/40 dark:border-amber-800`}
         >
-          Stalled
+          Travado
         </span>
       )
   }
@@ -160,7 +160,7 @@ function pickRowAction(record: KbFileGroup, hasWarnings: boolean): RowAction | n
       return hasWarnings
         ? {
             kind: 'reembed',
-            label: 'Re-embed',
+            label: 'Recalcular',
             force: true,
             variant: 'secondary',
             icon: 'IconRefreshAlert',
@@ -169,7 +169,7 @@ function pickRowAction(record: KbFileGroup, hasWarnings: boolean): RowAction | n
     case 'pending_decision':
       return {
         kind: 'index',
-        label: 'Index',
+        label: 'Indexar',
         force: false,
         variant: 'primary',
         icon: 'IconDownload',
@@ -177,19 +177,19 @@ function pickRowAction(record: KbFileGroup, hasWarnings: boolean): RowAction | n
     case 'browse_only':
       return {
         kind: 'index',
-        label: 'Index',
+        label: 'Indexar',
         force: true,
         variant: 'primary',
         icon: 'IconDownload',
       }
     case 'failed':
     case 'stalled':
-      return { kind: 'index', label: 'Retry', force: true, variant: 'primary', icon: 'IconRefresh' }
+      return { kind: 'index', label: 'Tentar novamente', force: true, variant: 'primary', icon: 'IconRefresh' }
   }
 }
 
 export default function KnowledgeBaseModal({
-  aiAssistantName = 'AI Assistant',
+  aiAssistantName = 'Assistente de IA',
   onClose,
 }: KnowledgeBaseModalProps) {
   const { addNotification } = useNotifications()
@@ -275,14 +275,14 @@ export default function KnowledgeBaseModal({
         type: 'success',
         message:
           policy === 'Always'
-            ? 'New content will be auto-indexed for AI.'
-            : 'New content will wait for you to opt in.',
+            ? 'Novos conteúdos serão indexados automaticamente para a IA.'
+            : 'Novos conteúdos aguardarão sua autorização para serem indexados.',
       })
     },
     onError: (error: any) => {
       addNotification({
         type: 'error',
-        message: error?.message || 'Failed to update indexing policy.',
+        message: error?.message || 'Não foi possível atualizar a política de indexação.',
       })
     },
   })
@@ -295,12 +295,12 @@ export default function KnowledgeBaseModal({
     mutationFn: ({ source, collection }: { source: string; collection: string }) =>
       api.updateFileCollection(source, collection || null),
     onSuccess: (data) => {
-      addNotification({ type: 'success', message: data?.message || 'Collection updated.' })
+      addNotification({ type: 'success', message: data?.message || 'Coleção atualizada.' })
       queryClient.invalidateQueries({ queryKey: ['storedFiles'] })
       queryClient.invalidateQueries({ queryKey: ['kbCollections'] })
     },
     onError: (error: any) => {
-      addNotification({ type: 'error', message: error?.message || 'Failed to update collection.' })
+      addNotification({ type: 'error', message: error?.message || 'Não foi possível atualizar a coleção.' })
     },
   })
 
@@ -308,13 +308,13 @@ export default function KnowledgeBaseModal({
     mutationFn: ({ source, active }: { source: string; active: boolean }) =>
       api.setFileActive(source, active),
     onSuccess: (data) => {
-      addNotification({ type: 'success', message: data?.message || 'Active state updated.' })
+      addNotification({ type: 'success', message: data?.message || 'Estado de ativação atualizado.' })
       queryClient.invalidateQueries({ queryKey: ['storedFiles'] })
     },
     onError: (error: any) => {
       addNotification({
         type: 'error',
-        message: error?.message || 'Failed to update active state.',
+        message: error?.message || 'Não foi possível atualizar o estado de ativação.',
       })
     },
   })
@@ -325,14 +325,14 @@ export default function KnowledgeBaseModal({
     onSuccess: (data) => {
       addNotification({
         type: 'success',
-        message: data?.message || 'Collection active state updated.',
+        message: data?.message || 'Estado de ativação da coleção atualizado.',
       })
       queryClient.invalidateQueries({ queryKey: ['storedFiles'] })
     },
     onError: (error: any) => {
       addNotification({
         type: 'error',
-        message: error?.message || 'Failed to update collection active state.',
+        message: error?.message || 'Não foi possível atualizar o estado de ativação da coleção.',
       })
     },
   })
@@ -340,12 +340,12 @@ export default function KnowledgeBaseModal({
   const deleteMutation = useMutation({
     mutationFn: (source: string) => api.deleteRAGFile(source),
     onSuccess: () => {
-      addNotification({ type: 'success', message: 'File removed from knowledge base.' })
+      addNotification({ type: 'success', message: 'Arquivo removido da base de conhecimento.' })
       setConfirmDeleteSource(null)
       queryClient.invalidateQueries({ queryKey: ['storedFiles'] })
     },
     onError: (error: any) => {
-      addNotification({ type: 'error', message: error?.message || 'Failed to delete file.' })
+      addNotification({ type: 'error', message: error?.message || 'Não foi possível excluir o arquivo.' })
       setConfirmDeleteSource(null)
     },
   })
@@ -356,7 +356,7 @@ export default function KnowledgeBaseModal({
     onSuccess: (data) => {
       addNotification({
         type: 'success',
-        message: data?.message || 'File queued for embedding.',
+        message: data?.message || 'Arquivo adicionado à fila de embeddings.',
       })
       setConfirmReembed(null)
       queryClient.invalidateQueries({ queryKey: ['storedFiles'] })
@@ -364,7 +364,7 @@ export default function KnowledgeBaseModal({
       queryClient.invalidateQueries({ queryKey: ['kbFileWarnings'] })
     },
     onError: (error: any) => {
-      addNotification({ type: 'error', message: error?.message || 'Failed to queue file.' })
+      addNotification({ type: 'error', message: error?.message || 'Não foi possível adicionar o arquivo à fila.' })
       setConfirmReembed(null)
     },
   })
@@ -372,11 +372,11 @@ export default function KnowledgeBaseModal({
   const cleanupFailedMutation = useMutation({
     mutationFn: () => api.cleanupFailedEmbedJobs(),
     onSuccess: (data) => {
-      addNotification({ type: 'success', message: data?.message || 'Failed jobs cleaned up.' })
+      addNotification({ type: 'success', message: data?.message || 'Tarefas com falha removidas.' })
       queryClient.invalidateQueries({ queryKey: ['failedEmbedJobs'] })
     },
     onError: (error: any) => {
-      addNotification({ type: 'error', message: error?.message || 'Failed to clean up jobs.' })
+      addNotification({ type: 'error', message: error?.message || 'Não foi possível limpar as tarefas.' })
     },
   })
 
@@ -385,7 +385,7 @@ export default function KnowledgeBaseModal({
     onSuccess: (data) => {
       addNotification({
         type: 'success',
-        message: data?.message || 'All embedding jobs cancelled.',
+        message: data?.message || 'Todas as tarefas de embeddings foram canceladas.',
       })
       queryClient.invalidateQueries({ queryKey: ['embed-jobs'] })
       queryClient.invalidateQueries({ queryKey: ['failedEmbedJobs'] })
@@ -393,7 +393,7 @@ export default function KnowledgeBaseModal({
       queryClient.invalidateQueries({ queryKey: ['kbFileWarnings'] })
     },
     onError: (error: any) => {
-      addNotification({ type: 'error', message: error?.message || 'Failed to cancel jobs.' })
+      addNotification({ type: 'error', message: error?.message || 'Não foi possível cancelar as tarefas.' })
     },
   })
 
@@ -404,7 +404,7 @@ export default function KnowledgeBaseModal({
       queryClient.invalidateQueries({ queryKey: ['qdrantHealth'] })
     },
     onError: (error: any) => {
-      addNotification({ type: 'error', message: error?.message || 'Failed to start Qdrant.' })
+      addNotification({ type: 'error', message: error?.message || 'Não foi possível iniciar o Qdrant.' })
     },
   })
 
@@ -415,13 +415,13 @@ export default function KnowledgeBaseModal({
         type: 'success',
         message:
           data?.message ||
-          'Storage synced successfully. If new files were found, they have been queued for processing.',
+          'Armazenamento sincronizado com sucesso. Se novos arquivos foram encontrados, eles foram enviados para processamento.',
       })
     },
     onError: (error: any) => {
       addNotification({
         type: 'error',
-        message: error?.message || 'Failed to sync storage',
+        message: error?.message || 'Não foi possível sincronizar o armazenamento',
       })
     },
   })
@@ -431,7 +431,7 @@ export default function KnowledgeBaseModal({
     onSuccess: (data) => {
       addNotification({
         type: data?.success ? 'success' : 'error',
-        message: data?.message || 'Re-embed completed.',
+        message: data?.message || 'Recálculo concluído.',
       })
       queryClient.invalidateQueries({ queryKey: ['storedFiles'] })
       queryClient.invalidateQueries({ queryKey: ['embed-jobs'] })
@@ -439,7 +439,7 @@ export default function KnowledgeBaseModal({
       setResetTyped('')
     },
     onError: () => {
-      addNotification({ type: 'error', message: 'Failed to re-embed knowledge base.' })
+      addNotification({ type: 'error', message: 'Não foi possível recalcular os embeddings da base de conhecimento.' })
       setBulkMode(null)
     },
   })
@@ -449,7 +449,7 @@ export default function KnowledgeBaseModal({
     onSuccess: (data) => {
       addNotification({
         type: data?.success ? 'success' : 'error',
-        message: data?.message || 'Reset complete.',
+        message: data?.message || 'Reinicialização concluída.',
       })
       queryClient.invalidateQueries({ queryKey: ['storedFiles'] })
       queryClient.invalidateQueries({ queryKey: ['embed-jobs'] })
@@ -457,7 +457,7 @@ export default function KnowledgeBaseModal({
       setResetTyped('')
     },
     onError: () => {
-      addNotification({ type: 'error', message: 'Failed to reset knowledge base.' })
+      addNotification({ type: 'error', message: 'Não foi possível reinicializar a base de conhecimento.' })
       setBulkMode(null)
     },
   })
@@ -487,11 +487,11 @@ export default function KnowledgeBaseModal({
     if (successCount > 0) {
       addNotification({
         type: 'success',
-        message: `${successCount} file${successCount > 1 ? 's' : ''} queued for processing.`,
+        message: `${successCount} ${successCount > 1 ? 'arquivos enviados' : 'arquivo enviado'} para processamento.`,
       })
     }
     for (const name of failedNames) {
-      addNotification({ type: 'error', message: `Failed to upload: ${name}` })
+      addNotification({ type: 'error', message: `Não foi possível enviar: ${name}` })
     }
   }
 
@@ -510,22 +510,19 @@ export default function KnowledgeBaseModal({
   const handleConfirmCancelAll = () => {
     openModal(
       <StyledModal
-        title="Cancel All Embedding Jobs?"
+        title="Cancelar todas as tarefas de embeddings?"
         onConfirm={() => {
           cancelAllMutation.mutate()
           closeModal('confirm-cancel-all-modal')
         }}
         onCancel={() => closeModal('confirm-cancel-all-modal')}
         open={true}
-        confirmText="Cancel All Jobs"
-        cancelText="Keep Jobs"
+        confirmText="Cancelar todas as tarefas"
+        cancelText="Manter tarefas"
         confirmVariant="danger"
       >
         <p className="text-text-primary">
-          This stops <strong>every</strong> embedding job — including ones still in progress or
-          stuck — and clears the processing queue. The uploaded source files for those jobs are
-          deleted, so you'll need to re-upload anything you still want indexed. Stored files that
-          already finished embedding are not affected. Are you sure you want to proceed?
+          Isso para <strong>toda</strong> tarefa de embeddings — inclusive as em andamento ou travadas — e limpa a fila de processamento. Os arquivos enviados dessas tarefas são apagados, então você precisará reenviar o que ainda quiser indexar. Arquivos já processados não são afetados. Tem certeza de que quer continuar?
         </p>
       </StyledModal>,
       'confirm-cancel-all-modal'
@@ -535,22 +532,19 @@ export default function KnowledgeBaseModal({
   const handleConfirmSync = () => {
     openModal(
       <StyledModal
-        title="Confirm Sync?"
+        title="Confirmar sincronização?"
         onConfirm={() => {
           syncMutation.mutate()
           closeModal('confirm-sync-modal')
         }}
         onCancel={() => closeModal('confirm-sync-modal')}
         open={true}
-        confirmText="Confirm Sync"
-        cancelText="Cancel"
+        confirmText="Confirmar sincronização"
+        cancelText="Cancelar"
         confirmVariant="primary"
       >
         <p className="text-text-primary">
-          This will scan the NOMAD's storage directories for any new files and queue them for
-          processing. This is useful if you've manually added files to the storage or want to ensure
-          everything is up to date. This may cause a temporary increase in resource usage if new
-          files are found and being processed. Are you sure you want to proceed?
+          Isso verifica as pastas de armazenamento em busca de novos arquivos e os coloca na fila de processamento. É útil se você adicionou arquivos manualmente ou quer garantir que tudo esteja atualizado. O uso de recursos pode aumentar temporariamente se houver arquivos novos. Tem certeza de que quer continuar?
         </p>
       </StyledModal>,
       'confirm-sync-modal'
@@ -565,7 +559,7 @@ export default function KnowledgeBaseModal({
           against 961px of usable width at 5xl. */}
       <div className="bg-surface-primary rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between p-6 border-b border-border-subtle shrink-0">
-          <h2 className="text-2xl font-semibold text-text-primary">Knowledge Base</h2>
+          <h2 className="text-2xl font-semibold text-text-primary">Base de conhecimento</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-surface-secondary rounded-lg transition-colors"
@@ -577,7 +571,7 @@ export default function KnowledgeBaseModal({
           {qdrantOffline && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm dark:bg-red-950 dark:border-red-800 dark:text-red-300 flex items-center justify-between gap-4">
               <span>
-                <strong>Knowledge Base unavailable:</strong> The Qdrant vector database is offline.
+                <strong>Base de conhecimento indisponível:</strong> o banco de vetores Qdrant está offline.
               </span>
               <StyledButton
                 variant="danger"
@@ -586,7 +580,7 @@ export default function KnowledgeBaseModal({
                 loading={startQdrantMutation.isPending || isStartingQdrant}
                 disabled={startQdrantMutation.isPending || isStartingQdrant}
               >
-                {isStartingQdrant ? 'Starting…' : 'Start Qdrant'}
+                {isStartingQdrant ? 'Iniciando…' : 'Iniciar Qdrant'}
               </StyledButton>
             </div>
           )}
@@ -602,7 +596,7 @@ export default function KnowledgeBaseModal({
               />
               <div className="flex justify-center items-center gap-4 my-6">
                 <label className="flex items-center gap-2 text-sm text-text-secondary">
-                  Collection:
+                  Coleção:
                   <CollectionCombobox
                     value={uploadCollection}
                     onChange={setUploadCollection}
@@ -618,13 +612,13 @@ export default function KnowledgeBaseModal({
                   disabled={files.length === 0 || isUploading || qdrantOffline}
                   loading={isUploading}
                 >
-                  Upload
+                  Enviar
                 </StyledButton>
               </div>
             </div>
             <div className="border-t bg-surface-primary p-6">
               <h3 className="text-lg font-semibold text-desert-green mb-4">
-                Why upload documents to your Knowledge Base?
+                Por que enviar documentos para a sua Base de conhecimento?
               </h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
@@ -633,14 +627,11 @@ export default function KnowledgeBaseModal({
                   </div>
                   <div>
                     <p className="font-medium text-desert-stone-dark">
-                      {aiAssistantName} Knowledge Base Integration
+                      {aiAssistantName} Integração com a Base de conhecimento
                     </p>
                     <p className="text-sm text-desert-stone">
-                      When you upload documents to your Knowledge Base, NOMAD processes and embeds
-                      the content, making it directly accessible to {aiAssistantName}. This allows{' '}
-                      {aiAssistantName} to reference your specific documents during conversations,
-                      providing more accurate and personalized responses based on your uploaded
-                      data.
+                      Quando você envia documentos para a Base de conhecimento, o sistema processa o conteúdo e o deixa acessível para {aiAssistantName}. Assim,{' '}
+                      {aiAssistantName} pode consultar os seus documentos durante as conversas e dar respostas mais precisas e personalizadas com base nos dados enviados.
                     </p>
                   </div>
                 </div>
@@ -650,13 +641,10 @@ export default function KnowledgeBaseModal({
                   </div>
                   <div>
                     <p className="font-medium text-desert-stone-dark">
-                      Enhanced Document Processing with OCR
+                      Processamento de documentos com OCR
                     </p>
                     <p className="text-sm text-desert-stone">
-                      NOMAD includes built-in Optical Character Recognition (OCR) capabilities,
-                      allowing it to extract text from image-based documents such as scanned PDFs or
-                      photos. This means that even if your documents are not in a standard text
-                      format, NOMAD can still process and embed their content for AI access.
+                      O sistema tem reconhecimento óptico de caracteres (OCR) integrado, que extrai texto de documentos em imagem, como PDFs digitalizados ou fotos. Assim, mesmo documentos fora de um formato de texto padrão podem ser processados e ficar acessíveis para a IA.
                     </p>
                   </div>
                 </div>
@@ -666,12 +654,11 @@ export default function KnowledgeBaseModal({
                   </div>
                   <div>
                     <p className="font-medium text-desert-stone-dark">
-                      Information Library Integration
+                      Integração com a Biblioteca de informações
                     </p>
                     <p className="text-sm text-desert-stone">
-                      NOMAD will automatically discover and extract any content you save to your
-                      Information Library (if installed), making it instantly available to{' '}
-                      {aiAssistantName} without any extra steps.
+                      O sistema encontra e extrai automaticamente o conteúdo salvo na Biblioteca de informações (se instalada), deixando-o disponível para{' '}
+                      {aiAssistantName} sem etapas adicionais.
                     </p>
                   </div>
                 </div>
@@ -682,16 +669,15 @@ export default function KnowledgeBaseModal({
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex-1 min-w-[14rem]">
                 <p className="text-sm font-medium text-text-primary">
-                  Auto-index new content for AI?
+                  Indexar automaticamente o novo conteúdo para a IA?
                 </p>
                 <p className="text-xs text-text-muted mt-1">
-                  Indexed content typically uses 5–10× the original file size on disk. Changes apply
-                  to new content added after this setting changes.
+                  O conteúdo indexado costuma ocupar de 5 a 10 vezes o tamanho original no disco. As mudanças valem para o conteúdo adicionado depois de alterar esta opção.
                 </p>
               </div>
               <div
                 role="radiogroup"
-                aria-label="Ingest policy"
+                aria-label="Política de indexação"
                 className="inline-flex rounded-md overflow-hidden border border-border-subtle"
               >
                 {(['Always', 'Manual'] as const).map((option) => {
@@ -720,7 +706,7 @@ export default function KnowledgeBaseModal({
 
           <div className="my-8">
             <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
-              <StyledSectionHeader title="Processing Queue" className="!mb-0" />
+              <StyledSectionHeader title="Fila de processamento" className="!mb-0" />
               <div className="flex items-center gap-2 flex-wrap">
                 <StyledButton
                   variant="danger"
@@ -730,7 +716,7 @@ export default function KnowledgeBaseModal({
                   loading={cleanupFailedMutation.isPending}
                   disabled={cleanupFailedMutation.isPending || qdrantOffline}
                 >
-                  Clean Up Failed
+                  Limpar falhas
                 </StyledButton>
                 <StyledButton
                   variant="danger"
@@ -739,9 +725,9 @@ export default function KnowledgeBaseModal({
                   onClick={handleConfirmCancelAll}
                   loading={cancelAllMutation.isPending}
                   disabled={cancelAllMutation.isPending}
-                  title="Stop and clear every embedding job regardless of state, including stuck or in-progress ones. Deletes the uploaded source files for those jobs."
+                  title="Para e limpa todas as tarefas de embeddings, em qualquer estado, inclusive as travadas ou em andamento. Apaga os arquivos enviados dessas tarefas."
                 >
-                  Cancel All Jobs
+                  Cancelar todas as tarefas
                 </StyledButton>
               </div>
             </div>
@@ -750,22 +736,22 @@ export default function KnowledgeBaseModal({
 
           <div className="my-12">
             <div className="flex items-center justify-between mb-6 gap-2 flex-wrap">
-              <StyledSectionHeader title="Stored Knowledge Base Files" className="!mb-0" />
+              <StyledSectionHeader title="Arquivos da Base de conhecimento" className="!mb-0" />
               <div className="flex items-center gap-2 flex-wrap">
                 <label className="flex items-center gap-2 text-sm text-text-secondary">
-                  Search in:
+                  Pesquisar em:
                   <select
                     value={collectionFilter}
                     onChange={(e) => setCollectionFilter(e.target.value)}
                     className="rounded border border-border-subtle bg-surface-primary px-3 py-2 text-text-primary"
                   >
-                    <option value="All">All</option>
+                    <option value="All">Todas</option>
                     {knownCollections.map((c) => (
                       <option key={c} value={c}>
                         {c}
                       </option>
                     ))}
-                    <option value={UNCATEGORIZED_COLLECTION_KEY}>Uncategorized</option>
+                    <option value={UNCATEGORIZED_COLLECTION_KEY}>Sem categoria</option>
                   </select>
                 </label>
                 <StyledButton
@@ -774,7 +760,7 @@ export default function KnowledgeBaseModal({
                   icon="IconSettings"
                   onClick={() => setManageCollectionsOpen(true)}
                 >
-                  Manage Collections
+                  Gerenciar Collections
                 </StyledButton>
                 <StyledButton
                   variant="danger"
@@ -786,9 +772,9 @@ export default function KnowledgeBaseModal({
                   }}
                   disabled={isUploading || qdrantOffline || bulkBusy}
                   loading={resetMutation.isPending}
-                  title="Drop the entire embeddings collection and re-embed everything from scratch. Permanently removes vectors for files no longer on disk. Destructive: requires typing RESET to confirm."
+                  title="Apaga toda a coleção de embeddings e recalcula tudo do zero. Remove permanentemente os vetores de arquivos que não estão mais no disco. Ação destrutiva: exige digitar RESET para confirmar."
                 >
-                  Reset & Rebuild
+                  Reinicializar e reconstruir
                 </StyledButton>
                 <StyledButton
                   variant="secondary"
@@ -797,9 +783,9 @@ export default function KnowledgeBaseModal({
                   onClick={() => setBulkMode('reembed')}
                   disabled={isUploading || qdrantOffline || bulkBusy || storedFiles.length === 0}
                   loading={reembedMutation.isPending}
-                  title="Re-embed every file on disk, replacing existing vectors file-by-file. Vectors for files no longer on disk are preserved. Use this if the chunker or embedding model has changed."
+                  title="Recalcula os embeddings de todos os arquivos no disco, substituindo os vetores arquivo por arquivo. Os vetores de arquivos que não estão mais no disco são mantidos. Use se o divisor de texto ou o modelo de embeddings mudou."
                 >
-                  Re-embed All
+                  Recalcular tudo
                 </StyledButton>
                 <StyledButton
                   variant="secondary"
@@ -808,16 +794,16 @@ export default function KnowledgeBaseModal({
                   onClick={handleConfirmSync}
                   disabled={syncMutation.isPending || isUploading || qdrantOffline || bulkBusy}
                   loading={syncMutation.isPending || isUploading}
-                  title="Scan storage for new files and queue any that haven't been embedded yet. Safe to run anytime; won't touch already-embedded content."
+                  title="Verifica o armazenamento em busca de novos arquivos e coloca na fila os que ainda não têm embeddings. Pode ser usado a qualquer momento; não mexe no conteúdo já processado."
                 >
-                  Sync Storage
+                  Sincronizar armazenamento
                 </StyledButton>
               </div>
             </div>
             {warningsUnavailable && (
               <div className="mb-4 inline-flex items-center gap-2 text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded px-3 py-2">
                 <span aria-hidden="true">⚠</span>
-                <span>File warnings unavailable — couldn't read storage state. Retrying…</span>
+                <span>Avisos de arquivos indisponíveis — não foi possível ler o estado do armazenamento. Tentando novamente…</span>
               </div>
             )}
             <StyledTable<KbFileGroup>
@@ -871,15 +857,13 @@ export default function KnowledgeBaseModal({
                                 <span aria-hidden="true">⚠</span>
                                 {w.kind === 'zero_chunks' && (
                                   <span>
-                                    Embedded 0 chunks — this file has no text content. AI Assistant
-                                    cannot reference it.
+                                    Nenhum trecho processado — este arquivo não tem texto. O Assistente de IA não pode consultá-lo.
                                   </span>
                                 )}
                                 {w.kind === 'partial_stall' && (
                                   <span>
-                                    Only {w.chunksEmbedded.toLocaleString()} of est.{' '}
-                                    {w.chunksExpected.toLocaleString()} chunks embedded — ingestion
-                                    may have stalled.
+                                    Apenas {w.chunksEmbedded.toLocaleString()} de aprox.{' '}
+                                    {w.chunksExpected.toLocaleString()} trechos processados — a indexação pode ter travado.
                                   </span>
                                 )}
                               </span>
@@ -919,7 +903,7 @@ export default function KnowledgeBaseModal({
                 },
                 {
                   accessor: 'collection',
-                  title: 'Collection',
+                  title: 'Coleção',
                   className: 'whitespace-nowrap',
                   noTruncate: true,
                   render(record) {
@@ -947,7 +931,7 @@ export default function KnowledgeBaseModal({
                 },
                 {
                   accessor: 'active',
-                  title: 'Active',
+                  title: 'Ativo',
                   render(record) {
                     if (record.bucket === 'admin_docs') {
                       return <span className="text-text-muted">—</span>
@@ -991,7 +975,7 @@ export default function KnowledgeBaseModal({
                     if (record.bucket === 'admin_docs') {
                       return (
                         <div className="flex justify-end">
-                          <span className="text-sm text-text-muted italic">Managed by NOMAD</span>
+                          <span className="text-sm text-text-muted italic">Gerenciado pelo sistema</span>
                         </div>
                       )
                     }
@@ -1006,7 +990,7 @@ export default function KnowledgeBaseModal({
                       return (
                         <div className="flex items-center gap-2 justify-end">
                           <span className="text-sm text-text-secondary">
-                            Remove from knowledge base?
+                            Remover da base de conhecimento?
                           </span>
                           <StyledButton
                             variant="danger"
@@ -1014,7 +998,7 @@ export default function KnowledgeBaseModal({
                             onClick={() => deleteMutation.mutate(record.source)}
                             disabled={isDeleting}
                           >
-                            {isDeleting ? 'Deleting…' : 'Confirm'}
+                            {isDeleting ? 'Excluindo…' : 'Confirmar'}
                           </StyledButton>
                           <StyledButton
                             variant="ghost"
@@ -1022,7 +1006,7 @@ export default function KnowledgeBaseModal({
                             onClick={() => setConfirmDeleteSource(null)}
                             disabled={isDeleting}
                           >
-                            Cancel
+                            Cancelar
                           </StyledButton>
                         </div>
                       )
@@ -1071,7 +1055,7 @@ export default function KnowledgeBaseModal({
                             icon="IconEye"
                             onClick={() => setViewerSource(record.source)}
                           >
-                            View
+                            Ver
                           </StyledButton>
                         )}
                         {canDownload && (
@@ -1083,7 +1067,7 @@ export default function KnowledgeBaseModal({
                               window.location.href = `/api/rag/files/download?source=${encodeURIComponent(record.source)}`
                             }}
                           >
-                            Download
+                            Baixar
                           </StyledButton>
                         )}
                         <StyledButton
@@ -1096,7 +1080,7 @@ export default function KnowledgeBaseModal({
                             deleteMutation.isPending && confirmDeleteSource === record.source
                           }
                         >
-                          Delete
+                          Excluir
                         </StyledButton>
                       </div>
                     )
@@ -1122,10 +1106,10 @@ export default function KnowledgeBaseModal({
 
       {bulkMode === 'reembed' && (
         <StyledModal
-          title="Re-embed All Documents?"
+          title="Recalcular todos os documentos?"
           open={true}
-          confirmText={reembedMutation.isPending ? 'Re-embedding…' : 'Re-embed All'}
-          cancelText="Cancel"
+          confirmText={reembedMutation.isPending ? 'Recalculando…' : 'Recalcular tudo'}
+          cancelText="Cancelar"
           confirmVariant="primary"
           confirmLoading={reembedMutation.isPending}
           onConfirm={() => reembedMutation.mutate()}
@@ -1133,41 +1117,34 @@ export default function KnowledgeBaseModal({
         >
           <div className="text-text-primary text-sm space-y-3 text-left">
             <p>
-              This will re-process every document currently in your knowledge base — about
+              Isso reprocessa todos os documentos da sua base de conhecimento — cerca de
               <strong>
                 {' '}
-                {storedFiles.length} file{storedFiles.length === 1 ? '' : 's'}
+                {storedFiles.length} arquivo{storedFiles.length === 1 ? '' : 's'}
               </strong>
-              . For each file, NOMAD will delete the existing embeddings from Qdrant and queue a
-              fresh embedding job using the current chunking and embedding model.
+              . Para cada arquivo, o sistema apaga os embeddings existentes no Qdrant e cria uma nova tarefa com o divisor de texto e o modelo de embeddings atuais.
             </p>
             <div className="rounded border border-border-subtle bg-surface-secondary p-3">
-              <p className="font-semibold mb-1">What this is for</p>
+              <p className="font-semibold mb-1">Para que serve</p>
               <p className="text-text-secondary">
-                Use this when the embedding model or chunking logic has changed, or when you suspect
-                stored vectors are stale. Files on disk are <em>not</em> deleted, and any orphan
-                points whose source file is no longer present will be preserved untouched (see
-                <em> Reset &amp; Rebuild </em>if you want a fully clean slate).
+                Use quando o modelo de embeddings ou a divisão de texto mudar, ou se suspeitar que os vetores estão desatualizados. Os arquivos no disco <em>não</em> são apagados, e os pontos órfãos cujo arquivo de origem não existe mais continuam intactos (veja
+                <em> Reinicializar e reconstruir </em>se quiser começar totalmente do zero).
               </p>
             </div>
             <div className="rounded border border-amber-300 bg-amber-50 dark:bg-amber-950 dark:border-amber-800 p-3 text-amber-900 dark:text-amber-200">
-              <p className="font-semibold mb-1">Heads up</p>
+              <p className="font-semibold mb-1">Atenção</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>
-                  Embedding {storedFiles.length} file{storedFiles.length === 1 ? '' : 's'} may take
-                  a long time, especially for large PDFs or ZIM archives.
+                  A geração de embeddings {storedFiles.length} arquivo{storedFiles.length === 1 ? '' : 's'} pode demorar bastante, principalmente em PDFs grandes ou arquivos ZIM.
                 </li>
                 <li>
-                  On systems without GPU acceleration, expect sustained high CPU usage for the
-                  duration.
+                  Em sistemas sem aceleração por GPU, espere uso alto de CPU durante todo o processo.
                 </li>
                 <li>
-                  Knowledge Base search results may be incomplete until every file finishes
-                  re-embedding.
+                  Os resultados de pesquisa da Base de conhecimento podem ficar incompletos até o recálculo terminar.
                 </li>
                 <li>
-                  If embed jobs are already in progress, this action will be refused — wait for the
-                  queue to drain first.
+                  Se já houver tarefas em andamento, esta ação será recusada — espere a fila esvaziar.
                 </li>
               </ul>
             </div>
@@ -1177,10 +1154,10 @@ export default function KnowledgeBaseModal({
 
       {bulkMode === 'reset' && (
         <StyledModal
-          title="Reset & Rebuild Knowledge Base?"
+          title="Reinicializar e reconstruir a base de conhecimento?"
           open={true}
-          confirmText={resetMutation.isPending ? 'Resetting…' : 'Wipe & Rebuild'}
-          cancelText="Cancel"
+          confirmText={resetMutation.isPending ? 'Reinicializando…' : 'Apagar e reconstruir'}
+          cancelText="Cancelar"
           confirmVariant="danger"
           confirmLoading={resetMutation.isPending}
           onConfirm={() => {
@@ -1193,50 +1170,42 @@ export default function KnowledgeBaseModal({
         >
           <div className="text-text-primary text-sm space-y-3 text-left">
             <p>
-              This will <strong>permanently delete every point</strong> in the
-              <code> nomad_knowledge_base </code>Qdrant collection and rebuild from the
+              Isso vai <strong>apagar permanentemente todos os pontos</strong> da coleção
+              <code> nomad_knowledge_base </code>do Qdrant e reconstruir a partir dos
               <strong>
                 {' '}
-                {storedFiles.length} file{storedFiles.length === 1 ? '' : 's'}
+                {storedFiles.length} arquivo{storedFiles.length === 1 ? '' : 's'}
               </strong>{' '}
-              currently on disk. The collection is dropped, recreated, and every file is re-queued
-              for embedding.
+              que estão no disco. A coleção é apagada e recriada, e todos os arquivos voltam para a fila.
             </p>
             <div className="rounded border border-border-subtle bg-surface-secondary p-3">
-              <p className="font-semibold mb-1">How this differs from Re-embed All</p>
+              <p className="font-semibold mb-1">Em que isso difere de Recalcular tudo</p>
               <ul className="list-disc pl-5 space-y-1 text-text-secondary">
                 <li>
-                  <strong>Re-embed All</strong> replaces vectors file-by-file. Any orphan points
-                  (vectors whose source file was deleted from disk at some point) are preserved.
+                  <strong>Recalcular tudo</strong> substitui os vetores arquivo por arquivo. Os pontos órfãos (vetores cujo arquivo de origem foi apagado do disco) são mantidos.
                 </li>
                 <li>
-                  <strong>Reset &amp; Rebuild</strong> drops the entire collection. Orphan points
-                  are <strong>gone forever</strong>. Only files currently on disk will exist in
-                  Qdrant afterwards.
+                  <strong>Reinicializar e reconstruir</strong> apaga a coleção inteira. Os pontos órfãos são <strong>perdidos para sempre</strong>. Depois disso, só os arquivos que estão no disco existirão no Qdrant.
                 </li>
               </ul>
             </div>
             <div className="rounded border border-red-300 bg-red-50 dark:bg-red-950 dark:border-red-800 p-3 text-red-900 dark:text-red-200">
-              <p className="font-semibold mb-1">This action is destructive and cannot be undone</p>
+              <p className="font-semibold mb-1">Esta ação é destrutiva e não pode ser desfeita</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>
-                  Knowledge Base search will be empty until embedding finishes (potentially hours on
-                  CPU-only systems).
+                  A pesquisa na Base de conhecimento ficará vazia até o processamento terminar (pode levar horas em sistemas só com CPU).
                 </li>
                 <li>
-                  For a few seconds during the reset, the Qdrant collection does not exist — any
-                  chat-with-RAG queries in that window may return a "collection not found" error.
-                  Avoid using chat until the rebuild has begun.
+                  Por alguns segundos durante a reinicialização, a coleção do Qdrant não existe — perguntas no chat nesse intervalo podem retornar o erro "collection not found". Evite usar o chat até a reconstrução começar.
                 </li>
                 <li>
-                  If embed jobs are already in progress, this action will be refused — wait for the
-                  queue to drain first.
+                  Se já houver tarefas em andamento, esta ação será recusada — espere a fila esvaziar.
                 </li>
               </ul>
             </div>
             <div>
               <label className="block text-sm font-semibold mb-1">
-                Type <code>RESET</code> to confirm:
+                Digite <code>RESET</code> para confirmar:
               </label>
               <input
                 type="text"
@@ -1248,7 +1217,7 @@ export default function KnowledgeBaseModal({
               />
               {resetTyped.length > 0 && resetTyped !== 'RESET' && (
                 <p className="text-xs text-red-600 mt-1">
-                  Type RESET exactly (uppercase, no spaces) to enable the confirm button.
+                  Digite RESET exatamente assim (maiúsculas, sem espaços) para ativar o botão de confirmar.
                 </p>
               )}
             </div>
@@ -1258,10 +1227,10 @@ export default function KnowledgeBaseModal({
 
       {confirmReembed && (
         <StyledModal
-          title="Re-embed this file?"
+          title="Recalcular este arquivo?"
           open={true}
-          confirmText={embedMutation.isPending ? 'Queuing…' : 'Re-embed'}
-          cancelText="Cancel"
+          confirmText={embedMutation.isPending ? 'Adicionando à fila…' : 'Recalcular'}
+          cancelText="Cancelar"
           confirmVariant="primary"
           confirmLoading={embedMutation.isPending}
           onConfirm={() => embedMutation.mutate({ source: confirmReembed.source, force: true })}
@@ -1269,23 +1238,20 @@ export default function KnowledgeBaseModal({
         >
           <div className="text-text-primary text-sm space-y-3 text-left">
             <p>
-              This will delete the existing embeddings for{' '}
-              <strong>{confirmReembed.displayName}</strong> and queue a fresh embedding job. The
-              file on disk is not touched.
+              Isso apaga os embeddings existentes de{' '}
+              <strong>{confirmReembed.displayName}</strong> e cria uma nova tarefa. O arquivo no disco não é alterado.
             </p>
             <div className="rounded border border-amber-300 bg-amber-50 dark:bg-amber-950 dark:border-amber-800 p-3 text-amber-900 dark:text-amber-200">
-              <p className="font-semibold mb-1">Heads up</p>
+              <p className="font-semibold mb-1">Atenção</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>
-                  For large ZIM archives this can take a long time, especially on CPU-only systems.
+                  Em arquivos ZIM grandes isso pode demorar bastante, principalmente em sistemas só com CPU.
                 </li>
                 <li>
-                  Search results that referenced this file will be incomplete until the new
-                  embedding finishes.
+                  Os resultados de pesquisa que usavam este arquivo ficarão incompletos até o novo processamento terminar.
                 </li>
                 <li>
-                  If a job for this file is already running, the re-embed will be refused — wait for
-                  it to finish first.
+                  Se já houver uma tarefa em andamento para este arquivo, o recálculo será recusado — espere ela terminar.
                 </li>
               </ul>
             </div>
@@ -1326,14 +1292,14 @@ function FileViewerModal({ source, onClose }: { source: string; onClose: () => v
       open={true}
       onClose={onClose}
       onCancel={onClose}
-      cancelText="Close"
+      cancelText="Fechar"
       large
     >
       <div className="text-left text-sm">
-        {isLoading && <div className="text-text-secondary">Loading…</div>}
+        {isLoading && <div className="text-text-secondary">Carregando…</div>}
         {showError && (
           <div className="text-amber-700 dark:text-amber-300">
-            Couldn't load file. It may have been moved or its type isn't viewable.
+            Não foi possível carregar o arquivo. Ele pode ter sido movido ou o tipo não pode ser visualizado.
           </div>
         )}
         {data && (

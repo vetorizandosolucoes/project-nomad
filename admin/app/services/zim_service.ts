@@ -20,6 +20,7 @@ import {
   listDirectoryContents,
   ZIM_STORAGE_PATH,
 } from '../utils/fs.js'
+import { readFile } from 'node:fs/promises'
 import { join, resolve, sep } from 'path'
 import { WikipediaOption, WikipediaState } from '../../types/downloads.js'
 import vine from '@vinejs/vine'
@@ -44,7 +45,6 @@ import { getHostedContentHeaders } from '../utils/hosted_content_auth.js'
 import { KIWIX_CATALOG_BASE_URL } from '../../constants/kiwix.js'
 
 const ZIM_MIME_TYPES = ['application/x-zim', 'application/x-openzim', 'application/octet-stream']
-const WIKIPEDIA_OPTIONS_URL = 'https://raw.githubusercontent.com/Crosstalk-Solutions/project-nomad/refs/heads/main/collections/wikipedia.json'
 
 @inject()
 export class ZimService {
@@ -802,8 +802,7 @@ export class ZimService {
 
   async getWikipediaOptions(): Promise<WikipediaOption[]> {
     try {
-      const response = await axios.get(WIKIPEDIA_OPTIONS_URL)
-      const data = response.data
+      const data = JSON.parse(await readFile(join(process.cwd(), 'collections', 'wikipedia.json'), 'utf8'))
 
       const validated = await vine.validate({
         schema: wikipediaOptionsFileSchema,
@@ -851,7 +850,7 @@ export class ZimService {
 
     // If same as currently installed, no action needed
     if (currentSelection?.option_id === optionId && currentSelection.status === 'installed') {
-      return { success: true, message: 'Already installed' }
+      return { success: true, message: 'Já instalado' }
     }
 
     // Handle "none" option - delete current Wikipedia file and update DB
@@ -889,7 +888,7 @@ export class ZimService {
           logger.error(`[ZimService] Failed to restart Kiwix after Wikipedia removal:`, error)
         })
 
-      return { success: true, message: 'Wikipedia removed' }
+      return { success: true, message: 'Wikipédia removida' }
     }
 
     // Start download for the new Wikipedia option
@@ -900,7 +899,7 @@ export class ZimService {
     // Check if already downloading
     const existingJob = await RunDownloadJob.getActiveByUrl(selectedOption.url)
     if (existingJob) {
-      return { success: false, message: 'Download already in progress' }
+      return { success: false, message: 'O download já está em andamento' }
     }
 
     // Extract filename from URL
@@ -955,7 +954,7 @@ export class ZimService {
     return {
       success: true,
       jobId: result.job.id,
-      message: 'Download started',
+      message: 'Download iniciado',
     }
   }
 

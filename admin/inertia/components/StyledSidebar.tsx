@@ -34,9 +34,9 @@ const StyledSidebar: React.FC<StyledSidebarProps> = ({ title, items }) => {
   const ListItem = (item: SidebarItem) => {
     const className = classNames(
       item.current
-        ? 'bg-desert-green text-white'
-        : 'text-text-primary hover:bg-desert-green-light hover:text-white',
-      'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold'
+        ? 'bg-desert-green text-white shadow-md'
+        : 'text-text-secondary hover:bg-desert-green-lighter hover:text-text-primary',
+      'group flex gap-x-3 rounded-xl px-3 py-2.5 text-sm/6 font-medium transition-colors'
     )
     const content = (
       <>
@@ -61,9 +61,9 @@ const StyledSidebar: React.FC<StyledSidebarProps> = ({ title, items }) => {
 
   const Sidebar = () => {
     return (
-      <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-desert-sand px-6 ring-1 ring-white/5 pt-4 shadow-md">
+      <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-surface-primary/90 backdrop-blur-xl border-r border-border-subtle px-5 pt-4 shadow-md">
         <div className="flex h-16 shrink-0 items-center">
-          <img src="/nomad-primary.svg" alt="Project NOMAD Logo" className="h-16 w-16 object-contain" />
+          <img src="/vetorizando-icon.png" alt="Vetorizando Soluções" className="h-16 w-16 object-contain" />
           <h1 className="ml-3 text-xl font-semibold text-text-primary">{title}</h1>
         </div>
         <nav className="flex flex-1 flex-col">
@@ -79,7 +79,7 @@ const StyledSidebar: React.FC<StyledSidebarProps> = ({ title, items }) => {
                     className="flex flex-row items-center gap-x-3 text-desert-green text-sm font-semibold"
                   >
                     <IconArrowLeft aria-hidden="true" className="size-6 shrink-0" />
-                    Back to Home
+                    Voltar ao início
                   </Link>
                 </li>
               </ul>
@@ -87,13 +87,13 @@ const StyledSidebar: React.FC<StyledSidebarProps> = ({ title, items }) => {
           </ul>
         </nav>
         <div className="mb-4 flex flex-col items-center gap-1 text-sm text-text-secondary text-center">
-          <p>Project NOMAD&trade; Command Center v{appVersion}</p>
+          <p>Vetorizando Soluções · v{appVersion}</p>
           <button
             onClick={() => setDebugModalOpen(true)}
             className="text-gray-500 hover:text-desert-green inline-flex items-center gap-1 cursor-pointer"
           >
             <IconBug className="size-3.5" />
-            Debug Info
+            Informações de depuração
           </button>
           <ThemeToggle />
         </div>
@@ -129,7 +129,7 @@ const StyledSidebar: React.FC<StyledSidebarProps> = ({ title, items }) => {
                   onClick={() => setSidebarOpen(false)}
                   className="-m-2.5 p-2.5"
                 >
-                  <span className="sr-only">Close sidebar</span>
+                  <span className="sr-only">Fechar menu lateral</span>
                   <IconX aria-hidden="true" className="size-6 text-white" />
                 </button>
               </div>

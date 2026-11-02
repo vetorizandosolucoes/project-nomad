@@ -130,11 +130,11 @@ export default class OllamaController {
       normalizedImages.length > 0 &&
       !reqData.messages.some((message) => message.role === 'user')
     ) {
-      return response.status(422).send({ message: 'Images require a user message.' })
+      return response.status(422).send({ message: 'Imagens precisam de uma mensagem.' })
     }
     if (normalizedImages.length > 0 && modelCapabilities.vision === 'unsupported') {
       return response.status(422).send({
-        message: `The selected model "${reqData.model}" does not support image input.`,
+        message: `O modelo selecionado "${reqData.model}" não aceita imagens.`,
       })
     }
 
@@ -426,8 +426,8 @@ export default class OllamaController {
       return {
         success: true,
         message: hasLocalContainer
-          ? 'Remote Ollama cleared. Local Ollama container restored.'
-          : 'Remote Ollama configuration cleared.',
+          ? 'Ollama remoto removido. O contêiner local do Ollama foi restaurado.'
+          : 'Configuração do Ollama remoto removida.',
       }
     }
 
@@ -436,7 +436,7 @@ export default class OllamaController {
     } catch (err) {
       return response.status(400).send({
         success: false,
-        message: err instanceof Error ? err.message : 'Invalid URL.',
+        message: err instanceof Error ? err.message : 'URL inválida.',
       })
     }
 
@@ -448,13 +448,13 @@ export default class OllamaController {
       if (!testResponse.ok) {
         return response.status(400).send({
           success: false,
-          message: `Could not connect to ${remoteUrl} (HTTP ${testResponse.status}). Make sure the server is running and accessible. For Ollama, start it with OLLAMA_HOST=0.0.0.0.`,
+          message: `Não foi possível conectar a ${remoteUrl} (HTTP ${testResponse.status}). Confira se o servidor está em execução e acessível. No Ollama, inicie com OLLAMA_HOST=0.0.0.0.`,
         })
       }
     } catch (error) {
       return response.status(400).send({
         success: false,
-        message: `Could not connect to ${remoteUrl}. Make sure the server is running and reachable. For Ollama, start it with OLLAMA_HOST=0.0.0.0.`,
+        message: `Não foi possível conectar a ${remoteUrl}. Confira se o servidor está em execução e acessível. No Ollama, inicie com OLLAMA_HOST=0.0.0.0.`,
       })
     }
 
@@ -482,7 +482,7 @@ export default class OllamaController {
       logger.error('[OllamaController] Failed to discover Nomad docs:', error)
     })
 
-    return { success: true, message: 'Remote Ollama configured.' }
+    return { success: true, message: 'Ollama remoto configurado.' }
   }
 
   private async _stopLocalOllamaContainer(): Promise<void> {
@@ -534,7 +534,7 @@ export default class OllamaController {
     await this.ollamaService.deleteModel(reqData.model)
     return {
       success: true,
-      message: `Model deleted: ${reqData.model}`,
+      message: `Modelo excluído: ${reqData.model}`,
     }
   }
 
@@ -543,7 +543,7 @@ export default class OllamaController {
     await this.ollamaService.dispatchModelDownload(reqData.model)
     return {
       success: true,
-      message: `Download job dispatched for model: ${reqData.model}`,
+      message: `Download iniciado para o modelo: ${reqData.model}`,
     }
   }
 

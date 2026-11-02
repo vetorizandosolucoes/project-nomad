@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { readFile } from 'node:fs/promises'
 import vine from '@vinejs/vine'
 import logger from '@adonisjs/core/services/logger'
 import { DateTime } from 'luxon'
@@ -28,11 +28,12 @@ import type {
   SpecTier,
 } from '../../types/collections.js'
 
-const SPEC_URLS: Record<ManifestType, string> = {
-  zim_categories: 'https://raw.githubusercontent.com/Crosstalk-Solutions/project-nomad/refs/heads/main/collections/kiwix-categories.json',
-  maps: 'https://github.com/Crosstalk-Solutions/project-nomad/raw/refs/heads/main/collections/maps.json',
-  wikipedia: 'https://raw.githubusercontent.com/Crosstalk-Solutions/project-nomad/refs/heads/main/collections/wikipedia.json',
-  creator_packs: 'https://raw.githubusercontent.com/Crosstalk-Solutions/project-nomad/refs/heads/main/collections/creator-packs.json',
+// Catalogs ship with the image (translated, Portuguese-first) instead of being fetched from upstream.
+const SPEC_FILES: Record<ManifestType, string> = {
+  zim_categories: 'kiwix-categories.json',
+  maps: 'maps.json',
+  wikipedia: 'wikipedia.json',
+  creator_packs: 'creator-packs.json',
 }
 
 const VALIDATORS: Record<ManifestType, any> = {
@@ -49,11 +50,11 @@ export class CollectionManifestService {
 
   async fetchAndCacheSpec(type: ManifestType): Promise<boolean> {
     try {
-      const response = await axios.get(SPEC_URLS[type], { timeout: 15000 })
+      const raw = await readFile(join(process.cwd(), 'collections', SPEC_FILES[type]), 'utf8')
 
       const validated = await vine.validate({
         schema: VALIDATORS[type],
-        data: response.data,
+        data: JSON.parse(raw),
       })
 
       const existing = await CollectionManifest.find(type)

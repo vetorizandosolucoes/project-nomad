@@ -29,7 +29,7 @@ export default function ContentUpdatesSection() {
       setCheckResult({
         updates: [],
         checked_at: new Date().toISOString(),
-        error: 'Failed to check for content updates',
+        error: 'Não foi possível verificar atualizações de conteúdo',
       })
     } finally {
       setIsChecking(false)
@@ -41,21 +41,21 @@ export default function ContentUpdatesSection() {
     try {
       const result = await api.applyContentUpdate(update)
       if (result?.success) {
-        addNotification({ type: 'success', message: `Update started for ${update.resource_id}` })
+        addNotification({ type: 'success', message: `Atualização iniciada para ${update.resource_id}` })
         // Remove from the updates list
         setCheckResult((prev) =>
           prev
             ? { ...prev, updates: prev.updates.filter((u) => u.resource_id !== update.resource_id) }
             : prev
         )
-        // Force Active Downloads to refetch now — small updates finish before the next
+        // Force Downloads ativos to refetch now — small updates finish before the next
         // idle poll fires, so without this the user wouldn't see them.
         queryClient.invalidateQueries({ queryKey: ['download-jobs'] })
       } else {
-        addNotification({ type: 'error', message: result?.error || 'Failed to start update' })
+        addNotification({ type: 'error', message: result?.error || 'Não foi possível iniciar a atualização' })
       }
     } catch {
-      addNotification({ type: 'error', message: `Failed to start update for ${update.resource_id}` })
+      addNotification({ type: 'error', message: `Não foi possível iniciar a atualização de ${update.resource_id}` })
     } finally {
       setApplyingIds((prev) => {
         const next = new Set(prev)
@@ -74,10 +74,10 @@ export default function ContentUpdatesSection() {
         const succeeded = result.results.filter((r) => r.success).length
         const failed = result.results.filter((r) => !r.success).length
         if (succeeded > 0) {
-          addNotification({ type: 'success', message: `Started ${succeeded} update(s)` })
+          addNotification({ type: 'success', message: `${succeeded} atualização(ões) iniciada(s)` })
         }
         if (failed > 0) {
-          addNotification({ type: 'error', message: `${failed} update(s) could not be started` })
+          addNotification({ type: 'error', message: `Não foi possível iniciar ${failed} atualização(ões)` })
         }
         // Remove successful updates from the list
         const successIds = new Set(result.results.filter((r) => r.success).map((r) => r.resource_id))
@@ -91,7 +91,7 @@ export default function ContentUpdatesSection() {
         }
       }
     } catch {
-      addNotification({ type: 'error', message: 'Failed to apply updates' })
+      addNotification({ type: 'error', message: 'Não foi possível aplicar as atualizações' })
     } finally {
       setIsApplyingAll(false)
     }
@@ -99,12 +99,12 @@ export default function ContentUpdatesSection() {
 
   return (
     <div className="mt-8">
-      <StyledSectionHeader title="Manual Content Updates" />
+      <StyledSectionHeader title="Atualizações manuais de conteúdo" />
 
       <div className="bg-surface-primary rounded-lg border shadow-md overflow-hidden p-6">
         <div className="flex items-center justify-between">
           <p className="text-desert-stone-dark">
-            Check if newer versions of your installed ZIM files and maps are available.
+            Verifique se há versões mais recentes dos arquivos ZIM e mapas instalados.
           </p>
           <StyledButton
             variant="primary"
@@ -112,14 +112,14 @@ export default function ContentUpdatesSection() {
             onClick={handleCheck}
             loading={isChecking}
           >
-            Check for Content Updates
+            Verificar atualizações de conteúdo
           </StyledButton>
         </div>
 
         {checkResult?.error && (
           <Alert
             type="warning"
-            title="Update Check Issue"
+            title="Problema na verificação de atualizações"
             message={checkResult.error}
             variant="bordered"
             className="my-4"
@@ -129,8 +129,8 @@ export default function ContentUpdatesSection() {
         {checkResult && !checkResult.error && checkResult.updates.length === 0 && (
           <Alert
             type="success"
-            title="All Content Up to Date"
-            message="All your installed content is running the latest available version."
+            title="Todo o conteúdo está atualizado"
+            message="Todo o conteúdo instalado está na versão mais recente disponível."
             variant="bordered"
             className="my-4"
           />
@@ -140,7 +140,7 @@ export default function ContentUpdatesSection() {
           <div className="mt-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm text-desert-stone-dark">
-                {checkResult.updates.length} update(s) available
+                {checkResult.updates.length} atualização(ões) disponível(is)
               </p>
               <StyledButton
                 variant="primary"
@@ -149,7 +149,7 @@ export default function ContentUpdatesSection() {
                 onClick={handleApplyAll}
                 loading={isApplyingAll}
               >
-                Update All ({checkResult.updates.length})
+                Atualizar tudo ({checkResult.updates.length})
               </StyledButton>
             </div>
             <StyledTable
@@ -157,14 +157,14 @@ export default function ContentUpdatesSection() {
               columns={[
                 {
                   accessor: 'resource_id',
-                  title: 'Title',
+                  title: 'Título',
                   render: (record) => (
                     <span className="font-medium text-desert-green">{record.resource_id}</span>
                   ),
                 },
                 {
                   accessor: 'resource_type',
-                  title: 'Type',
+                  title: 'Digite',
                   render: (record) => (
                     <span
                       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${record.resource_type === 'zim'
@@ -172,13 +172,13 @@ export default function ContentUpdatesSection() {
                         : 'bg-emerald-100 text-emerald-800'
                         }`}
                     >
-                      {record.resource_type === 'zim' ? 'ZIM' : 'Map'}
+                      {record.resource_type === 'zim' ? 'ZIM' : 'Mapa'}
                     </span>
                   ),
                 },
                 {
                   accessor: 'size_bytes',
-                  title: 'Size',
+                  title: 'Tamanho',
                   render: (record) => (
                     <span className="text-desert-stone-dark">
                       {record.size_bytes ? formatBytes(record.size_bytes, 1) : '—'}
@@ -187,7 +187,7 @@ export default function ContentUpdatesSection() {
                 },
                 {
                   accessor: 'installed_version',
-                  title: 'Version',
+                  title: 'Versão',
                   render: (record) => (
                     <span className="text-desert-stone-dark">
                       {record.installed_version} → {record.latest_version}
@@ -205,7 +205,7 @@ export default function ContentUpdatesSection() {
                       onClick={() => handleApply(record)}
                       loading={applyingIds.has(record.resource_id)}
                     >
-                      Update
+                      Atualizar
                     </StyledButton>
                   ),
                 },
@@ -216,7 +216,7 @@ export default function ContentUpdatesSection() {
 
         {checkResult?.checked_at && (
           <p className="text-xs text-desert-stone mt-3">
-            Last checked: {new Date(checkResult.checked_at).toLocaleString()}
+            Última verificação: {new Date(checkResult.checked_at).toLocaleString()}
           </p>
         )}
       </div>

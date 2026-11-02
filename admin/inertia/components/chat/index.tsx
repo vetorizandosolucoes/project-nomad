@@ -204,14 +204,14 @@ export default function Chat({
     }) => api.sendChatMessage({ ...request, stream: false }),
     onSuccess: async (data) => {
       if (!data || !activeSessionId) {
-        throw new Error('No response from Ollama')
+        throw new Error('Sem resposta do Ollama')
       }
 
       // Add assistant message
       const assistantMessage: ChatMessage = {
         id: `msg-${Date.now()}-assistant`,
         role: 'assistant',
-        content: data.message?.content || 'Sorry, I could not generate a response.',
+        content: data.message?.content || 'Desculpe, não consegui gerar uma resposta.',
         timestamp: new Date(),
         truncated: data.done_reason === 'length',
       }
@@ -223,11 +223,11 @@ export default function Chat({
       setTimeout(() => queryClient.invalidateQueries({ queryKey: ['chatSessions'] }), 3000)
     },
     onError: (error) => {
-      console.error('Error sending message:', error)
+      console.error('Erro ao enviar a mensagem:', error)
       const errorMessage: ChatMessage = {
         id: `msg-${Date.now()}-error`,
         role: 'assistant',
-        content: 'Sorry, there was an error processing your request. Please try again.',
+        content: 'Desculpe, houve um erro ao processar sua solicitação. Tente novamente.',
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, errorMessage])
@@ -264,7 +264,7 @@ export default function Chat({
     if (pageLoadNormalizedRef.current) return
     pageLoadNormalizedRef.current = true
     api.unloadChatModels(selectedModel).catch((err) => {
-      console.warn('Failed to normalize loaded models on chat-page mount:', err)
+      console.warn('Falha ao normalizar os modelos carregados ao abrir o chat:', err)
     })
   }, [enabled, selectedModel])
 
@@ -294,7 +294,7 @@ export default function Chat({
     // request on the old model finishes cleanly. We don't await this before
     // clearing the session — UI responsiveness wins over housekeeping.
     api.unloadChatModels(newModel).catch((err) => {
-      console.warn('Failed to unload previous chat model:', err)
+      console.warn('Falha ao descarregar o modelo de chat anterior:', err)
     })
     abortCurrentStream()
     setIsStreamingResponse(false)
@@ -322,17 +322,16 @@ export default function Chat({
   const handleClearHistory = useCallback(() => {
     openModal(
       <StyledModal
-        title="Clear All Chat History?"
+        title="Limpar todo o histórico de chat?"
         onConfirm={() => deleteAllSessionsMutation.mutate()}
         onCancel={closeAllModals}
         open={true}
-        confirmText="Clear All"
-        cancelText="Cancel"
+        confirmText="Limpar tudo"
+        cancelText="Cancelar"
         confirmVariant="danger"
       >
         <p className="text-text-primary">
-          Are you sure you want to delete all chat sessions? This action cannot be undone and all
-          conversations will be permanently deleted.
+          Tem certeza de que quer apagar todas as conversas? Esta ação não pode ser desfeita, e todas as conversas serão apagadas permanentemente.
         </p>
       </StyledModal>,
       'confirm-clear-history-modal'
@@ -376,7 +375,7 @@ export default function Chat({
       // click after the first render.
       const targetModel = sessionData?.model ?? selectedModel ?? null
       api.unloadChatModels(targetModel).catch((err) => {
-        console.warn('Failed to unload non-target chat models on session switch:', err)
+        console.warn('Falha ao descarregar os outros modelos ao trocar de sessão:', err)
       })
     },
     [installedModels, queryClient, selectedModel, abortCurrentStream]
@@ -417,7 +416,7 @@ export default function Chat({
             {
               id: `msg-${Date.now()}-error`,
               role: 'assistant',
-              content: 'Sorry, there was an error starting this chat. Please try again.',
+              content: 'Desculpe, houve um erro ao iniciar este chat. Tente novamente.',
               timestamp: new Date(),
             },
           ])
@@ -537,7 +536,7 @@ export default function Chat({
                   content:
                     error instanceof Error
                       ? error.message
-                      : 'Sorry, there was an error processing your request. Please try again.',
+                      : 'Desculpe, houve um erro ao processar sua solicitação. Tente novamente.',
                   timestamp: new Date(),
                 },
               ]
@@ -578,17 +577,16 @@ export default function Chat({
     <>
       {pendingModelSwitch && (
         <StyledModal
-          title={`Switch to ${pendingModelSwitch}?`}
+          title={`Mudar para ${pendingModelSwitch}?`}
           onConfirm={handleConfirmModelSwitch}
           onCancel={handleCancelModelSwitch}
           open={true}
-          confirmText="Switch & New Chat"
-          cancelText="Cancel"
+          confirmText="Mudar e abrir novo chat"
+          cancelText="Cancelar"
           confirmVariant="primary"
         >
           <p className="text-text-primary">
-            Switching to <strong>{pendingModelSwitch}</strong> will start a new chat. Your current
-            conversation stays available in the sidebar.
+            Mudar para <strong>{pendingModelSwitch}</strong> inicia um novo chat. Sua conversa atual continua disponível na barra lateral.
           </p>
         </StyledModal>
       )}
@@ -611,7 +609,7 @@ export default function Chat({
         {isMobileSidebarOpen && (
           <button
             type="button"
-            aria-label="Close conversation sidebar"
+            aria-label="Fechar barra de conversas"
             className="fixed inset-0 z-40 bg-black/40 md:hidden"
             onClick={() => setIsMobileSidebarOpen(false)}
           />
@@ -623,7 +621,7 @@ export default function Chat({
               <button
                 type="button"
                 className="rounded-lg p-1.5 hover:bg-surface-primary focus:outline-none focus:ring-2 focus:ring-desert-green md:hidden"
-                aria-label="Open conversation sidebar"
+                aria-label="Abrir barra de conversas"
                 aria-controls="chat-sidebar"
                 aria-expanded={isMobileSidebarOpen}
                 onClick={() => setIsMobileSidebarOpen(true)}
@@ -631,7 +629,7 @@ export default function Chat({
                 <IconMenu2 className="h-6 w-6 text-text-muted" aria-hidden="true" />
               </button>
               <h2 className="text-lg font-semibold text-text-primary truncate">
-                {activeSession?.title || 'New Chat'}
+                {activeSession?.title || 'Novo chat'}
               </h2>
             </div>
             <div className="flex items-center gap-2 sm:gap-4 min-w-0">
@@ -644,13 +642,13 @@ export default function Chat({
                       : 'text-green-700 bg-green-50 border border-green-200'
                   )}
                 >
-                  {remoteStatus?.connected === false ? 'Remote Disconnected' : 'Remote Connected'}
+                  {remoteStatus?.connected === false ? 'Remoto desconectado' : 'Remoto conectado'}
                 </span>
               )}
               {ragEnabled && (
                 <div className="flex items-center gap-2">
                   <label htmlFor="collection-select" className="text-sm text-text-secondary">
-                    Search in:
+                    Pesquisar em:
                   </label>
                   <select
                     id="collection-select"
@@ -658,7 +656,7 @@ export default function Chat({
                     onChange={(e) => setCollectionFilter(e.target.value)}
                     className="px-3 py-1.5 border border-border-default rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-desert-green focus:border-transparent bg-surface-primary"
                   >
-                    <option value="">All</option>
+                    <option value="">Todos</option>
                     {knownCollections.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
@@ -667,12 +665,12 @@ export default function Chat({
               )}
               <div className="flex items-center gap-2 min-w-0">
                 <label htmlFor="model-select" className="text-sm text-text-secondary">
-                  Model:
+                  Modelo:
                 </label>
                 {isLoadingModels ? (
-                  <div className="text-sm text-text-muted">Loading models...</div>
+                  <div className="text-sm text-text-muted">Carregando modelos...</div>
                 ) : installedModels.length === 0 ? (
-                  <div className="text-sm text-red-600">No models installed</div>
+                  <div className="text-sm text-red-600">Nenhum modelo instalado</div>
                 ) : (
                   <select
                     id="model-select"
@@ -690,11 +688,11 @@ export default function Chat({
                 )}
               </div>
               <div className="flex items-center">
-                <span className="text-sm text-text-secondary select-none">Knowledge Base:</span>
+                <span className="text-sm text-text-secondary select-none">Base de conhecimento:</span>
                 <InfoTooltip
                   position="bottom"
                   align="right"
-                  text="When on, the assistant searches your knowledge base for relevant documents before answering. Turning this off is faster and lighter on hardware, which helps when your knowledge base is small or empty. This is the same setting as in AI Assistant settings."
+                  text="Quando ativado, o assistente pesquisa na sua base de conhecimento por documentos relevantes antes de responder. Desativar é mais rápido e exige menos do hardware, o que ajuda quando a base é pequena ou está vazia. É a mesma configuração das opções do Assistente de IA."
                 />
                 <Switch
                   id="chat-rag-toggle"
@@ -704,11 +702,11 @@ export default function Chat({
               </div>
               {selectedModelSupportsThinking && (
                 <div className="flex items-center">
-                  <span className="text-sm text-text-secondary select-none">Thinking:</span>
+                  <span className="text-sm text-text-secondary select-none">Raciocínio:</span>
                   <InfoTooltip
                     position="bottom"
                     align="right"
-                    text="When on, this model works through its reasoning before answering. Slower, but often better on tricky questions. Your choice is remembered for this model; the default for other models is set in AI Assistant settings."
+                    text="Quando ativado, este modelo pensa antes de responder. Mais lento, mas costuma ser melhor em perguntas difíceis. Sua escolha fica salva para este modelo; o padrão dos outros modelos é definido nas configurações do Assistente de IA."
                   />
                   <Switch
                     id="chat-thinking-toggle"
@@ -720,7 +718,7 @@ export default function Chat({
               {isInModal && (
                 <button
                   type="button"
-                  aria-label="Close chat"
+                  aria-label="Fechar chat"
                   onClick={() => {
                     if (onClose) {
                       onClose()

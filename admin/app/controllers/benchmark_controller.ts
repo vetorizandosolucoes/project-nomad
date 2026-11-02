@@ -24,7 +24,7 @@ export default class BenchmarkController {
     if (status.status !== 'idle') {
       return response.status(409).send({
         success: false,
-        error: 'A benchmark is already running',
+        error: 'Já há um benchmark em execução',
         current_benchmark_id: status.benchmarkId,
       })
     }
@@ -56,7 +56,7 @@ export default class BenchmarkController {
         logger.error({ err: error }, '[BenchmarkController] Benchmark run failed')
         return response.status(500).send({
           success: false,
-          error: 'An internal error occurred while running the benchmark.',
+          error: 'Ocorreu um erro interno ao executar o benchmark.',
         })
       }
     }
@@ -74,8 +74,8 @@ export default class BenchmarkController {
       job_id: job?.id || benchmarkId,
       benchmark_id: benchmarkId,
       message: created
-        ? `${benchmarkType} benchmark started`
-        : 'Benchmark job already exists',
+        ? `Benchmark ${benchmarkType} iniciado`
+        : 'Essa tarefa de benchmark já existe',
     })
   }
 
@@ -87,7 +87,7 @@ export default class BenchmarkController {
     if (status.status !== 'idle') {
       return response.status(409).send({
         success: false,
-        error: 'A benchmark is already running',
+        error: 'Já há um benchmark em execução',
       })
     }
 
@@ -101,7 +101,7 @@ export default class BenchmarkController {
     return response.status(201).send({
       success: true,
       benchmark_id: benchmarkId,
-      message: 'System benchmark started',
+      message: 'Benchmark do sistema iniciado',
     })
   }
 
@@ -113,7 +113,7 @@ export default class BenchmarkController {
     if (status.status !== 'idle') {
       return response.status(409).send({
         success: false,
-        error: 'A benchmark is already running',
+        error: 'Já há um benchmark em execução',
       })
     }
 
@@ -127,7 +127,7 @@ export default class BenchmarkController {
     return response.status(201).send({
       success: true,
       benchmark_id: benchmarkId,
-      message: 'AI benchmark started',
+      message: 'Benchmark de IA iniciado',
     })
   }
 
@@ -160,7 +160,7 @@ export default class BenchmarkController {
     const result = await this.benchmarkService.getResultById(params.id)
     if (!result) {
       return response.status(404).send({
-        error: 'Benchmark result not found',
+        error: 'Resultado do benchmark não encontrado',
       })
     }
     return { result }
@@ -222,7 +222,7 @@ export default class BenchmarkController {
     if (!result) {
       return response.status(404).send({
         success: false,
-        error: 'Benchmark result not found',
+        error: 'Resultado do benchmark não encontrado',
       })
     }
 
@@ -232,7 +232,7 @@ export default class BenchmarkController {
       if (!tagPattern.test(builderTag)) {
         return response.status(400).send({
           success: false,
-          error: 'Invalid builder tag format. Expected: Word-Word-0000',
+          error: 'Formato de tag inválido. Esperado: Palavra-Palavra-0000',
         })
       }
     }

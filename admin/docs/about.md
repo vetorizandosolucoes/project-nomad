@@ -1,17 +1,17 @@
-# About Project NOMAD
+# Sobre o sistema
 
-Project NOMAD ("NOMAD" for short) is a project started in 2025 by Chris Sherwood of [Crosstalk Solutions, LLC](https://crosstalksolutions.com). The goal of the project is not to create just another utility for storing offline resources, but rather to allow users to run their own ultimate "survival computer". The name started as a backronym, Node for Offline Maps, Archives, and Data, but these days we just call it NOMAD.
+Este sistema é uma versão em português, com a marca Vetorizando Soluções, do Project NOMAD.
 
-While many similar offline survival computers are designed to be run on bare-minimum, lightweight hardware, Project NOMAD is quite the opposite. To install and run the available AI tools, we highly encourage the use of a beefy, GPU-backed device to make the most of your install. See the [Hardware Guide](https://www.projectnomad.us/hardware) for detailed build recommendations at three price points.
+O Project NOMAD ("NOMAD", para abreviar) é um projeto iniciado em 2025 por Chris Sherwood, da [Crosstalk Solutions, LLC](https://crosstalksolutions.com). O objetivo é permitir que cada pessoa tenha seu próprio "computador de sobrevivência" completo, e não apenas mais um utilitário para guardar recursos offline.
 
-Since its initial release, NOMAD has grown to include built-in AI chat with a Knowledge Base for document-aware responses, a System Benchmark with a community leaderboard, curated content collections with tiered options, and an Easy Setup Wizard to get new users up and running quickly.
+Muitos computadores offline parecidos são feitos para hardware mínimo e leve. O NOMAD é o oposto: para instalar e usar as ferramentas de IA, recomenda-se um equipamento potente, com GPU. Veja o [guia de hardware](https://www.projectnomad.us/hardware) (em inglês).
 
-Project NOMAD is open source, released under the [Apache License 2.0](https://github.com/Crosstalk-Solutions/project-nomad/blob/main/LICENSE).
+O Project NOMAD é de código aberto, publicado sob a [licença Apache 2.0](https://github.com/Crosstalk-Solutions/project-nomad/blob/main/LICENSE). Esta versão mantém a atribuição ao projeto original.
 
-## Links
+## Links do projeto original
 
-- **Website:** [www.projectnomad.us](https://www.projectnomad.us)
-- **Hardware Guide:** [www.projectnomad.us/hardware](https://www.projectnomad.us/hardware)
-- **Discord:** [Join the Community](https://discord.com/invite/crosstalksolutions)
+- **Site:** [www.projectnomad.us](https://www.projectnomad.us)
+- **Guia de hardware:** [www.projectnomad.us/hardware](https://www.projectnomad.us/hardware)
+- **Discord:** [Entrar na comunidade](https://discord.com/invite/crosstalksolutions)
 - **GitHub:** [Crosstalk-Solutions/project-nomad](https://github.com/Crosstalk-Solutions/project-nomad)
-- **Benchmark Leaderboard:** [benchmark.projectnomad.us](https://benchmark.projectnomad.us)
+- **Ranking de benchmark:** [benchmark.projectnomad.us](https://benchmark.projectnomad.us)

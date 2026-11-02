@@ -14,7 +14,7 @@ export default class ChatsController {
   async inertia({ inertia, response }: HttpContext) {
     const aiAssistantInstalled = await this.systemService.checkServiceInstalled(SERVICE_NAMES.OLLAMA)
     if (!aiAssistantInstalled) {
-      return response.status(404).json({ error: 'AI Assistant service not installed' })
+      return response.status(404).json({ error: 'O Assistente de IA não está instalado' })
     }
     
     const chatSuggestionsEnabled = await KVStore.getValue('chat.suggestionsEnabled')
@@ -34,7 +34,7 @@ export default class ChatsController {
     const session = await this.chatService.getSession(sessionId)
 
     if (!session) {
-      return response.status(404).json({ error: 'Session not found' })
+      return response.status(404).json({ error: 'Conversa não encontrada' })
     }
 
     return session
@@ -48,7 +48,7 @@ export default class ChatsController {
     } catch (error) {
       logger.error({ err: error }, '[ChatsController] Failed to create session')
       return response.status(500).json({
-        error: 'Failed to create session',
+        error: 'Não foi possível criar a conversa',
       })
     }
   }
@@ -60,7 +60,7 @@ export default class ChatsController {
     } catch (error) {
       logger.error({ err: error }, '[ChatsController] Failed to get suggestions')
       return response.status(500).json({
-        error: 'Failed to get suggestions',
+        error: 'Não foi possível obter sugestões',
       })
     }
   }
@@ -74,7 +74,7 @@ export default class ChatsController {
     } catch (error) {
       logger.error({ err: error }, '[ChatsController] Failed to update session')
       return response.status(500).json({
-        error: 'Failed to update session',
+        error: 'Não foi possível atualizar a conversa',
       })
     }
   }
@@ -87,7 +87,7 @@ export default class ChatsController {
     } catch (error) {
       logger.error({ err: error }, '[ChatsController] Failed to delete session')
       return response.status(500).json({
-        error: 'Failed to delete session',
+        error: 'Não foi possível excluir a conversa',
       })
     }
   }
@@ -101,7 +101,7 @@ export default class ChatsController {
     } catch (error) {
       logger.error({ err: error }, '[ChatsController] Failed to add message')
       return response.status(500).json({
-        error: 'Failed to add message',
+        error: 'Não foi possível adicionar a mensagem',
       })
     }
   }
@@ -113,7 +113,7 @@ export default class ChatsController {
     } catch (error) {
       logger.error({ err: error }, '[ChatsController] Failed to delete all sessions')
       return response.status(500).json({
-        error: 'Failed to delete all sessions',
+        error: 'Não foi possível excluir todas as conversas',
       })
     }
   }

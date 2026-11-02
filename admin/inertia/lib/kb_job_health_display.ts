@@ -13,28 +13,28 @@ export const JOB_HEALTH_DISPLAY: Record<
 > = {
   waiting: {
     dot: 'bg-gray-400 dark:bg-gray-500',
-    label: 'Waiting',
-    ariaLabel: 'Job is queued and waiting to start',
+    label: 'Aguardando',
+    ariaLabel: 'A tarefa está na fila, aguardando para começar',
   },
   healthy: {
     dot: 'bg-green-500',
-    label: 'Active',
-    ariaLabel: 'Job is embedding at a normal rate',
+    label: 'Ativo',
+    ariaLabel: 'A tarefa está gerando embeddings em ritmo normal',
   },
   slow: {
     dot: 'bg-yellow-500',
-    label: 'Slow',
-    ariaLabel: 'Job has not made progress for at least 2 minutes',
+    label: 'Lento',
+    ariaLabel: 'A tarefa não avança há pelo menos 2 minutos',
   },
   stalled: {
     dot: 'bg-red-500',
-    label: 'Stalled',
-    ariaLabel: 'Job has not made progress for at least 5 minutes',
+    label: 'Travado',
+    ariaLabel: 'A tarefa não avança há pelo menos 5 minutos',
   },
   failed: {
     dot: 'bg-red-700',
-    label: 'Failed',
-    ariaLabel: 'Job failed',
+    label: 'Falhou',
+    ariaLabel: 'A tarefa falhou',
   },
 }
 
@@ -44,7 +44,7 @@ export const JOB_HEALTH_DISPLAY: Record<
  */
 export function formatTimeAgo(timestampMs: number, now: number): string {
   const seconds = Math.max(0, Math.floor((now - timestampMs) / 1000))
-  if (seconds < 5) return 'just now'
+  if (seconds < 5) return 'agora mesmo'
   if (seconds < 60) return `${seconds}s ago`
   const minutes = Math.floor(seconds / 60)
   if (minutes < 60) return `${minutes}m ago`

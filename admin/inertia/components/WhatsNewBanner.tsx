@@ -16,13 +16,13 @@ import Alert from '~/components/Alert'
  */
 const WHATS_NEW = {
   version: '1.34',
-  title: "What's new in v1.34",
+  title: "Novidades da v1.34",
   highlights: [
-    'Creator Packs - install curated video packs from your favorite creators and watch them fully offline.',
+    'Pacotes de criadores — instale pacotes de vídeos selecionados dos seus criadores favoritos e assista totalmente offline.',
     'Medication Reference - offline FDA drug-label lookup for quick, reliable medication information.',
-    'Benchmark Score v2 - a rebuilt scoring model, with live telemetry while the test runs and your score revealed at the end.',
-    'NOMAD.md - give your AI assistant standing instructions it follows in every conversation.',
-    'Knowledge Base collections - group what the assistant searches by subject, so answers stay on topic.',
+    'Benchmark Score v2 — um novo modelo de pontuação, com telemetria em tempo real durante o teste e sua pontuação revelada no final.',
+    'NOMAD.md — dê ao seu assistente de IA instruções permanentes que ele seguirá em todas as conversas.',
+    'Coleções da Base de conhecimento — agrupe o que o assistente pesquisa por assunto, para que as respostas fiquem no tema.',
   ],
 }
 
@@ -72,7 +72,7 @@ export default function WhatsNewBanner() {
         onDismiss={handleDismiss}
         buttonProps={{
           variant: 'primary',
-          children: 'See release notes',
+          children: 'Ver notas de versão',
           icon: 'IconBook',
           onClick: () => router.visit('/docs/release-notes'),
         }}

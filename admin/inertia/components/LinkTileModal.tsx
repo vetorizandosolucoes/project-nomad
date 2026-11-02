@@ -77,8 +77,8 @@ export default function LinkTileModal({
     if (!result?.success) {
       showError(
         isEdit
-          ? 'Failed to save this link.'
-          : 'Failed to add this link. A link with that name may already exist.'
+          ? 'Não foi possível salvar este link.'
+          : 'Não foi possível adicionar este link. Pode já existir um link com esse nome.'
       )
       return
     }
@@ -87,28 +87,27 @@ export default function LinkTileModal({
 
   return (
     <StyledModal
-      title={isEdit ? 'Edit Link' : 'Add a Link'}
+      title={isEdit ? 'Editar link' : 'Adicionar um link'}
       open={open}
       onCancel={onClose}
       onClose={onClose}
-      cancelText="Cancel"
+      cancelText="Cancelar"
       onConfirm={handleSave}
       confirmVariant="primary"
-      confirmText={isEdit ? 'Save' : 'Add Link'}
+      confirmText={isEdit ? 'Salvar' : 'Adicionar link'}
       confirmIcon="IconCheck"
       confirmLoading={submitting}
       confirmDisabled={!canSave}
     >
       <div className="space-y-4 text-sm">
         <p className="text-text-muted">
-          Add a shortcut to something you already run, on this machine or anywhere else on your
-          network. NOMAD does not manage it, it just puts a button on your dashboard.
+          Adicione um atalho para algo que você já usa, nesta máquina ou em outro lugar da sua rede. O sistema não gerencia esse item, só coloca um botão no seu painel.
         </p>
 
         <Input
           name="linkName"
-          label="Name"
-          placeholder="Living room NAS"
+          label="Nome"
+          placeholder="NAS da sala"
           value={name}
           onChange={(e) => setName(e.target.value)}
           maxLength={60}
@@ -125,13 +124,13 @@ export default function LinkTileModal({
           />
           {urlInvalid ? (
             <p className="mt-1.5 text-xs text-red-500">
-              Enter a valid URL, for example 192.168.1.50:8080 or https://nas.local.
+              Digite uma URL válida, por exemplo 192.168.1.50:8080 ou https://nas.local.
             </p>
           ) : (
             <p className="mt-1.5 text-xs text-text-muted">
               Opens as:{' '}
               <span className="font-mono break-all text-text-primary">
-                {normalized || 'not set yet'}
+                {normalized || 'ainda não definida'}
               </span>
             </p>
           )}
@@ -139,8 +138,8 @@ export default function LinkTileModal({
 
         <Input
           name="linkDescription"
-          label="Description (optional)"
-          placeholder="Photos and backups"
+          label="Descrição (opcional)"
+          placeholder="Fotos e backups"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           maxLength={200}
@@ -148,7 +147,7 @@ export default function LinkTileModal({
 
         <div>
           <p className="mb-1.5 flex items-center gap-2 font-medium text-text-primary">
-            Icon
+            Ícone
             <span className="text-text-secondary">
               <DynamicIcon icon={icon as DynamicIconName} className="!size-5" />
             </span>
@@ -157,7 +156,7 @@ export default function LinkTileModal({
         </div>
 
         <div>
-          <p className="mb-1.5 font-medium text-text-primary">Color</p>
+          <p className="mb-1.5 font-medium text-text-primary">Cor</p>
           <div className="flex items-center gap-2">
             {LINK_TILE_COLORS.map((option) => (
               <button
@@ -176,8 +175,7 @@ export default function LinkTileModal({
             ))}
           </div>
           <p className="mt-1.5 text-xs text-text-muted">
-            Links stay outlined rather than filled whichever color you pick, so they
-            are distinguishable from apps NOMAD manages.
+            Os links ficam só com contorno, qualquer que seja a cor escolhida, para se diferenciarem dos aplicativos gerenciados pelo sistema.
           </p>
         </div>
       </div>

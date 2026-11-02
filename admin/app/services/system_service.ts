@@ -726,7 +726,7 @@ export class SystemService {
         updateAvailable: false,
         currentVersion: '',
         latestVersion: '',
-        message: `Failed to check latest version: ${error instanceof Error ? error.message : error}`,
+        message: `Não foi possível verificar a versão mais recente: ${error instanceof Error ? error.message : error}`,
       }
     }
   }
@@ -742,19 +742,19 @@ export class SystemService {
       if (response.status === 200) {
         return {
           success: true,
-          message: 'Successfully subscribed to release notes',
+          message: 'Inscrição nas notas de versão feita com sucesso',
         }
       }
 
       return {
         success: false,
-        message: `Failed to subscribe: ${response.statusText}`,
+        message: `Não foi possível se inscrever: ${response.statusText}`,
       }
     } catch (error) {
       logger.error('Error subscribing to release notes:', error)
       return {
         success: false,
-        message: `Failed to subscribe: ${error instanceof Error ? error.message : error}`,
+        message: `Não foi possível se inscrever: ${error instanceof Error ? error.message : error}`,
       }
     }
   }

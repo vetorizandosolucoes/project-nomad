@@ -23,10 +23,10 @@ const DownloadURLModal: React.FC<DownloadURLModalProps> = ({
   async function runPreflightCheck(downloadUrl: string) {
     try {
       setLoading(true)
-      setMessages([`Running preflight check for URL: ${downloadUrl}`])
+      setMessages([`Executando verificação prévia da URL: ${downloadUrl}`])
       const res = await api.downloadRemoteMapRegionPreflight(downloadUrl)
       if (!res) {
-        throw new Error('An unknown error occurred during the preflight check.')
+        throw new Error('Ocorreu um erro desconhecido na verificação prévia.')
       }
 
       if ('message' in res) {
@@ -35,7 +35,7 @@ const DownloadURLModal: React.FC<DownloadURLModalProps> = ({
 
       setMessages((prev) => [
         ...prev,
-        `Preflight check passed. Filename: ${res.filename}, Size: ${(res.size / (1024 * 1024)).toFixed(2)} MB`,
+        `Verificação prévia aprovada. Arquivo: ${res.filename}, tamanho: ${(res.size / (1024 * 1024)).toFixed(2)} MB`,
       ])
 
       if (onPreflightSuccess) {
@@ -43,7 +43,7 @@ const DownloadURLModal: React.FC<DownloadURLModalProps> = ({
       }
     } catch (error) {
       console.error('Preflight check failed:', error)
-      setMessages((prev) => [...prev, `Preflight check failed: ${error.message}`])
+      setMessages((prev) => [...prev, `A verificação prévia falhou: ${error.message}`])
     } finally {
       setLoading(false)
     }
@@ -54,9 +54,9 @@ const DownloadURLModal: React.FC<DownloadURLModalProps> = ({
       {...modalProps}
       onConfirm={() => runPreflightCheck(url)}
       open={true}
-      confirmText="Download"
+      confirmText="Baixar"
       confirmIcon="IconDownload"
-      cancelText="Cancel"
+      cancelText="Cancelar"
       confirmVariant="primary"
       confirmLoading={loading}
       cancelLoading={loading}
@@ -64,14 +64,12 @@ const DownloadURLModal: React.FC<DownloadURLModalProps> = ({
     >
       <div className="flex flex-col pb-4">
         <p className="text-text-secondary mb-8">
-          Enter the URL of the map region file you wish to download. The URL must be publicly
-          reachable and end with .pmtiles. A preflight check will be run to verify the file's
-          availability, type, and approximate size.
+          Digite a URL do arquivo de região do mapa que você quer baixar. A URL precisa ser pública e terminar em .pmtiles. Uma verificação prévia confere a disponibilidade, o tipo e o tamanho aproximado do arquivo.
         </p>
         <Input
           name="download-url"
           label=""
-          placeholder={suggestedURL || 'Enter download URL...'}
+          placeholder={suggestedURL || 'Digite a URL do download...'}
           className="mb-4"
           value={url}
           onChange={(e) => setUrl(e.target.value)}

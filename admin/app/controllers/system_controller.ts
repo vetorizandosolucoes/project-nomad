@@ -76,7 +76,7 @@ export default class SystemController {
         const payload = await request.validateUsing(affectServiceValidator);
         const result = await this.dockerService.affectContainer(payload.service_name, payload.action);
         if (!result) {
-            response.internalServerError({ error: 'Failed to affect service' });
+            response.internalServerError({ error: 'Não foi possível alterar o serviço' });
             return;
         }
         response.send({ success: result.success, message: result.message });
@@ -91,7 +91,7 @@ export default class SystemController {
         const payload = await request.validateUsing(installServiceValidator);
         const result = await this.dockerService.forceReinstall(payload.service_name);
         if (!result) {
-            response.internalServerError({ error: 'Failed to force reinstall service' });
+            response.internalServerError({ error: 'Não foi possível reinstalar o serviço à força' });
             return;
         }
         response.send({ success: result.success, message: result.message });
@@ -101,7 +101,7 @@ export default class SystemController {
         if (!this.systemUpdateService.isSidecarAvailable()) {
             response.status(503).send({
                 success: false,
-                error: 'Update sidecar is not available. Ensure the updater container is running.',
+                error: 'O atualizador não está disponível. Confira se o contêiner de atualização está em execução.',
             });
             return;
         }
@@ -127,7 +127,7 @@ export default class SystemController {
 
         if (!status) {
             response.status(500).send({
-                error: 'Failed to retrieve update status',
+                error: 'Não foi possível obter o status da atualização',
             });
             return;
         }
@@ -157,7 +157,7 @@ export default class SystemController {
             response.send(status)
         } catch (error) {
             logger.error({ err: error }, '[SystemController] Failed to get auto-update status')
-            response.status(500).send({ error: 'Failed to retrieve auto-update status' })
+            response.status(500).send({ error: 'Não foi possível obter o status da atualização automática' })
         }
     }
 
@@ -177,7 +177,7 @@ export default class SystemController {
             response.send(status)
         } catch (error) {
             logger.error({ err: error }, '[SystemController] Failed to get app auto-update status')
-            response.status(500).send({ error: 'Failed to retrieve app auto-update status' })
+            response.status(500).send({ error: 'Não foi possível obter o status da atualização automática dos aplicativos' })
         }
     }
 
@@ -194,7 +194,7 @@ export default class SystemController {
             response.send(status)
         } catch (error) {
             logger.error({ err: error }, '[SystemController] Failed to get content auto-update status')
-            response.status(500).send({ error: 'Failed to retrieve content auto-update status' })
+            response.status(500).send({ error: 'Não foi possível obter o status da atualização automática de conteúdo' })
         }
     }
 
@@ -202,7 +202,7 @@ export default class SystemController {
         const payload = await request.validateUsing(setServiceAutoUpdateValidator)
         const service = await Service.query().where('service_name', payload.service_name).first()
         if (!service) {
-            return response.status(404).send({ error: `Service ${payload.service_name} not found` })
+            return response.status(404).send({ error: `Serviço ${payload.service_name} não encontrado` })
         }
 
         service.auto_update_enabled = payload.enabled
@@ -213,7 +213,7 @@ export default class SystemController {
         }
         await service.save()
 
-        return response.send({ success: true, message: 'App auto-update preference updated' })
+        return response.send({ success: true, message: 'Preferência de atualização automática alterada' })
     }
 
 
@@ -229,7 +229,7 @@ export default class SystemController {
 
     async checkServiceUpdates({ response }: HttpContext) {
         await CheckServiceUpdatesJob.dispatch()
-        response.send({ success: true, message: 'Service update check dispatched' })
+        response.send({ success: true, message: 'Verificação de atualizações iniciada' })
     }
 
     async getAvailableVersions({ params, response }: HttpContext) {
@@ -241,7 +241,7 @@ export default class SystemController {
             .first()
 
         if (!service) {
-            return response.status(404).send({ error: `Service ${serviceName} not found or not installed` })
+            return response.status(404).send({ error: `Serviço ${serviceName} não encontrado ou não instalado` })
         }
 
         try {
@@ -254,7 +254,7 @@ export default class SystemController {
             response.send({ versions: updates })
         } catch (error) {
             logger.error({ err: error }, `[SystemController] Failed to fetch versions for ${serviceName}`)
-            response.status(500).send({ error: 'Failed to fetch available versions for this service.' })
+            response.status(500).send({ error: 'Não foi possível obter as versões disponíveis deste serviço.' })
         }
     }
 
@@ -298,7 +298,7 @@ export default class SystemController {
 
         const service = await Service.query().where('service_name', payload.service_name).first()
         if (!service) {
-            return response.status(404).send({ error: `Service ${payload.service_name} not found` })
+            return response.status(404).send({ error: `Serviço ${payload.service_name} não encontrado` })
         }
 
         // Extract host ports from container_config — the MySQL driver may return JSON columns
@@ -383,7 +383,7 @@ export default class SystemController {
         if (existing) {
             return response.status(409).send({
                 success: false,
-                message: `A custom app named "${payload.friendly_name}" already exists. Choose a different name.`,
+                message: `Já existe um aplicativo personalizado chamado "${payload.friendly_name}". Escolha outro nome.`,
             })
         }
 
@@ -394,7 +394,7 @@ export default class SystemController {
         if (duplicateHostPorts.length) {
             return response.status(422).send({
                 success: false,
-                message: `Duplicate host port(s): ${duplicateHostPorts.join(', ')}. Each host port can map to only one container.`,
+                message: `Portas do host duplicadas: ${duplicateHostPorts.join(', ')}. Cada porta do host só pode apontar para um contêiner.`,
             })
         }
 
@@ -461,16 +461,16 @@ export default class SystemController {
 
         const service = await Service.query().where('service_name', payload.service_name).first()
         if (!service) {
-            return response.status(404).send({ error: `Service ${payload.service_name} not found` })
+            return response.status(404).send({ error: `Serviço ${payload.service_name} não encontrado` })
         }
         if (!service.is_custom) {
-            return response.status(403).send({ error: 'Only custom apps can be deleted.' })
+            return response.status(403).send({ error: 'Só aplicativos personalizados podem ser excluídos.' })
         }
 
         await this.dockerService.removeCustomAppContainer(payload.service_name, payload.remove_image ?? false)
         await service.delete()
 
-        return response.send({ success: true, message: `Custom app ${payload.service_name} deleted` })
+        return response.send({ success: true, message: `Aplicativo personalizado ${payload.service_name} excluído` })
     }
 
     /** Uninstall a curated catalog app: stop + remove its container (optionally its image) and
@@ -482,16 +482,16 @@ export default class SystemController {
 
         const service = await Service.query().where('service_name', payload.service_name).first()
         if (!service) {
-            return response.status(404).send({ error: `Service ${payload.service_name} not found` })
+            return response.status(404).send({ error: `Serviço ${payload.service_name} não encontrado` })
         }
         if (service.is_custom) {
             return response.status(403).send({ error: 'Custom apps are removed via delete.' })
         }
         if (service.is_dependency_service) {
-            return response.status(403).send({ error: 'Dependency services cannot be uninstalled directly.' })
+            return response.status(403).send({ error: 'Serviços de dependência não podem ser desinstalados diretamente.' })
         }
         if (!service.installed) {
-            return response.status(409).send({ error: `Service ${payload.service_name} is not installed` })
+            return response.status(409).send({ error: `O serviço ${payload.service_name} não está instalado` })
         }
 
         const result = await this.dockerService.uninstallService(
@@ -512,11 +512,11 @@ export default class SystemController {
 
         const service = await Service.query().where('service_name', payload.service_name).first()
         if (!service) {
-            return response.status(404).send({ success: false, message: `Service ${payload.service_name} not found` })
+            return response.status(404).send({ success: false, message: `Serviço ${payload.service_name} não encontrado` })
         }
         // Hidden dependency services (e.g. Qdrant) aren't user-launchable, so they have no link to set.
         if (service.is_dependency_service) {
-            return response.status(403).send({ success: false, message: 'This service cannot be configured.' })
+            return response.status(403).send({ success: false, message: 'Este serviço não pode ser configurado.' })
         }
 
         // Reject a non-empty value that isn't a valid http(s) URL; an empty value clears the override.
@@ -524,7 +524,7 @@ export default class SystemController {
         if (payload.custom_url && payload.custom_url.trim() && !normalized) {
             return response.status(422).send({
                 success: false,
-                message: 'Custom URL must be a valid http(s) address (e.g. https://jellyfin.myhomelab.net).',
+                message: 'A URL personalizada precisa ser um endereço http(s) válido (por exemplo, https://jellyfin.minharede.net).',
             })
         }
 
@@ -550,12 +550,12 @@ export default class SystemController {
         if (!normalized) {
             return response.status(422).send({
                 success: false,
-                message: 'Enter a valid URL, for example 192.168.1.50:8080 or https://nas.local.',
+                message: 'Digite uma URL válida, por exemplo 192.168.1.50:8080 ou https://nas.local.',
             })
         }
 
         if (payload.icon && !isLinkTileIcon(payload.icon)) {
-            return response.status(422).send({ success: false, message: 'Unknown icon.' })
+            return response.status(422).send({ success: false, message: 'Ícone desconhecido.' })
         }
 
         // Namespaced so a tile can never collide with a curated catalog entry. The
@@ -566,7 +566,7 @@ export default class SystemController {
             .replace(/[^a-z0-9]+/g, '_')
             .replace(/^_+|_+$/g, '')
         if (!slug) {
-            return response.status(422).send({ success: false, message: 'Enter a name using letters or numbers.' })
+            return response.status(422).send({ success: false, message: 'Digite um nome com letras ou números.' })
         }
         const serviceName = `nomad_link_${slug}`
 
@@ -574,7 +574,7 @@ export default class SystemController {
         if (existing) {
             return response.status(409).send({
                 success: false,
-                message: `A link named "${payload.friendly_name}" already exists. Choose a different name.`,
+                message: `Já existe um link chamado "${payload.friendly_name}". Escolha outro nome.`,
             })
         }
 
@@ -607,22 +607,22 @@ export default class SystemController {
 
         const service = await Service.query().where('service_name', payload.service_name).first()
         if (!service) {
-            return response.status(404).send({ success: false, message: 'Link not found' })
+            return response.status(404).send({ success: false, message: 'Link não encontrado' })
         }
         if (!service.is_link_tile) {
-            return response.status(403).send({ success: false, message: 'That app is not a link.' })
+            return response.status(403).send({ success: false, message: 'Esse aplicativo não é um link.' })
         }
 
         const normalized = normalizeCustomUrl(payload.url)
         if (!normalized) {
             return response.status(422).send({
                 success: false,
-                message: 'Enter a valid URL, for example 192.168.1.50:8080 or https://nas.local.',
+                message: 'Digite uma URL válida, por exemplo 192.168.1.50:8080 ou https://nas.local.',
             })
         }
 
         if (payload.icon && !isLinkTileIcon(payload.icon)) {
-            return response.status(422).send({ success: false, message: 'Unknown icon.' })
+            return response.status(422).send({ success: false, message: 'Ícone desconhecido.' })
         }
 
         service.friendly_name = payload.friendly_name
@@ -642,10 +642,10 @@ export default class SystemController {
 
         const service = await Service.query().where('service_name', payload.service_name).first()
         if (!service) {
-            return response.status(404).send({ success: false, message: 'Link not found' })
+            return response.status(404).send({ success: false, message: 'Link não encontrado' })
         }
         if (!service.is_link_tile) {
-            return response.status(403).send({ success: false, message: 'That app is not a link.' })
+            return response.status(403).send({ success: false, message: 'Esse aplicativo não é um link.' })
         }
 
         await service.delete()
@@ -659,10 +659,10 @@ export default class SystemController {
 
         const service = await Service.query().where('service_name', payload.service_name).first()
         if (!service) {
-            return response.status(404).send({ success: false, message: `Service ${payload.service_name} not found` })
+            return response.status(404).send({ success: false, message: `Serviço ${payload.service_name} não encontrado` })
         }
         if (!service.is_custom) {
-            return response.status(403).send({ success: false, message: 'Only custom apps can be updated this way.' })
+            return response.status(403).send({ success: false, message: 'Só aplicativos personalizados podem ser atualizados assim.' })
         }
 
         const result = await this.dockerService.recreateCustomAppContainer(payload.service_name, {
@@ -680,7 +680,7 @@ export default class SystemController {
         // database) would be readable by name on this unauthenticated API surface.
         const service = await Service.query().where('service_name', params.name).first()
         if (!service) {
-            return response.status(404).send({ success: false, message: `Service ${params.name} not found` })
+            return response.status(404).send({ success: false, message: `Serviço ${params.name} não encontrado` })
         }
         const { tail } = await request.validateUsing(serviceLogsValidator)
         const result = await this.dockerService.getContainerLogs(params.name, tail ?? 200)
@@ -695,7 +695,7 @@ export default class SystemController {
         // Scope to managed services only (see getServiceLogs).
         const service = await Service.query().where('service_name', params.name).first()
         if (!service) {
-            return response.status(404).send({ success: false, message: `Service ${params.name} not found` })
+            return response.status(404).send({ success: false, message: `Serviço ${params.name} não encontrado` })
         }
         const result = await this.dockerService.getContainerStats(params.name)
         if (!result.success) {
@@ -708,11 +708,11 @@ export default class SystemController {
     async getCustomApp({ params, response }: HttpContext) {
         const service = await Service.query().where('service_name', params.name).first()
         if (!service) {
-            return response.status(404).send({ error: `Service ${params.name} not found` })
+            return response.status(404).send({ error: `Serviço ${params.name} não encontrado` })
         }
         // Custom and curated apps are both editable; hidden dependency services (e.g. Qdrant) are not.
         if (service.is_dependency_service) {
-            return response.status(403).send({ error: 'This service cannot be edited.' })
+            return response.status(403).send({ error: 'Este serviço não pode ser editado.' })
         }
         return response.send({ success: true, app: this.parseCustomContainerConfig(service) })
     }
@@ -725,11 +725,11 @@ export default class SystemController {
 
         const service = await Service.query().where('service_name', payload.service_name).first()
         if (!service) {
-            return response.status(404).send({ success: false, message: `Service ${payload.service_name} not found` })
+            return response.status(404).send({ success: false, message: `Serviço ${payload.service_name} não encontrado` })
         }
         // Custom and curated apps are both editable; hidden dependency services (e.g. Qdrant) are not.
         if (service.is_dependency_service) {
-            return response.status(403).send({ success: false, message: 'This service cannot be edited.' })
+            return response.status(403).send({ success: false, message: 'Este serviço não pode ser editado.' })
         }
 
         // Reject duplicate host ports within the request.
@@ -738,7 +738,7 @@ export default class SystemController {
         if (duplicateHostPorts.length) {
             return response.status(422).send({
                 success: false,
-                message: `Duplicate host port(s): ${duplicateHostPorts.join(', ')}. Each host port can map to only one container.`,
+                message: `Portas do host duplicadas: ${duplicateHostPorts.join(', ')}. Cada porta do host só pode apontar para um contêiner.`,
             })
         }
 

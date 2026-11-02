@@ -104,8 +104,8 @@ export default function MarkerPanel({
             ? 'A → Z'
             : 'Z → A'
           : sortDirection === 'asc'
-            ? 'Hidden first'
-            : 'Visible first'
+            ? 'Ocultos primeiro'
+            : 'Visíveis primeiro'
 
   const filteredAndSortedMarkers = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
@@ -207,8 +207,8 @@ export default function MarkerPanel({
             onToggleVisibility(marker.id, !marker.visible)
           }}
           className="shrink-0 rounded p-1 text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary"
-          title={marker.visible ? 'Hide pin' : 'Show pin'}
-          aria-label={marker.visible ? 'Hide pin' : 'Show pin'}
+          title={marker.visible ? 'Ocultar marcador' : 'Mostrar marcador'}
+          aria-label={marker.visible ? 'Ocultar marcador' : 'Mostrar marcador'}
         >
           {marker.visible ? <IconEye size={14} /> : <IconEyeOff size={14} />}
         </button>
@@ -223,7 +223,7 @@ export default function MarkerPanel({
               }}
               className="rounded bg-desert-red px-1.5 py-0.5 text-[11px] font-medium text-white transition-colors hover:brightness-110"
             >
-              Delete
+              Excluir
             </button>
 
             <button
@@ -231,7 +231,7 @@ export default function MarkerPanel({
               onClick={() => setPendingDeleteId(null)}
               className="rounded border border-border-default px-1.5 py-0.5 text-[11px] text-text-secondary transition-colors hover:bg-surface-secondary"
             >
-              Cancel
+              Cancelar
             </button>
           </span>
         ) : (
@@ -246,7 +246,7 @@ export default function MarkerPanel({
               onFlyTo(marker.longitude, marker.latitude)
             }}
             className="shrink-0 rounded p-1 text-text-muted opacity-0 transition-all hover:bg-surface-secondary hover:text-desert-red group-hover:opacity-100"
-            title="Delete pin"
+            title="Excluir marcador"
           >
             <IconTrash size={14} />
           </button>
@@ -261,10 +261,10 @@ export default function MarkerPanel({
         type="button"
         onClick={() => setOpen(true)}
         className="absolute left-4 top-[72px] z-40 flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-primary/95 px-3 py-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-surface-secondary"
-        title="Show saved locations"
+        title="Mostrar locais salvos"
       >
         <IconMapPin size={18} className="text-desert-orange" />
-        <span className="text-sm font-medium text-text-primary">Pins</span>
+        <span className="text-sm font-medium text-text-primary">Marcadores</span>
 
         {markers.length > 0 && (
           <span className="ml-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-desert-orange px-1 text-[11px] font-bold text-white">
@@ -291,13 +291,13 @@ export default function MarkerPanel({
             setOpen(false)
           }
         }}
-        title="Close panel"
+        title="Fechar painel"
         className="flex cursor-pointer items-center justify-between border-b border-border-subtle px-3 py-2.5 transition-colors hover:bg-surface-secondary"
       >
         <div className="flex items-center gap-2">
           <IconMapPin size={18} className="text-desert-orange" />
 
-          <span className="text-sm font-semibold text-text-primary">Saved Locations</span>
+          <span className="text-sm font-semibold text-text-primary">Locais salvos</span>
 
           {markers.length > 0 && (
             <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-desert-orange px-1 text-[11px] font-bold text-white">
@@ -317,7 +317,7 @@ export default function MarkerPanel({
       <div className="space-y-2 border-b border-border-subtle px-3 py-2">
         <input
           type="search"
-          placeholder="Search pins..."
+          placeholder="Pesquisar marcadores..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="block w-full rounded border border-border-default bg-surface-primary px-2 py-1 text-sm text-text-primary placeholder:text-text-muted focus:border-desert-green focus:outline-none"
@@ -329,10 +329,10 @@ export default function MarkerPanel({
             onChange={(e) => setSortField(e.target.value as SortField)}
             className="flex-1 rounded border border-border-default bg-surface-primary px-2 py-1 text-xs text-text-primary focus:border-desert-green focus:outline-none"
           >
-            <option value="name">Sort by name</option>
-            <option value="color">Sort by hue</option>
-            <option value="icon">Sort by icon</option>
-            <option value="visibility">Sort by visibility</option>
+            <option value="name">Ordenar por nome</option>
+            <option value="color">Ordenar por cor</option>
+            <option value="icon">Ordenar por ícone</option>
+            <option value="visibility">Ordenar por visibilidade</option>
           </select>
 
           <button
@@ -353,7 +353,7 @@ export default function MarkerPanel({
             onClick={() => setAllMarkerVisibility(!allFilteredMarkersVisible)}
             className="w-full rounded bg-[#424420] px-2 py-1 text-xs text-white transition-colors hover:bg-[#525530]"
           >
-            {allFilteredMarkersVisible ? 'Hide all' : 'Show all'}
+            {allFilteredMarkersVisible ? 'Ocultar todos' : 'Mostrar todos'}
           </button>
         )}
       </div>
@@ -362,11 +362,11 @@ export default function MarkerPanel({
         {markers.length === 0 ? (
           <div className="px-3 py-6 text-center">
             <IconMapPinFilled size={24} className="mx-auto mb-2 text-text-muted" />
-            <p className="text-sm text-text-muted">Click anywhere on the map to drop a pin</p>
+            <p className="text-sm text-text-muted">Clique em qualquer lugar do mapa para colocar um marcador</p>
           </div>
         ) : filteredAndSortedMarkers.length === 0 ? (
           <div className="px-3 py-6 text-center">
-            <p className="text-sm text-text-muted">No pins match your search.</p>
+            <p className="text-sm text-text-muted">Nenhum marcador corresponde à pesquisa.</p>
           </div>
         ) : (
           <ul>{filteredAndSortedMarkers.map(renderMarkerRow)}</ul>

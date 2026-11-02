@@ -1,53 +1,61 @@
 @import 'tailwindcss';
 
+/*
+ * Vetorizando Soluções brand palette.
+ * Token names keep the original "desert-*" prefix so existing components pick up the new colors
+ * without touching every class name:
+ *   green  -> brand blue (#1d7dd4 / #0b74d1 / #0a5ca6)   primary actions, links, active states
+ *   orange -> brand gold (#c9a84c / #a87c2a)              highlights and accents
+ *   tan    -> brand silver (grays)                       secondary text and borders
+ */
 @theme {
-  --color-desert-white: #f6f6f4;
-  --color-desert-sand: #f7eedc;
+  --color-desert-white: #f8fbff;
+  --color-desert-sand: #eef4fb;
 
-  --color-desert-green-darker: #2a2a15;
-  --color-desert-green-dark: #353518;
-  --color-desert-green: #424420;
-  --color-desert-green-light: #babaaa;
-  --color-desert-green-lighter: #d4d4c8;
+  --color-desert-green-darker: #0a2a4a;
+  --color-desert-green-dark: #0c3f6e;
+  --color-desert-green: #0b74d1;
+  --color-desert-green-light: #bfdcf5;
+  --color-desert-green-lighter: #dbeaf8;
 
-  --color-desert-orange-dark: #8a3d0f;
-  --color-desert-orange: #a84a12;
-  --color-desert-orange-light: #c85815;
-  --color-desert-orange-lighter: #e69556;
+  --color-desert-orange-dark: #7a5a1c;
+  --color-desert-orange: #a87c2a;
+  --color-desert-orange-light: #c9a84c;
+  --color-desert-orange-lighter: #e8c96e;
 
-  --color-desert-tan-dark: #6b5d4f;
-  --color-desert-tan: #8b7355;
-  --color-desert-tan-light: #a8927a;
-  --color-desert-tan-lighter: #c9b99f;
+  --color-desert-tan-dark: #4b5563;
+  --color-desert-tan: #6b7280;
+  --color-desert-tan-light: #9ca3af;
+  --color-desert-tan-lighter: #d1d5db;
 
   --color-desert-red-dark: #7a2e2e;
   --color-desert-red: #994444;
   --color-desert-red-light: #b05555;
   --color-desert-red-lighter: #d88989;
 
-  --color-desert-olive-dark: #5a5c3a;
-  --color-desert-olive: #6d7042;
-  --color-desert-olive-light: #858a55;
-  --color-desert-olive-lighter: #a5ab7d;
+  --color-desert-olive-dark: #0e3a66;
+  --color-desert-olive: #1d4f80;
+  --color-desert-olive-light: #3a77b0;
+  --color-desert-olive-lighter: #9ec5e8;
 
-  --color-desert-stone-dark: #5c5c54;
-  --color-desert-stone: #75756a;
-  --color-desert-stone-light: #8f8f82;
-  --color-desert-stone-lighter: #afafa5;
+  --color-desert-stone-dark: #4a4f57;
+  --color-desert-stone: #7a8290;
+  --color-desert-stone-light: #9aa3ae;
+  --color-desert-stone-lighter: #c4cad2;
 
   /* Semantic surface/text tokens (for replacing generic gray/white Tailwind classes) */
   --color-surface-primary: #ffffff;
-  --color-surface-secondary: #f9fafb;
+  --color-surface-secondary: #f5f9fe;
   --color-surface-elevated: #ffffff;
-  --color-text-primary: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-muted: #9ca3af;
-  --color-border-default: #d1d5db;
-  --color-border-subtle: #e5e7eb;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-border-default: #cbd5e1;
+  --color-border-subtle: #e2e8f0;
 
   /* Button interactive states (green hover/active swap conflicts with text color inversion) */
-  --color-btn-green-hover: #353518;
-  --color-btn-green-active: #2a2a15;
+  --color-btn-green-hover: #0a5ca6;
+  --color-btn-green-active: #0a3a66;
 }
 
 body {
@@ -56,35 +64,35 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Night Ops — warm charcoal dark mode */
+/* Night Ops — deep navy dark mode (Vetorizando dark surfaces) */
 [data-theme="dark"] {
-  /* Backgrounds: light sand → warm charcoal */
-  --color-desert-sand: #1c1b16;
-  --color-desert-white: #2a2918;
+  /* Backgrounds: light blue-gray → deep navy */
+  --color-desert-sand: #080d18;
+  --color-desert-white: #0c1220;
 
-  /* Text greens: dark text → light text for readability */
-  --color-desert-green-darker: #f7eedc;
-  --color-desert-green-dark: #e8dfc8;
+  /* Text blues: dark text → light text for readability */
+  --color-desert-green-darker: #e6eefa;
+  --color-desert-green-dark: #d4e3f5;
 
-  /* Accent green remains dark enough for white text on buttons */
-  --color-desert-green: #525530;
-  --color-desert-green-foreground: #babaaa;
+  /* Accent blue remains bright enough for white text on buttons */
+  --color-desert-green: #1d7dd4;
+  --color-desert-green-foreground: #93c5fd;
 
   /* Light variants → dark variants (hover bg, disabled states) */
-  --color-desert-green-light: #3a3c24;
-  --color-desert-green-lighter: #2d2e1c;
+  --color-desert-green-light: #13233d;
+  --color-desert-green-lighter: #0e1a2e;
 
-  /* Orange: brighter for contrast on dark surfaces */
-  --color-desert-orange-dark: #c85815;
-  --color-desert-orange: #c85815;
-  --color-desert-orange-light: #e69556;
-  --color-desert-orange-lighter: #f0b87a;
+  /* Gold: brighter for contrast on dark surfaces */
+  --color-desert-orange-dark: #e8c96e;
+  --color-desert-orange: #c9a84c;
+  --color-desert-orange-light: #e8c96e;
+  --color-desert-orange-lighter: #f5e3a8;
 
-  /* Tan: lightened for readability */
-  --color-desert-tan-dark: #c9b99f;
-  --color-desert-tan: #a8927a;
-  --color-desert-tan-light: #8b7355;
-  --color-desert-tan-lighter: #6b5d4f;
+  /* Silver: lightened for readability */
+  --color-desert-tan-dark: #d1d5db;
+  --color-desert-tan: #9ca3af;
+  --color-desert-tan-light: #6b7280;
+  --color-desert-tan-lighter: #374151;
 
   /* Red: lightened for dark bg */
   --color-desert-red-dark: #d88989;
@@ -92,36 +100,36 @@ body {
   --color-desert-red-light: #994444;
   --color-desert-red-lighter: #7a2e2e;
 
-  /* Olive: lightened */
-  --color-desert-olive-dark: #a5ab7d;
-  --color-desert-olive: #858a55;
-  --color-desert-olive-light: #6d7042;
-  --color-desert-olive-lighter: #5a5c3a;
+  /* Blue-olive: lightened */
+  --color-desert-olive-dark: #a9cdf0;
+  --color-desert-olive: #5d9bd6;
+  --color-desert-olive-light: #2d5f94;
+  --color-desert-olive-lighter: #1e3c5f;
 
   /* Stone: lightened */
-  --color-desert-stone-dark: #afafa5;
-  --color-desert-stone: #8f8f82;
-  --color-desert-stone-light: #75756a;
-  --color-desert-stone-lighter: #5c5c54;
+  --color-desert-stone-dark: #cbd5e1;
+  --color-desert-stone: #94a3b8;
+  --color-desert-stone-light: #64748b;
+  --color-desert-stone-lighter: #334155;
 
   /* Semantic surface overrides */
-  --color-surface-primary: #2a2918;
-  --color-surface-secondary: #353420;
-  --color-surface-elevated: #3d3c2a;
-  --color-text-primary: #f7eedc;
-  --color-text-secondary: #afafa5;
-  --color-text-muted: #8f8f82;
-  --color-border-default: #424420;
-  --color-border-subtle: #353420;
+  --color-surface-primary: #111827;
+  --color-surface-secondary: #0c1220;
+  --color-surface-elevated: #1f2937;
+  --color-text-primary: #e6edf7;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-border-default: #1f2f4a;
+  --color-border-subtle: #172238;
 
-  /* Button interactive states: darker green for hover/active on dark bg */
-  --color-btn-green-hover: #474a28;
-  --color-btn-green-active: #3a3c24;
+  /* Button interactive states: darker blue for hover/active on dark bg */
+  --color-btn-green-hover: #1560a8;
+  --color-btn-green-active: #0e4a85;
 
   color-scheme: dark;
 }
 
-/* Keep foreground accents readable without lightening green button backgrounds. */
+/* Keep foreground accents readable without lightening blue button backgrounds. */
 [data-theme="dark"] .text-desert-green {
   color: var(--color-desert-green-foreground);
 }
@@ -140,41 +148,41 @@ body {
 
 /* MapLibre popup styling for dark mode */
 [data-theme="dark"] .maplibregl-popup-content {
-  background: #2a2918;
-  color: #f7eedc;
+  background: #111827;
+  color: #e6edf7;
 }
 
 [data-theme="dark"] .maplibregl-popup-content input,
 [data-theme="dark"] .maplibregl-popup-content textarea {
-  background: #353420;
-  color: #f7eedc;
-  border-color: #424420;
+  background: #0c1220;
+  color: #e6edf7;
+  border-color: #1f2f4a;
 }
 
 [data-theme="dark"] .maplibregl-popup-content input::placeholder,
 [data-theme="dark"] .maplibregl-popup-content textarea::placeholder {
-  color: #8f8f82;
+  color: #64748b;
 }
 
 [data-theme="dark"] .maplibregl-popup-tip {
-  border-top-color: #2a2918;
+  border-top-color: #111827;
 }
 
 [data-theme="dark"] .maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
-  border-top-color: #2a2918;
+  border-top-color: #111827;
 }
 
 [data-theme="dark"] .maplibregl-popup-anchor-top .maplibregl-popup-tip {
-  border-bottom-color: #2a2918;
+  border-bottom-color: #111827;
 }
 
 [data-theme="dark"] .maplibregl-popup-close-button {
-  color: #afafa5;
+  color: #94a3b8;
 }
 
 [data-theme="dark"] .maplibregl-popup-close-button:hover {
-  color: #f7eedc;
-  background: #353420;
+  color: #e6edf7;
+  background: #0c1220;
 }
 
 /* Base (hidden scrollbar + fade hint) */
@@ -222,4 +230,85 @@ body {
 .themed-scrollbar:hover::-webkit-scrollbar-thumb:hover,
 .themed-scrollbar:focus::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-text-muted);
+}
+
+/*
+ * Modern layer: softer surfaces, rounder corners, system UI font, clearer focus states.
+ * Works by refining the utility classes the existing components already use, so pages pick it up
+ * without per-component rewrites. Keep this block at the end so it wins over the earlier rules.
+ */
+html {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-image: radial-gradient(1200px 600px at 100% -10%, color-mix(in oklab, var(--color-desert-green) 8%, transparent), transparent),
+    radial-gradient(900px 500px at -10% 110%, color-mix(in oklab, var(--color-desert-orange) 6%, transparent), transparent);
+  background-attachment: fixed;
+}
+
+.rounded-md {
+  border-radius: 0.75rem;
+}
+
+.rounded-lg {
+  border-radius: 1rem;
+}
+
+.rounded-xl {
+  border-radius: 1.25rem;
+}
+
+.shadow-md {
+  box-shadow: 0 6px 24px -8px rgb(15 23 42 / 0.12), 0 1px 2px rgb(15 23 42 / 0.06);
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.06);
+}
+
+:where(a, button, input, select, textarea, [role="button"]):focus-visible {
+  outline: 2px solid var(--color-desert-green);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-desert-green) 25%, transparent);
+}
+
+[data-theme="dark"] .shadow-md {
+  box-shadow: 0 8px 28px -10px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.03);
+}
+
+/* Tighter page headings and calmer dividers on every page. */
+.text-4xl {
+  font-size: 1.75rem;
+  line-height: 2.25rem;
+  letter-spacing: -0.01em;
+}
+
+input,
+select,
+textarea {
+  border-radius: 0.5rem;
+}
+
+table thead th {
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+/* Long names inside grid and flex children must wrap or truncate instead of widening the page. */
+.grid > *,
+main {
+  min-width: 0;
+}
+
+/* Scrollbar-width differences must never add a sideways scroll to the page. */
+html,
+body {
+  overflow-x: clip;
 }

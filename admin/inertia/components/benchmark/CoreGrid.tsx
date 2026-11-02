@@ -52,7 +52,7 @@ export default function CoreGrid({ loads }: CoreGridProps) {
       </div>
       <div className="text-xs text-desert-stone-dark font-mono">
         {loads.length} thread{loads.length === 1 ? '' : 's'}
-        {grouped > 1 ? ` (${grouped}/cell)` : ''}
+        {grouped > 1 ? ` (${grouped}/célula)` : ''}
       </div>
     </div>
   )

@@ -93,7 +93,7 @@ export default function DrugReferenceInteractions({ ingestStatus, rowCount }: Pa
       setPickerResults(json.results ?? [])
       setPickerSearched(true)
     } catch (err) {
-      setPickerError(err instanceof Error ? err.message : 'Search failed')
+      setPickerError(err instanceof Error ? err.message : 'A pesquisa falhou')
     } finally {
       setPickerLoading(false)
     }
@@ -122,22 +122,22 @@ export default function DrugReferenceInteractions({ ingestStatus, rowCount }: Pa
 
   return (
     <AppLayout compact>
-      <Head title="Compare label warnings" />
+      <Head title="Comparar avisos das bulas" />
 
       <div className="p-4 max-w-7xl mx-auto">
-        {/* Back nav */}
+        {/* Voltar nav */}
         <Link
           href="/drug-reference"
           className="inline-flex items-center gap-1 text-sm text-desert-green hover:underline mb-4"
         >
           <IconArrowLeft size={16} />
-          Drug Reference
+          Referência de medicamentos
         </Link>
 
         <div className="mb-5">
-          <h1 className="text-2xl font-bold mb-1">Compare label warnings</h1>
+          <h1 className="text-2xl font-bold mb-1">Comparar avisos das bulas</h1>
           <p className="text-sm opacity-70">
-            View each drug's FDA-labeled interaction warnings side by side. Select up to {MAX_COMPARE} drugs.
+            Veja lado a lado os avisos de interação das bulas da FDA. Selecione até {MAX_COMPARE} drugs.
           </p>
         </div>
 
@@ -145,23 +145,22 @@ export default function DrugReferenceInteractions({ ingestStatus, rowCount }: Pa
         <div className="flex gap-3 items-start bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 mb-6">
           <IconAlertTriangle size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-amber-900 leading-relaxed">
-            <strong>This shows each drug's own FDA-labeled interaction warnings, individually.</strong>{' '}
-            It is <strong>not</strong> a cross-drug interaction checker and is{' '}
-            <strong>not</strong> a substitute for professional medical review. Absence of text
-            here does not mean a drug is safe to combine.
+            <strong>Isto mostra os avisos de interação da bula de cada medicamento, individualmente.</strong>{' '}
+            Não é <strong>um verificador de interações entre medicamentos</strong> e é{' '}
+            <strong>não</strong> um substituto para a avaliação de um profissional de saúde. A ausência de texto aqui não significa que a combinação seja segura.
           </p>
         </div>
 
         {isEmpty ? (
           // ── Empty state (no data ingested) ─────────────────────────────────
           <div className="border-2 border-dashed border-border-default rounded-lg p-8 text-center">
-            <p className="text-lg font-semibold mb-2">No FDA drug data yet</p>
+            <p className="text-lg font-semibold mb-2">Ainda não há dados de medicamentos da FDA</p>
             <p className="mb-6 opacity-70">
-              Download the openFDA drug-label dataset to enable offline search and comparison.
+              Baixe o conjunto de bulas da openFDA para ativar a pesquisa e a comparação offline.
             </p>
             <Link href="/drug-reference">
               <StyledButton variant="primary" onClick={() => {}}>
-                Go to Drug Reference to download data
+                Ir para a Referência de medicamentos para baixar os dados
               </StyledButton>
             </Link>
             {ingestStatus && (
@@ -175,10 +174,10 @@ export default function DrugReferenceInteractions({ ingestStatus, rowCount }: Pa
             {/* ── Drug picker ───────────────────────────────────────────────── */}
             <div className="mb-6 border border-border-subtle rounded-lg p-4 bg-surface-secondary">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-semibold text-text-primary">Select drugs to compare</h2>
+                <h2 className="text-sm font-semibold text-text-primary">Selecione medicamentos para comparar</h2>
                 {atMax && (
                   <span className="text-xs text-amber-700 bg-amber-100 border border-amber-200 rounded px-2 py-0.5">
-                    Maximum {MAX_COMPARE} drugs reached
+                    Máximo de {MAX_COMPARE} medicamentos atingido
                   </span>
                 )}
               </div>
@@ -195,7 +194,7 @@ export default function DrugReferenceInteractions({ ingestStatus, rowCount }: Pa
                       <button
                         type="button"
                         onClick={() => removeId(entry.id)}
-                        aria-label={`Remove ${entry.brand_name ?? entry.generic_name}`}
+                        aria-label={`Remover ${entry.brand_name ?? entry.generic_name}`}
                         className="hover:opacity-70 transition-opacity leading-none"
                       >
                         ×
@@ -214,7 +213,7 @@ export default function DrugReferenceInteractions({ ingestStatus, rowCount }: Pa
                         <button
                           type="button"
                           onClick={() => removeId(id)}
-                          aria-label={`Remove drug ${id}`}
+                          aria-label={`Remover medicamento ${id}`}
                           className="hover:opacity-70 transition-opacity leading-none"
                         >
                           ×
@@ -229,20 +228,20 @@ export default function DrugReferenceInteractions({ ingestStatus, rowCount }: Pa
                 type="text"
                 value={query}
                 onChange={handleQueryChange}
-                placeholder="Search for a drug to add…"
+                placeholder="Pesquise um medicamento para adicionar…"
                 disabled={atMax}
                 className="w-full border border-border-default rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-desert-green disabled:bg-surface-secondary disabled:text-text-muted"
               />
 
               {/* Picker results */}
               {pickerLoading && (
-                <div className="mt-2 text-xs text-text-secondary">Searching…</div>
+                <div className="mt-2 text-xs text-text-secondary">Pesquisando…</div>
               )}
               {pickerError && (
                 <div className="mt-2 text-xs text-red-600">{pickerError}</div>
               )}
               {pickerSearched && pickerResults.length === 0 && !pickerLoading && (
-                <div className="mt-2 text-xs text-text-secondary">No results for "{query}"</div>
+                <div className="mt-2 text-xs text-text-secondary">Nenhum resultado para "{query}"</div>
               )}
               {pickerResults.length > 0 && !atMax && (
                 <div className="mt-2 border border-border-subtle rounded-lg overflow-hidden divide-y divide-border-subtle max-h-64 overflow-y-auto bg-surface-primary">
@@ -261,11 +260,11 @@ export default function DrugReferenceInteractions({ ingestStatus, rowCount }: Pa
             {/* ── Comparison columns ────────────────────────────────────────── */}
             {selectedIds.length === 0 ? (
               <div className="text-center py-12 text-text-muted border-2 border-dashed border-border-subtle rounded-lg">
-                <p className="text-sm">Select drugs above to compare their labeled interaction warnings.</p>
+                <p className="text-sm">Selecione medicamentos acima para comparar os avisos de interação das bulas.</p>
               </div>
             ) : loadingEntries ? (
               <div className="text-center py-12 text-text-muted">
-                <p className="text-sm">Loading…</p>
+                <p className="text-sm">Carregando…</p>
               </div>
             ) : (
               // Stacked single-column on phones. From sm: up the columns share
@@ -288,10 +287,8 @@ export default function DrugReferenceInteractions({ ingestStatus, rowCount }: Pa
 
         {/* ── Source citation (CC0, no-endorsement) ───────────────────────── */}
         <footer className="mt-8 pt-4 border-t border-border-subtle text-xs text-text-secondary">
-          <strong>Source:</strong> U.S. Food &amp; Drug Administration drug labeling, via{' '}
-          <strong>openFDA</strong> — public domain (CC0 1.0). NOMAD is not affiliated with or
-          endorsed by the FDA. Label data is provided as-is; do not rely on it for medical
-          decisions.
+          <strong>Fonte:</strong> bulas da U.S. Food &amp; Drug Administration (FDA), via{' '}
+          <strong>openFDA</strong> — domínio público (CC0 1.0). Este sistema não é afiliado nem endossado pela FDA. Os dados das bulas são fornecidos como estão; não os use para decisões médicas.
         </footer>
       </div>
     </AppLayout>
@@ -314,21 +311,21 @@ function PickerRow({ result, selected, onAdd }: PickerRowProps) {
       {/* Reuse the same visual pattern as DrugResultRow but without a Link */}
       <div className="min-w-0 flex-1 mr-3">
         <span className="text-sm font-medium text-text-primary block truncate">
-          {result.brand_name ?? result.generic_name ?? 'Unknown'}
+          {result.brand_name ?? result.generic_name ?? 'Desconhecido'}
         </span>
         {result.brand_name && result.generic_name && (
           <span className="text-xs text-text-secondary italic">{result.generic_name}</span>
         )}
       </div>
       {selected ? (
-        <span className="text-xs text-desert-green font-semibold flex-shrink-0">Added</span>
+        <span className="text-xs text-desert-green font-semibold flex-shrink-0">Adicionado</span>
       ) : (
         <button
           type="button"
           onClick={onAdd}
           className="text-xs px-2.5 py-1 rounded border border-desert-green text-desert-green hover:bg-desert-green hover:text-white transition-colors flex-shrink-0"
         >
-          Add
+          Adicionar
         </button>
       )}
     </div>

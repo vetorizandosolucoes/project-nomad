@@ -39,7 +39,7 @@ export default class ZimController {
     const { filename, jobId } = await this.zimService.downloadRemote(payload.url, payload.metadata)
 
     return {
-      message: 'Download started successfully',
+      message: 'Download iniciado com sucesso',
       filename,
       jobId,
       url: payload.url,
@@ -58,7 +58,7 @@ export default class ZimController {
     )
 
     return {
-      message: 'Download started successfully',
+      message: 'Download iniciado com sucesso',
       categorySlug: payload.categorySlug,
       tierSlug: payload.tierSlug,
       resources,
@@ -68,7 +68,7 @@ export default class ZimController {
   async rescanLibrary({}: HttpContext) {
     const result = await this.zimService.rescanLibrary()
     return {
-      message: 'Kiwix library rescanned',
+      message: 'Biblioteca do Kiwix reindexada',
       ...result,
     }
   }
@@ -81,14 +81,14 @@ export default class ZimController {
     } catch (error) {
       if (error.message === 'not_found') {
         return response.status(404).send({
-          message: `ZIM file with key ${payload.params.filename} not found`,
+          message: `Arquivo ZIM ${payload.params.filename} não encontrado`,
         })
       }
       throw error // Re-throw any other errors and let the global error handler catch
     }
 
     return {
-      message: 'ZIM file deleted successfully',
+      message: 'Arquivo ZIM excluído com sucesso',
     }
   }
 
@@ -144,22 +144,22 @@ export default class ZimController {
       await request.multipart.process()
 
       if (uploadError === 'INVALID_TYPE') {
-        return response.status(422).send({ message: 'Only .zim files are accepted' })
+        return response.status(422).send({ message: 'Só arquivos .zim são aceitos' })
       }
       if (uploadError === 'INVALID_FILENAME') {
-        return response.status(422).send({ message: 'Invalid filename' })
+        return response.status(422).send({ message: 'Nome de arquivo inválido' })
       }
       if (uploadError === 'DUPLICATE_FILENAME') {
-        return response.status(409).send({ message: 'A ZIM file with that name already exists' })
+        return response.status(409).send({ message: 'Já existe um arquivo ZIM com esse nome' })
       }
       if (!filename) {
-        return response.status(400).send({ message: 'No file received' })
+        return response.status(400).send({ message: 'Nenhum arquivo recebido' })
       }
 
       const { added } = await this.zimService.registerLocalUpload(filename)
 
       return response.status(201).send({
-        message: 'ZIM file uploaded and registered successfully',
+        message: 'Arquivo ZIM enviado e registrado com sucesso',
         filename,
         added,
       })
@@ -169,7 +169,7 @@ export default class ZimController {
         const { unlink } = await import('fs/promises')
         await unlink(tmpPath).catch(() => {})
       }
-      return response.status(500).send({ message: 'Upload failed' })
+      return response.status(500).send({ message: 'O envio falhou' })
     }
   }
 
@@ -195,7 +195,7 @@ export default class ZimController {
     assertNotPrivateUrl(payload.base_url)
     try {
       const source = await this.zimService.addCustomLibrary(payload.name, payload.base_url)
-      return { message: 'Custom library added', library: source }
+      return { message: 'Biblioteca personalizada adicionada', library: source }
     } catch (error) {
       if (error.message === 'Maximum of 10 custom libraries allowed') {
         return response.status(400).send({ message: error.message })
@@ -208,7 +208,7 @@ export default class ZimController {
     const payload = await request.validateUsing(idParamValidator)
     try {
       await this.zimService.removeCustomLibrary(payload.params.id)
-      return { message: 'Custom library removed' }
+      return { message: 'Biblioteca personalizada removida' }
     } catch (error) {
       if (error.message === 'Custom library not found') {
         return response.status(404).send({ message: error.message })
@@ -226,7 +226,7 @@ export default class ZimController {
         return response.status(400).send({ message: error.message })
       }
       return response.status(502).send({
-        message: 'Could not fetch directory listing from the provided URL',
+        message: 'Não foi possível listar o diretório da URL informada',
       })
     }
   }

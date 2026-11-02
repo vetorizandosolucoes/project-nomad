@@ -51,7 +51,7 @@ export default function IconSelectorPopover({
           onClick={onClose}
           className="rounded bg-[#424420] px-2 py-1 text-xs text-white hover:bg-[#525530]"
         >
-          Close
+          Fechar
         </button>
       </div>
     </div>

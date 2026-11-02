@@ -162,7 +162,7 @@ export function groupAndSortKbFiles(
       groups.push({
         bucket,
         source: '__admin_docs_group__',
-        displayName: `Project NOMAD documentation · ${members.length} file${members.length === 1 ? '' : 's'}`,
+        displayName: `Documentação do sistema · ${members.length} ${members.length === 1 ? 'arquivo' : 'arquivos'}`,
         count: members.length,
         members: members.map((m) => m.source),
         state: null,
@@ -209,7 +209,7 @@ export function groupAndSortKbFiles(
         groups.push({
           bucket,
           source: collectionHeaderKey(key),
-          displayName: `${label} · ${groupMembers.length} file${groupMembers.length === 1 ? '' : 's'}`,
+          displayName: `${label} · ${groupMembers.length} ${groupMembers.length === 1 ? 'arquivo' : 'arquivos'}`,
           count: groupMembers.length,
           members: groupMembers.map((m) => m.source),
           state: null,

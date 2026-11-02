@@ -1,24 +1,121 @@
 {
-  "spec_version": "2026-03-15",
+  "spec_version": "2026-11-02",
   "categories": [
     {
-      "name": "Medicine",
+      "name": "Biblioteca em português",
+      "slug": "portugues",
+      "icon": "IconBooks",
+      "description": "Medicina, dicionário, livros, viagens e literatura em português, dos projetos Wikimedia.",
+      "language": "pt",
+      "tiers": [
+        {
+          "name": "Essencial",
+          "slug": "portugues-essencial",
+          "recommended": true,
+          "description": "Artigos médicos da Wikipédia e guias de viagem em português. Leve e focado em texto.",
+          "resources": [
+            {
+              "id": "wikipedia_pt_medicine_nopic",
+              "version": "2026-10",
+              "title": "Wikipédia: Medicina",
+              "description": "Artigos de medicina e saúde da Wikipédia em português, sem imagens",
+              "url": "https://download.kiwix.org/zim/wikipedia/wikipedia_pt_medicine_nopic_2026-10.zim",
+              "size_mb": 116
+            },
+            {
+              "id": "wikivoyage_pt_all_nopic",
+              "version": "2026-09",
+              "title": "Wikivoyage",
+              "description": "Guia de viagens em português",
+              "url": "https://download.kiwix.org/zim/wikivoyage/wikivoyage_pt_all_nopic_2026-09.zim",
+              "size_mb": 17
+            },
+            {
+              "id": "vikidia_pt_all_maxi",
+              "version": "2026-09",
+              "title": "Vikidia",
+              "description": "Enciclopédia em português para crianças e jovens",
+              "url": "https://download.kiwix.org/zim/vikidia/vikidia_pt_all_maxi_2026-09.zim",
+              "size_mb": 18
+            }
+          ]
+        },
+        {
+          "name": "Padrão",
+          "slug": "portugues-padrao",
+          "includesTier": "portugues-essencial",
+          "description": "Adiciona dicionário, livros didáticos e cursos em português. Inclui o nível Essencial.",
+          "resources": [
+            {
+              "id": "wiktionary_pt_all_nopic",
+              "version": "2026-09",
+              "title": "Wikcionário",
+              "description": "Dicionário livre em português",
+              "url": "https://download.kiwix.org/zim/wiktionary/wiktionary_pt_all_nopic_2026-09.zim",
+              "size_mb": 352
+            },
+            {
+              "id": "wikibooks_pt_all_nopic",
+              "version": "2026-10",
+              "title": "Wikilivros",
+              "description": "Livros didáticos abertos em português",
+              "url": "https://download.kiwix.org/zim/wikibooks/wikibooks_pt_all_nopic_2026-10.zim",
+              "size_mb": 54
+            },
+            {
+              "id": "wikiversity_pt_all_nopic",
+              "version": "2026-10",
+              "title": "Wikiversidade",
+              "description": "Cursos e materiais de estudo em português",
+              "url": "https://download.kiwix.org/zim/wikiversity/wikiversity_pt_all_nopic_2026-10.zim",
+              "size_mb": 43
+            }
+          ]
+        },
+        {
+          "name": "Completo",
+          "slug": "portugues-completo",
+          "includesTier": "portugues-padrao",
+          "description": "Adiciona literatura e medicina com imagens. Inclui o nível Padrão.",
+          "resources": [
+            {
+              "id": "wikisource_pt_all_nopic",
+              "version": "2026-10",
+              "title": "Wikisource",
+              "description": "Biblioteca de textos e obras em português",
+              "url": "https://download.kiwix.org/zim/wikisource/wikisource_pt_all_nopic_2026-10.zim",
+              "size_mb": 1567
+            },
+            {
+              "id": "wikipedia_pt_medicine_maxi",
+              "version": "2026-10",
+              "title": "Wikipédia: Medicina (com imagens)",
+              "description": "Artigos de medicina e saúde da Wikipédia em português, com imagens",
+              "url": "https://download.kiwix.org/zim/wikipedia/wikipedia_pt_medicine_maxi_2026-10.zim",
+              "size_mb": 280
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Medicina (em inglês)",
       "slug": "medicine",
       "icon": "IconStethoscope",
-      "description": "Medical references, guides, and encyclopedias for healthcare information and emergency preparedness.",
+      "description": "Referências médicas, guias e enciclopédias sobre saúde e preparação para emergências. Conteúdo em inglês.",
       "language": "en",
       "tiers": [
         {
-          "name": "Essential",
+          "name": "Essencial",
           "slug": "medicine-essential",
-          "description": "Core medical references for first aid, medications, and emergency care. Start here.",
+          "description": "Referências médicas básicas sobre primeiros socorros, medicamentos e emergências. Comece por aqui.",
           "recommended": true,
           "resources": [
             {
               "id": "zimgit-medicine_en",
               "version": "2024-08",
               "title": "Medical Library",
-              "description": "Field and emergency medicine books and guides",
+              "description": "Livros e guias de medicina de campo e de emergência",
               "url": "https://download.kiwix.org/zim/other/zimgit-medicine_en_2024-08.zim",
               "size_mb": 67
             },
@@ -26,7 +123,7 @@
               "id": "nhs.uk_en_medicines",
               "version": "2025-12",
               "title": "NHS Medicines A to Z",
-              "description": "How medicines work, dosages, side effects, and interactions",
+              "description": "Como os medicamentos agem, doses, efeitos colaterais e interações",
               "url": "https://download.kiwix.org/zim/zimit/nhs.uk_en_medicines_2025-12.zim",
               "size_mb": 16
             },
@@ -34,7 +131,7 @@
               "id": "fas-military-medicine_en",
               "version": "2025-06",
               "title": "Military Medicine",
-              "description": "Tactical and field medicine manuals",
+              "description": "Manuais de medicina tática e de campo",
               "url": "https://download.kiwix.org/zim/zimit/fas-military-medicine_en_2025-06.zim",
               "size_mb": 78
             },
@@ -42,23 +139,23 @@
               "id": "wwwnc.cdc.gov_en_all",
               "version": "2024-11",
               "title": "CDC Health Information",
-              "description": "Disease prevention, travel health, and outbreak information",
+              "description": "Prevenção de doenças, saúde em viagens e informações sobre surtos",
               "url": "https://download.kiwix.org/zim/zimit/wwwnc.cdc.gov_en_all_2024-11.zim",
               "size_mb": 170
             }
           ]
         },
         {
-          "name": "Standard",
+          "name": "Padrão",
           "slug": "medicine-standard",
-          "description": "Comprehensive medical encyclopedia with detailed health information. Includes everything in Essential.",
+          "description": "Enciclopédia médica abrangente, com informações detalhadas de saúde. Inclui tudo do nível Essencial.",
           "includesTier": "medicine-essential",
           "resources": [
             {
               "id": "medlineplus.gov_en_all",
               "version": "2025-01",
               "title": "MedlinePlus",
-              "description": "NIH's consumer health encyclopedia - diseases, conditions, drugs, supplements",
+              "description": "Enciclopédia de saúde do NIH — doenças, condições, medicamentos e suplementos",
               "url": "https://download.kiwix.org/zim/zimit/medlineplus.gov_en_all_2025-01.zim",
               "size_mb": 1800
             },
@@ -67,23 +164,23 @@
               "type": "dataset",
               "version": "2025-01",
               "title": "FDA Drug Reference",
-              "description": "Offline FDA drug labels - search by drug name",
+              "description": "Bulas da FDA offline — pesquise pelo nome do medicamento",
               "url": "https://api.fda.gov/download.json",
               "size_mb": 1700
             }
           ]
         },
         {
-          "name": "Comprehensive",
+          "name": "Completo",
           "slug": "medicine-comprehensive",
-          "description": "Professional-level medical references and textbooks. Includes everything in Standard.",
+          "description": "Referências e livros médicos de nível profissional. Inclui tudo do nível Padrão.",
           "includesTier": "medicine-standard",
           "resources": [
             {
               "id": "wikipedia_en_medicine_maxi",
               "version": "2026-01",
               "title": "Wikipedia Medicine",
-              "description": "Curated medical articles from Wikipedia with images",
+              "description": "Artigos médicos selecionados da Wikipédia, com imagens",
               "url": "https://download.kiwix.org/zim/wikipedia/wikipedia_en_medicine_maxi_2026-01.zim",
               "size_mb": 2000
             },
@@ -91,7 +188,7 @@
               "id": "libretexts.org_en_med",
               "version": "2025-01",
               "title": "LibreTexts Medicine",
-              "description": "Open-source medical textbooks and educational content",
+              "description": "Livros de medicina e conteúdo educacional abertos",
               "url": "https://download.kiwix.org/zim/libretexts/libretexts.org_en_med_2025-01.zim",
               "size_mb": 1100
             },
@@ -99,7 +196,7 @@
               "id": "librepathology_en_all_maxi",
               "version": "2026-09",
               "title": "LibrePathology",
-              "description": "Pathology reference for disease identification",
+              "description": "Referência de patologia para identificar doenças",
               "url": "https://download.kiwix.org/zim/other/librepathology_en_all_maxi_2026-09.zim",
               "size_mb": 95
             }
@@ -108,23 +205,23 @@
       ]
     },
     {
-      "name": "Survival & Preparedness",
+      "name": "Sobrevivência e preparação (em inglês)",
       "slug": "survival",
       "icon": "IconShieldCheck",
-      "description": "Emergency preparedness, bug-out planning, and tactical survival skills for crisis situations.",
+      "description": "Preparação para emergências, planos de evacuação e técnicas de sobrevivência em situações de crise. Conteúdo em inglês.",
       "language": "en",
       "tiers": [
         {
-          "name": "Essential",
+          "name": "Essencial",
           "slug": "survival-essential",
-          "description": "Water, food, and knot references plus core survival videos. Start here for emergency basics.",
+          "description": "Referências sobre água, comida e nós, com vídeos básicos de sobrevivência. Comece por aqui.",
           "recommended": true,
           "resources": [
             {
               "id": "zimgit-water_en",
               "version": "2024-08",
               "title": "Water Treatment Library",
-              "description": "Collecting, filtering, and purifying drinking water",
+              "description": "Coleta, filtragem e purificação de água potável",
               "url": "https://download.kiwix.org/zim/other/zimgit-water_en_2024-08.zim",
               "size_mb": 20
             },
@@ -132,7 +229,7 @@
               "id": "zimgit-food-preparation_en",
               "version": "2025-04",
               "title": "Food for Preppers",
-              "description": "Recipes and techniques for preparing and preserving food",
+              "description": "Receitas e técnicas para preparar e conservar alimentos",
               "url": "https://download.kiwix.org/zim/other/zimgit-food-preparation_en_2025-04.zim",
               "size_mb": 97
             },
@@ -140,7 +237,7 @@
               "id": "zimgit-knots_en",
               "version": "2024-08",
               "title": "A Library of Knots",
-              "description": "Illustrated guides to knots, lashings, ladders, and sutures",
+              "description": "Guias ilustrados de nós, amarrações, escadas e suturas",
               "url": "https://download.kiwix.org/zim/other/zimgit-knots_en_2024-08.zim",
               "size_mb": 27
             },
@@ -148,7 +245,7 @@
               "id": "canadian-prepper_en_winterprepping",
               "version": "2026-08",
               "title": "Canadian Prepper: Winter Prepping",
-              "description": "Video guides for winter survival and cold weather emergencies",
+              "description": "Vídeos sobre sobrevivência no inverno e emergências no frio",
               "url": "https://download.kiwix.org/zim/videos/canadian-prepper_en_winterprepping_2026-08.zim",
               "size_mb": 1342
             },
@@ -156,23 +253,23 @@
               "id": "canadian-prepper_en_bugoutroll",
               "version": "2026-07",
               "title": "Canadian Prepper: Bug Out Roll",
-              "description": "Essential gear selection for your bug-out bag",
+              "description": "Equipamentos essenciais para a mochila de emergência",
               "url": "https://download.kiwix.org/zim/videos/canadian-prepper_en_bugoutroll_2026-07.zim",
               "size_mb": 879
             }
           ]
         },
         {
-          "name": "Standard",
+          "name": "Padrão",
           "slug": "survival-standard",
-          "description": "Official disaster planning, field skills, and radio communications, plus bug-out and urban survival techniques. Includes everything in Essential.",
+          "description": "Planejamento oficial para desastres, técnicas de campo, comunicação por rádio e sobrevivência urbana. Inclui tudo do nível Essencial.",
           "includesTier": "survival-essential",
           "resources": [
             {
               "id": "www.ready.gov_en",
               "version": "2024-12",
               "title": "Ready.gov",
-              "description": "Official US disaster planning guidance - weather, fire, evacuation plans, and emergency kits",
+              "description": "Orientações oficiais dos EUA para desastres — clima, incêndios, planos de evacuação e kits de emergência",
               "url": "https://download.kiwix.org/zim/zimit/www.ready.gov_en_2024-12.zim",
               "size_mb": 2429
             },
@@ -180,7 +277,7 @@
               "id": "outdoors.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "The Great Outdoors Q&A",
-              "description": "Answered questions on hiking, camping, navigation, and wilderness skills",
+              "description": "Perguntas e respostas sobre trilhas, acampamento, navegação e vida ao ar livre",
               "url": "https://download.kiwix.org/zim/stack_exchange/outdoors.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 142
             },
@@ -188,7 +285,7 @@
               "id": "ham.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "Amateur Radio Q&A",
-              "description": "Answered questions on radio equipment, antennas, licensing, and emergency communications",
+              "description": "Perguntas e respostas sobre rádios, antenas, licenças e comunicação de emergência",
               "url": "https://download.kiwix.org/zim/stack_exchange/ham.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 75
             },
@@ -196,7 +293,7 @@
               "id": "canadian-prepper_en_bugoutconcepts",
               "version": "2026-08",
               "title": "Canadian Prepper: Bug Out Concepts",
-              "description": "Strategies and planning for emergency evacuation",
+              "description": "Estratégias e planejamento para evacuação de emergência",
               "url": "https://download.kiwix.org/zim/videos/canadian-prepper_en_bugoutconcepts_2026-08.zim",
               "size_mb": 2886
             },
@@ -204,23 +301,23 @@
               "id": "urban-prepper_en_all",
               "version": "2026-08",
               "title": "Urban Prepper",
-              "description": "Comprehensive urban emergency preparedness video series",
+              "description": "Série de vídeos sobre preparação para emergências urbanas",
               "url": "https://download.kiwix.org/zim/videos/urban-prepper_en_all_2026-08.zim",
               "size_mb": 2245
             }
           ]
         },
         {
-          "name": "Comprehensive",
+          "name": "Completo",
           "slug": "survival-comprehensive",
-          "description": "Complete prepper library - post-disaster recovery, growing and storing food, off-grid technical references, and classic military strategy. Includes everything in Standard.",
+          "description": "Biblioteca completa de preparação — recuperação pós-desastre, cultivo e armazenamento de alimentos, referências para vida fora da rede e estratégia militar clássica. Inclui tudo do nível Padrão.",
           "includesTier": "survival-standard",
           "resources": [
             {
               "id": "canadian-prepper_en_preppingfood",
               "version": "2026-07",
               "title": "Canadian Prepper: Prepping Food",
-              "description": "Long-term food storage and survival meal preparation",
+              "description": "Armazenamento de alimentos a longo prazo e refeições de sobrevivência",
               "url": "https://download.kiwix.org/zim/videos/canadian-prepper_en_preppingfood_2026-07.zim",
               "size_mb": 2160
             },
@@ -228,7 +325,7 @@
               "id": "zimgit-post-disaster_en",
               "version": "2024-05",
               "title": "Post Disaster Resource Library",
-              "description": "Shelter, sanitation, salvage, and recovery guidance for the aftermath of a disaster",
+              "description": "Abrigo, saneamento, reaproveitamento e recuperação depois de um desastre",
               "url": "https://download.kiwix.org/zim/other/zimgit-post-disaster_en_2024-05.zim",
               "size_mb": 644
             },
@@ -236,7 +333,7 @@
               "id": "100r.co_en_all",
               "version": "2026-06",
               "title": "Hundred Rabbits",
-              "description": "Field notes on low-tech living - solar power, water, food, and repair from a decade off-grid",
+              "description": "Notas sobre vida com pouca tecnologia — energia solar, água, comida e consertos de uma década fora da rede",
               "url": "https://download.kiwix.org/zim/zimit/100r.co_en_all_2026-06.zim",
               "size_mb": 172
             },
@@ -244,7 +341,7 @@
               "id": "gutenberg_en_lcc-u",
               "version": "2026-03",
               "title": "Project Gutenberg: Military Science",
-              "description": "Classic military strategy, tactics, and field manuals",
+              "description": "Estratégia militar clássica, táticas e manuais de campo",
               "url": "https://download.kiwix.org/zim/gutenberg/gutenberg_en_lcc-u_2026-03.zim",
               "size_mb": 1200
             },
@@ -252,7 +349,7 @@
               "id": "cd3wdproject.org_en_all",
               "version": "2025-11",
               "title": "CD3WD: Appropriate Technology Library",
-              "description": "Practical guides to food production, water and sanitation, construction, and village-scale manufacturing without industrial supply chains",
+              "description": "Guias práticos de produção de alimentos, água e saneamento, construção e fabricação em pequena escala, sem cadeias industriais",
               "url": "https://download.kiwix.org/zim/zimit/cd3wdproject.org_en_all_2025-11.zim",
               "size_mb": 581
             }
@@ -261,39 +358,39 @@
       ]
     },
     {
-      "name": "Education & Reference",
+      "name": "Educação e referência (em inglês)",
       "slug": "education",
       "icon": "IconSchool",
-      "description": "Encyclopedias, textbooks, tutorials, and educational videos for self-directed learning.",
+      "description": "Enciclopédias, livros, tutoriais e vídeos educacionais para aprender por conta própria. Conteúdo em inglês.",
       "language": "en",
       "tiers": [
         {
-          "name": "Essential",
+          "name": "Essencial",
           "slug": "education-essential",
-          "description": "Core reference materials - open textbooks and essential educational content. Lightweight, text-focused.",
+          "description": "Materiais de referência básicos — livros abertos e conteúdo educacional essencial. Leve e focado em texto.",
           "recommended": true,
           "resources": [
             {
               "id": "wikibooks_en_all_nopic",
               "version": "2026-01",
               "title": "Wikibooks",
-              "description": "Open-content textbooks covering math, science, computing, and more",
+              "description": "Livros abertos de matemática, ciências, computação e mais",
               "url": "https://download.kiwix.org/zim/wikibooks/wikibooks_en_all_nopic_2026-01.zim",
               "size_mb": 3100
             }
           ]
         },
         {
-          "name": "Standard",
+          "name": "Padrão",
           "slug": "education-standard",
-          "description": "Adds educational videos, university-level tutorials, and STEM textbooks. Includes Essential.",
+          "description": "Adiciona vídeos educacionais, tutoriais de nível universitário e livros de ciências e exatas. Inclui o nível Essencial.",
           "includesTier": "education-essential",
           "resources": [
             {
               "id": "ted_mul_ted-ed",
               "version": "2026-09",
               "title": "TED-Ed",
-              "description": "Educational video lessons on science, history, literature, and more",
+              "description": "Videoaulas sobre ciências, história, literatura e mais",
               "url": "https://download.kiwix.org/zim/ted/ted_mul_ted-ed_2026-09.zim",
               "size_mb": 6381
             },
@@ -301,7 +398,7 @@
               "id": "wikiversity_en_all_maxi",
               "version": "2026-02",
               "title": "Wikiversity",
-              "description": "Tutorials, courses, and learning materials for all levels",
+              "description": "Tutoriais, cursos e materiais de estudo para todos os níveis",
               "url": "https://download.kiwix.org/zim/wikiversity/wikiversity_en_all_maxi_2026-02.zim",
               "size_mb": 2370
             },
@@ -309,7 +406,7 @@
               "id": "libretexts.org_en_math",
               "version": "2026-01",
               "title": "LibreTexts Mathematics",
-              "description": "Open-source math textbooks from algebra to calculus",
+              "description": "Livros abertos de matemática, da álgebra ao cálculo",
               "url": "https://download.kiwix.org/zim/libretexts/libretexts.org_en_math_2026-01.zim",
               "size_mb": 792
             },
@@ -317,7 +414,7 @@
               "id": "libretexts.org_en_phys",
               "version": "2026-01",
               "title": "LibreTexts Physics",
-              "description": "Physics courses and textbooks",
+              "description": "Cursos e livros de física",
               "url": "https://download.kiwix.org/zim/libretexts/libretexts.org_en_phys_2026-01.zim",
               "size_mb": 534
             },
@@ -325,7 +422,7 @@
               "id": "libretexts.org_en_chem",
               "version": "2025-01",
               "title": "LibreTexts Chemistry",
-              "description": "Chemistry courses and textbooks",
+              "description": "Cursos e livros de química",
               "url": "https://download.kiwix.org/zim/libretexts/libretexts.org_en_chem_2025-01.zim",
               "size_mb": 2180
             },
@@ -333,23 +430,23 @@
               "id": "libretexts.org_en_bio",
               "version": "2025-01",
               "title": "LibreTexts Biology",
-              "description": "Biology courses and textbooks",
+              "description": "Cursos e livros de biologia",
               "url": "https://download.kiwix.org/zim/libretexts/libretexts.org_en_bio_2025-01.zim",
               "size_mb": 2240
             }
           ]
         },
         {
-          "name": "Comprehensive",
+          "name": "Completo",
           "slug": "education-comprehensive",
-          "description": "Complete educational library with enhanced textbooks and TED talks. Includes Standard.",
+          "description": "Biblioteca educacional completa, com livros ampliados e palestras TED. Inclui o nível Padrão.",
           "includesTier": "education-standard",
           "resources": [
             {
               "id": "wikibooks_en_all_maxi",
               "version": "2026-01",
               "title": "Wikibooks (With Images)",
-              "description": "Open textbooks with full illustrations and diagrams",
+              "description": "Livros abertos com todas as ilustrações e diagramas",
               "url": "https://download.kiwix.org/zim/wikibooks/wikibooks_en_all_maxi_2026-01.zim",
               "size_mb": 5400
             },
@@ -357,7 +454,7 @@
               "id": "ted_mul_ted-conference",
               "version": "2026-09",
               "title": "TED Conference",
-              "description": "Main TED conference talks on ideas worth spreading",
+              "description": "Principais palestras das conferências TED",
               "url": "https://download.kiwix.org/zim/ted/ted_mul_ted-conference_2026-09.zim",
               "size_mb": 18136
             },
@@ -365,7 +462,7 @@
               "id": "libretexts.org_en_human",
               "version": "2025-01",
               "title": "LibreTexts Humanities",
-              "description": "Literature, philosophy, history, and social sciences",
+              "description": "Literatura, filosofia, história e ciências sociais",
               "url": "https://download.kiwix.org/zim/libretexts/libretexts.org_en_human_2025-01.zim",
               "size_mb": 3730
             },
@@ -373,7 +470,7 @@
               "id": "libretexts.org_en_geo",
               "version": "2026-01",
               "title": "LibreTexts Geosciences",
-              "description": "Earth science, geology, and environmental studies",
+              "description": "Ciências da Terra, geologia e estudos ambientais",
               "url": "https://download.kiwix.org/zim/libretexts/libretexts.org_en_geo_2026-01.zim",
               "size_mb": 1127
             },
@@ -381,7 +478,7 @@
               "id": "libretexts.org_en_eng",
               "version": "2025-01",
               "title": "LibreTexts Engineering",
-              "description": "Engineering courses and technical references",
+              "description": "Cursos de engenharia e referências técnicas",
               "url": "https://download.kiwix.org/zim/libretexts/libretexts.org_en_eng_2025-01.zim",
               "size_mb": 678
             },
@@ -389,7 +486,7 @@
               "id": "libretexts.org_en_biz",
               "version": "2026-01",
               "title": "LibreTexts Business",
-              "description": "Business, economics, and management textbooks",
+              "description": "Livros de negócios, economia e administração",
               "url": "https://download.kiwix.org/zim/libretexts/libretexts.org_en_biz_2026-01.zim",
               "size_mb": 801
             }
@@ -398,23 +495,23 @@
       ]
     },
     {
-      "name": "DIY & Repair",
+      "name": "Consertos e faça você mesmo (em inglês)",
       "slug": "diy",
       "icon": "IconTool",
-      "description": "Fix it yourself - repair guides, home improvement, woodworking, and vehicle maintenance.",
+      "description": "Conserte você mesmo — guias de reparo, reformas, marcenaria e manutenção de veículos. Conteúdo em inglês.",
       "language": "en",
       "tiers": [
         {
-          "name": "Essential",
+          "name": "Essencial",
           "slug": "diy-essential",
-          "description": "Core repair knowledge - woodworking basics and vehicle maintenance Q&A.",
+          "description": "Conhecimento básico de reparos — marcenaria e manutenção de veículos, em perguntas e respostas.",
           "recommended": true,
           "resources": [
             {
               "id": "woodworking.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "Woodworking Q&A",
-              "description": "Stack Exchange Q&A for carpentry, joinery, and woodcraft",
+              "description": "Perguntas e respostas do Stack Exchange sobre carpintaria e marcenaria",
               "url": "https://download.kiwix.org/zim/stack_exchange/woodworking.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 99
             },
@@ -422,39 +519,39 @@
               "id": "mechanics.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "Motor Vehicle Maintenance Q&A",
-              "description": "Stack Exchange Q&A for car and motorcycle repair",
+              "description": "Perguntas e respostas do Stack Exchange sobre consertos de carros e motos",
               "url": "https://download.kiwix.org/zim/stack_exchange/mechanics.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 321
             }
           ]
         },
         {
-          "name": "Standard",
+          "name": "Padrão",
           "slug": "diy-standard",
-          "description": "Home improvement expertise with thousands of Q&A threads. Includes Essential.",
+          "description": "Conhecimento sobre reformas, com milhares de perguntas e respostas. Inclui o nível Essencial.",
           "includesTier": "diy-essential",
           "resources": [
             {
               "id": "diy.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "DIY & Home Improvement Q&A",
-              "description": "Stack Exchange Q&A for home repairs, electrical, plumbing, and construction",
+              "description": "Perguntas e respostas do Stack Exchange sobre reparos, elétrica, hidráulica e construção",
               "url": "https://download.kiwix.org/zim/stack_exchange/diy.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 1900
             }
           ]
         },
         {
-          "name": "Comprehensive",
+          "name": "Completo",
           "slug": "diy-comprehensive",
-          "description": "Complete repair library with step-by-step guides for electronics and appliances. Includes Standard.",
+          "description": "Biblioteca completa de reparos, com guias passo a passo para eletrônicos e eletrodomésticos. Inclui o nível Padrão.",
           "includesTier": "diy-standard",
           "resources": [
             {
               "id": "ifixit_en_all",
               "version": "2025-12",
               "title": "iFixit Repair Guides",
-              "description": "Step-by-step repair guides for electronics, appliances, and vehicles",
+              "description": "Guias de reparo passo a passo para eletrônicos, eletrodomésticos e veículos",
               "url": "https://download.kiwix.org/zim/ifixit/ifixit_en_all_2025-12.zim",
               "size_mb": 3380
             }
@@ -463,23 +560,23 @@
       ]
     },
     {
-      "name": "Agriculture & Food",
+      "name": "Agricultura e alimentação (em inglês)",
       "slug": "agriculture",
       "icon": "IconPlant",
-      "description": "Grow and prepare your own food - gardening, cooking techniques, and food preservation.",
+      "description": "Cultive e prepare sua comida — jardinagem, técnicas de cozinha e conservação de alimentos. Conteúdo em inglês.",
       "language": "en",
       "tiers": [
         {
-          "name": "Essential",
+          "name": "Essencial",
           "slug": "agriculture-essential",
-          "description": "Quick recipes and cooking basics for everyday meal preparation.",
+          "description": "Receitas rápidas e noções básicas de cozinha para o dia a dia.",
           "recommended": true,
           "resources": [
             {
               "id": "foss.cooking_en_all",
               "version": "2026-02",
               "title": "FOSS Cooking",
-              "description": "Quick and easy cooking guides and recipes",
+              "description": "Guias e receitas rápidos e fáceis",
               "url": "https://download.kiwix.org/zim/zimit/foss.cooking_en_all_2026-02.zim",
               "size_mb": 24
             },
@@ -487,23 +584,23 @@
               "id": "based.cooking_en_all",
               "version": "2026-08",
               "title": "Based.Cooking",
-              "description": "Simple, practical recipes from the community",
+              "description": "Receitas simples e práticas da comunidade",
               "url": "https://download.kiwix.org/zim/zimit/based.cooking_en_all_2026-08.zim",
               "size_mb": 16
             }
           ]
         },
         {
-          "name": "Standard",
+          "name": "Padrão",
           "slug": "agriculture-standard",
-          "description": "Gardening knowledge and cooking expertise from community Q&A. Includes Essential.",
+          "description": "Conhecimento de jardinagem e cozinha, em perguntas e respostas da comunidade. Inclui o nível Essencial.",
           "includesTier": "agriculture-essential",
           "resources": [
             {
               "id": "gardening.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "Gardening Q&A",
-              "description": "Stack Exchange Q&A for growing your own food, plant care, and landscaping",
+              "description": "Perguntas e respostas do Stack Exchange sobre cultivo de alimentos, cuidado de plantas e paisagismo",
               "url": "https://download.kiwix.org/zim/stack_exchange/gardening.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 923
             },
@@ -511,7 +608,7 @@
               "id": "cooking.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "Cooking Q&A",
-              "description": "Stack Exchange Q&A for cooking techniques, food safety, and recipes",
+              "description": "Perguntas e respostas do Stack Exchange sobre técnicas de cozinha, segurança alimentar e receitas",
               "url": "https://download.kiwix.org/zim/stack_exchange/cooking.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 236
             },
@@ -519,23 +616,23 @@
               "id": "zimgit-food-preparation_en",
               "version": "2025-04",
               "title": "Food for Preppers",
-              "description": "Recipes and techniques for food preservation and long-term storage",
+              "description": "Receitas e técnicas para conservar e armazenar alimentos por muito tempo",
               "url": "https://download.kiwix.org/zim/other/zimgit-food-preparation_en_2025-04.zim",
               "size_mb": 98
             }
           ]
         },
         {
-          "name": "Comprehensive",
+          "name": "Completo",
           "slug": "agriculture-comprehensive",
-          "description": "Complete self-sufficiency with homesteading videos, classic agricultural texts, and advanced techniques. Includes Standard.",
+          "description": "Autossuficiência completa, com vídeos sobre vida no campo, textos agrícolas clássicos e técnicas avançadas. Inclui o nível Padrão.",
           "includesTier": "agriculture-standard",
           "resources": [
             {
               "id": "lrnselfreliance_en_all",
               "version": "2026-06",
               "title": "Learning Self-Reliance: Homesteading",
-              "description": "Beekeeping, animal husbandry, and sustainable living practices",
+              "description": "Apicultura, criação de animais e vida sustentável",
               "url": "https://download.kiwix.org/zim/videos/lrnselfreliance_en_all_2026-06.zim",
               "size_mb": 3790
             },
@@ -543,7 +640,7 @@
               "id": "gutenberg_en_lcc-s",
               "version": "2026-03",
               "title": "Project Gutenberg: Agriculture",
-              "description": "Classic texts on farming, animal husbandry, plant cultivation, and food preservation",
+              "description": "Textos clássicos sobre agricultura, criação de animais, cultivo de plantas e conservação de alimentos",
               "url": "https://download.kiwix.org/zim/gutenberg/gutenberg_en_lcc-s_2026-03.zim",
               "size_mb": 4300
             }
@@ -552,23 +649,23 @@
       ]
     },
     {
-      "name": "Computing & Technology",
+      "name": "Computação e tecnologia (em inglês)",
       "slug": "computing",
       "icon": "IconCode",
-      "description": "Programming tutorials, electronics projects, and technical documentation for makers and developers.",
+      "description": "Tutoriais de programação, projetos de eletrônica e documentação técnica para criadores e desenvolvedores. Conteúdo em inglês.",
       "language": "en",
       "tiers": [
         {
-          "name": "Essential",
+          "name": "Essencial",
           "slug": "computing-essential",
-          "description": "Learn to code with interactive tutorials and core programming documentation.",
+          "description": "Aprenda a programar com tutoriais interativos e a documentação básica.",
           "recommended": true,
           "resources": [
             {
               "id": "freecodecamp_en_all",
               "version": "2026-08",
               "title": "freeCodeCamp",
-              "description": "Interactive programming tutorials - JavaScript, algorithms, and data structures",
+              "description": "Tutoriais interativos de programação — JavaScript, algoritmos e estruturas de dados",
               "url": "https://download.kiwix.org/zim/freecodecamp/freecodecamp_en_all_2026-08.zim",
               "size_mb": 8
             },
@@ -576,7 +673,7 @@
               "id": "devdocs_en_python",
               "version": "2026-08",
               "title": "Python Documentation",
-              "description": "Complete Python language reference and tutorials",
+              "description": "Referência completa e tutoriais da linguagem Python",
               "url": "https://download.kiwix.org/zim/devdocs/devdocs_en_python_2026-08.zim",
               "size_mb": 4
             },
@@ -584,7 +681,7 @@
               "id": "devdocs_en_javascript",
               "version": "2026-07",
               "title": "JavaScript Documentation",
-              "description": "MDN JavaScript reference and guides",
+              "description": "Referência e guias de JavaScript da MDN",
               "url": "https://download.kiwix.org/zim/devdocs/devdocs_en_javascript_2026-07.zim",
               "size_mb": 3
             },
@@ -592,7 +689,7 @@
               "id": "devdocs_en_html",
               "version": "2026-07",
               "title": "HTML Documentation",
-              "description": "MDN HTML elements and attributes reference",
+              "description": "Referência de elementos e atributos HTML da MDN",
               "url": "https://download.kiwix.org/zim/devdocs/devdocs_en_html_2026-07.zim",
               "size_mb": 2
             },
@@ -600,23 +697,23 @@
               "id": "devdocs_en_css",
               "version": "2026-07",
               "title": "CSS Documentation",
-              "description": "MDN CSS properties and selectors reference",
+              "description": "Referência de propriedades e seletores CSS da MDN",
               "url": "https://download.kiwix.org/zim/devdocs/devdocs_en_css_2026-07.zim",
               "size_mb": 5
             }
           ]
         },
         {
-          "name": "Standard",
+          "name": "Padrão",
           "slug": "computing-standard",
-          "description": "Maker projects with Arduino and Raspberry Pi, plus more programming docs. Includes Essential.",
+          "description": "Projetos com Arduino e Raspberry Pi, além de mais documentação de programação. Inclui o nível Essencial.",
           "includesTier": "computing-essential",
           "resources": [
             {
               "id": "arduino.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "Arduino Q&A",
-              "description": "Stack Exchange Q&A for Arduino microcontroller projects",
+              "description": "Perguntas e respostas do Stack Exchange sobre projetos com Arduino",
               "url": "https://download.kiwix.org/zim/stack_exchange/arduino.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 247
             },
@@ -624,7 +721,7 @@
               "id": "raspberrypi.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "Raspberry Pi Q&A",
-              "description": "Stack Exchange Q&A for Raspberry Pi projects and troubleshooting",
+              "description": "Perguntas e respostas do Stack Exchange sobre projetos e problemas com Raspberry Pi",
               "url": "https://download.kiwix.org/zim/stack_exchange/raspberrypi.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 285
             },
@@ -632,7 +729,7 @@
               "id": "devdocs_en_node",
               "version": "2026-08",
               "title": "Node.js Documentation",
-              "description": "Node.js API reference and guides",
+              "description": "Referência da API e guias do Node.js",
               "url": "https://download.kiwix.org/zim/devdocs/devdocs_en_node_2026-08.zim",
               "size_mb": 1
             },
@@ -640,7 +737,7 @@
               "id": "devdocs_en_react",
               "version": "2026-02",
               "title": "React Documentation",
-              "description": "React library reference and tutorials",
+              "description": "Referência e tutoriais da biblioteca React",
               "url": "https://download.kiwix.org/zim/devdocs/devdocs_en_react_2026-02.zim",
               "size_mb": 3
             },
@@ -648,23 +745,23 @@
               "id": "devdocs_en_git",
               "version": "2026-07",
               "title": "Git Documentation",
-              "description": "Git version control reference",
+              "description": "Referência do controle de versão Git",
               "url": "https://download.kiwix.org/zim/devdocs/devdocs_en_git_2026-07.zim",
               "size_mb": 2
             }
           ]
         },
         {
-          "name": "Comprehensive",
+          "name": "Completo",
           "slug": "computing-comprehensive",
-          "description": "Deep electronics knowledge and extensive Q&A for hardware projects. Includes Standard.",
+          "description": "Conhecimento aprofundado de eletrônica e muitas perguntas e respostas sobre hardware. Inclui o nível Padrão.",
           "includesTier": "computing-standard",
           "resources": [
             {
               "id": "electronics.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "Electronics Q&A",
-              "description": "Stack Exchange Q&A for circuit design, components, and electrical engineering",
+              "description": "Perguntas e respostas do Stack Exchange sobre circuitos, componentes e engenharia elétrica",
               "url": "https://download.kiwix.org/zim/stack_exchange/electronics.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 3800
             },
@@ -672,7 +769,7 @@
               "id": "robotics.stackexchange.com_en_all",
               "version": "2026-02",
               "title": "Robotics Q&A",
-              "description": "Stack Exchange Q&A for robotics projects and automation",
+              "description": "Perguntas e respostas do Stack Exchange sobre robótica e automação",
               "url": "https://download.kiwix.org/zim/stack_exchange/robotics.stackexchange.com_en_all_2026-02.zim",
               "size_mb": 233
             },
@@ -680,7 +777,7 @@
               "id": "devdocs_en_docker",
               "version": "2026-07",
               "title": "Docker Documentation",
-              "description": "Docker container reference and guides",
+              "description": "Referência e guias de contêineres Docker",
               "url": "https://download.kiwix.org/zim/devdocs/devdocs_en_docker_2026-07.zim",
               "size_mb": 2
             },
@@ -688,7 +785,7 @@
               "id": "devdocs_en_bash",
               "version": "2026-01",
               "title": "Linux Documentation",
-              "description": "Linux command reference and system administration",
+              "description": "Referência de comandos Linux e administração de sistemas",
               "url": "https://download.kiwix.org/zim/devdocs/devdocs_en_bash_2026-01.zim",
               "size_mb": 1
             }

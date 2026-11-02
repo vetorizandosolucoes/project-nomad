@@ -1,10 +1,10 @@
 {
-  "spec_version": "2026-02-11",
+  "spec_version": "2026-11-02",
   "collections": [
     {
-      "name": "Pacific Region",
+      "name": "EUA: Pacífico",
       "slug": "pacific",
-      "description": "Map assets for the Pacific region, including Alaska, California, Hawaii, Oregon, and Washington.",
+      "description": "Mapas de Alaska, California, Hawaii, Oregon e Washington.",
       "icon": "IconMap",
       "language": "en",
       "resources": [
@@ -12,7 +12,7 @@
           "id": "alaska",
           "version": "2025-12",
           "title": "Alaska",
-          "description": "Topographic maps for the state of Alaska.",
+          "description": "Mapas topográficos de Alaska.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/alaska_2025-12.pmtiles",
           "size_mb": 684
         },
@@ -20,7 +20,7 @@
           "id": "california",
           "version": "2025-12",
           "title": "California",
-          "description": "Topographic maps for the state of California.",
+          "description": "Mapas topográficos de California.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/california_2025-12.pmtiles",
           "size_mb": 1100
         },
@@ -28,7 +28,7 @@
           "id": "hawaii",
           "version": "2025-12",
           "title": "Hawaii",
-          "description": "Topographic maps for the state of Hawaii.",
+          "description": "Mapas topográficos de Hawaii.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/hawaii_2025-12.pmtiles",
           "size_mb": 28
         },
@@ -36,7 +36,7 @@
           "id": "oregon",
           "version": "2025-12",
           "title": "Oregon",
-          "description": "Topographic maps for the state of Oregon.",
+          "description": "Mapas topográficos de Oregon.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/oregon_2025-12.pmtiles",
           "size_mb": 379
         },
@@ -44,16 +44,16 @@
           "id": "washington",
           "version": "2025-12",
           "title": "Washington",
-          "description": "Topographic maps for the state of Washington.",
+          "description": "Mapas topográficos de Washington.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/washington_2025-12.pmtiles",
           "size_mb": 466
         }
       ]
     },
     {
-      "name": "Mountain Region",
+      "name": "EUA: Montanhas",
       "slug": "mountain",
-      "description": "Map assets for the Mountain region, including Arizona, Colorado, Idaho, Montana, Nevada, New Mexico, Utah, and Wyoming.",
+      "description": "Mapas de Arizona, Colorado, Idaho, Montana, Nevada, New Mexico, Utah e Wyoming.",
       "icon": "IconMap",
       "language": "en",
       "resources": [
@@ -61,7 +61,7 @@
           "id": "arizona",
           "version": "2025-12",
           "title": "Arizona",
-          "description": "Topographic maps for the state of Arizona.",
+          "description": "Mapas topográficos de Arizona.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/arizona_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -69,7 +69,7 @@
           "id": "colorado",
           "version": "2025-12",
           "title": "Colorado",
-          "description": "Topographic maps for the state of Colorado.",
+          "description": "Mapas topográficos de Colorado.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/colorado_2025-12.pmtiles",
           "size_mb": 450
         },
@@ -77,7 +77,7 @@
           "id": "idaho",
           "version": "2025-12",
           "title": "Idaho",
-          "description": "Topographic maps for the state of Idaho.",
+          "description": "Mapas topográficos de Idaho.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/idaho_2025-12.pmtiles",
           "size_mb": 220
         },
@@ -85,7 +85,7 @@
           "id": "montana",
           "version": "2025-12",
           "title": "Montana",
-          "description": "Topographic maps for the state of Montana.",
+          "description": "Mapas topográficos de Montana.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/montana_2025-12.pmtiles",
           "size_mb": 270
         },
@@ -93,7 +93,7 @@
           "id": "nevada",
           "version": "2025-12",
           "title": "Nevada",
-          "description": "Topographic maps for the state of Nevada.",
+          "description": "Mapas topográficos de Nevada.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/nevada_2025-12.pmtiles",
           "size_mb": 200
         },
@@ -101,7 +101,7 @@
           "id": "new_mexico",
           "version": "2025-12",
           "title": "New Mexico",
-          "description": "Topographic maps for the state of New Mexico.",
+          "description": "Mapas topográficos de New Mexico.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/new_mexico_2025-12.pmtiles",
           "size_mb": 230
         },
@@ -109,7 +109,7 @@
           "id": "utah",
           "version": "2025-12",
           "title": "Utah",
-          "description": "Topographic maps for the state of Utah.",
+          "description": "Mapas topográficos de Utah.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/utah_2025-12.pmtiles",
           "size_mb": 240
         },
@@ -117,16 +117,16 @@
           "id": "wyoming",
           "version": "2025-12",
           "title": "Wyoming",
-          "description": "Topographic maps for the state of Wyoming.",
+          "description": "Mapas topográficos de Wyoming.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/wyoming_2025-12.pmtiles",
           "size_mb": 210
         }
       ]
     },
     {
-      "name": "West South Central",
+      "name": "EUA: Centro-Sul Oeste",
       "slug": "west-south-central",
-      "description": "Map assets for the West South Central region, including Arkansas, Louisiana, Oklahoma, and Texas.",
+      "description": "Mapas de Arkansas, Louisiana, Oklahoma e Texas.",
       "icon": "IconMap",
       "language": "en",
       "resources": [
@@ -134,7 +134,7 @@
           "id": "arkansas",
           "version": "2025-12",
           "title": "Arkansas",
-          "description": "Topographic maps for the state of Arkansas",
+          "description": "Mapas topográficos de Arkansas.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/arkansas_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -142,7 +142,7 @@
           "id": "oklahoma",
           "version": "2025-12",
           "title": "Oklahoma",
-          "description": "Topographic maps for the state of Oklahoma",
+          "description": "Mapas topográficos de Oklahoma.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/oklahoma_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -150,7 +150,7 @@
           "id": "louisiana",
           "version": "2025-12",
           "title": "Louisiana",
-          "description": "Topographic maps for the state of Louisiana",
+          "description": "Mapas topográficos de Louisiana.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/louisiana_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -158,16 +158,16 @@
           "id": "texas",
           "version": "2025-12",
           "title": "Texas",
-          "description": "Topographic maps for the state of Texas",
+          "description": "Mapas topográficos de Texas.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/texas_2025-12.pmtiles",
           "size_mb": 400
         }
       ]
     },
     {
-      "name": "East South Central",
+      "name": "EUA: Centro-Sul Leste",
       "slug": "east-south-central",
-      "description": "Map assets for the East South Central region, including Alabama, Kentucky, Mississippi, and Tennessee.",
+      "description": "Mapas de Alabama, Kentucky, Mississippi e Tennessee.",
       "icon": "IconMap",
       "language": "en",
       "resources": [
@@ -175,7 +175,7 @@
           "id": "alabama",
           "version": "2025-12",
           "title": "Alabama",
-          "description": "Topographic maps for the state of Alabama",
+          "description": "Mapas topográficos de Alabama.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/alabama_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -183,7 +183,7 @@
           "id": "kentucky",
           "version": "2025-12",
           "title": "Kentucky",
-          "description": "Topographic maps for the state of Kentucky",
+          "description": "Mapas topográficos de Kentucky.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/kentucky_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -191,7 +191,7 @@
           "id": "mississippi",
           "version": "2025-12",
           "title": "Mississippi",
-          "description": "Topographic maps for the state of Mississippi",
+          "description": "Mapas topográficos de Mississippi.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/mississippi_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -199,16 +199,16 @@
           "id": "tennessee",
           "version": "2025-12",
           "title": "Tennessee",
-          "description": "Topographic maps for the state of Tennessee",
+          "description": "Mapas topográficos de Tennessee.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/tennessee_2025-12.pmtiles",
           "size_mb": 400
         }
       ]
     },
     {
-      "name": "South Atlantic",
+      "name": "EUA: Atlântico Sul",
       "slug": "south-atlantic",
-      "description": "Map assets for the South Atlantic region, including Delaware, Florida, Georgia, Maryland, North Carolina, South Carolina, Virginia, and West Virginia.",
+      "description": "Mapas de Delaware, Florida, Georgia, Maryland, North Carolina, South Carolina, Virginia e West Virginia.",
       "icon": "IconMap",
       "language": "en",
       "resources": [
@@ -216,7 +216,7 @@
           "id": "delaware",
           "version": "2025-12",
           "title": "Delaware",
-          "description": "Topographic maps for the state of Delaware",
+          "description": "Mapas topográficos de Delaware.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/delaware_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -224,7 +224,7 @@
           "id": "florida",
           "version": "2025-12",
           "title": "Florida",
-          "description": "Topographic maps for the state of Florida",
+          "description": "Mapas topográficos de Florida.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/florida_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -232,7 +232,7 @@
           "id": "georgia",
           "version": "2025-12",
           "title": "Georgia",
-          "description": "Topographic maps for the state of Georgia",
+          "description": "Mapas topográficos de Georgia.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/georgia_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -240,7 +240,7 @@
           "id": "maryland",
           "version": "2025-12",
           "title": "Maryland",
-          "description": "Topographic maps for the state of Maryland",
+          "description": "Mapas topográficos de Maryland.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/maryland_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -248,7 +248,7 @@
           "id": "north_carolina",
           "version": "2025-12",
           "title": "North_Carolina",
-          "description": "Topographic maps for the state of North_Carolina",
+          "description": "Mapas topográficos de North_Carolina.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/north_carolina_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -256,7 +256,7 @@
           "id": "south_carolina",
           "version": "2025-12",
           "title": "South_Carolina",
-          "description": "Topographic maps for the state of South_Carolina",
+          "description": "Mapas topográficos de South_Carolina.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/south_carolina_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -264,7 +264,7 @@
           "id": "virginia",
           "version": "2025-12",
           "title": "Virginia",
-          "description": "Topographic maps for the state of Virginia",
+          "description": "Mapas topográficos de Virginia.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/virginia_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -272,16 +272,16 @@
           "id": "west_virginia",
           "version": "2025-12",
           "title": "West_Virginia",
-          "description": "Topographic maps for the state of West_Virginia",
+          "description": "Mapas topográficos de West_Virginia.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/west_virginia_2025-12.pmtiles",
           "size_mb": 400
         }
       ]
     },
     {
-      "name": "West North Central",
+      "name": "EUA: Centro-Norte Oeste",
       "slug": "west-north-central",
-      "description": "Map assets for the West North Central region, including Iowa, Kansas, Minnesota, Missouri, Nebraska, North Dakota, and South Dakota.",
+      "description": "Mapas de Iowa, Kansas, Minnesota, Missouri, Nebraska, North Dakota e South Dakota.",
       "icon": "IconMap",
       "language": "en",
       "resources": [
@@ -289,7 +289,7 @@
           "id": "iowa",
           "version": "2025-12",
           "title": "Iowa",
-          "description": "Topographic maps for the state of Iowa",
+          "description": "Mapas topográficos de Iowa.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/iowa_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -297,7 +297,7 @@
           "id": "kansas",
           "version": "2025-12",
           "title": "Kansas",
-          "description": "Topographic maps for the state of Kansas",
+          "description": "Mapas topográficos de Kansas.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/kansas_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -305,7 +305,7 @@
           "id": "minnesota",
           "version": "2025-12",
           "title": "Minnesota",
-          "description": "Topographic maps for the state of Minnesota",
+          "description": "Mapas topográficos de Minnesota.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/minnesota_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -313,7 +313,7 @@
           "id": "missouri",
           "version": "2025-12",
           "title": "Missouri",
-          "description": "Topographic maps for the state of Missouri",
+          "description": "Mapas topográficos de Missouri.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/missouri_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -321,7 +321,7 @@
           "id": "nebraska",
           "version": "2025-12",
           "title": "Nebraska",
-          "description": "Topographic maps for the state of Nebraska",
+          "description": "Mapas topográficos de Nebraska.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/nebraska_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -329,7 +329,7 @@
           "id": "north_dakota",
           "version": "2025-12",
           "title": "North_Dakota",
-          "description": "Topographic maps for the state of North_Dakota",
+          "description": "Mapas topográficos de North_Dakota.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/north_dakota_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -337,16 +337,16 @@
           "id": "south_dakota",
           "version": "2025-12",
           "title": "South_Dakota",
-          "description": "Topographic maps for the state of South_Dakota",
+          "description": "Mapas topográficos de South_Dakota.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/south_dakota_2025-12.pmtiles",
           "size_mb": 400
         }
       ]
     },
     {
-      "name": "East North Central",
+      "name": "EUA: Centro-Norte Leste",
       "slug": "east-north-central",
-      "description": "Map assets for the East North Central region, including Illinois, Indiana, Michigan, Ohio, and Wisconsin.",
+      "description": "Mapas de Illinois, Indiana, Michigan, Ohio e Wisconsin.",
       "icon": "IconMap",
       "language": "en",
       "resources": [
@@ -354,7 +354,7 @@
           "id": "illinois",
           "version": "2025-12",
           "title": "Illinois",
-          "description": "Topographic maps for the state of Illinois",
+          "description": "Mapas topográficos de Illinois.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/illinois_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -362,7 +362,7 @@
           "id": "indiana",
           "version": "2025-12",
           "title": "Indiana",
-          "description": "Topographic maps for the state of Indiana",
+          "description": "Mapas topográficos de Indiana.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/indiana_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -370,7 +370,7 @@
           "id": "michigan",
           "version": "2025-12",
           "title": "Michigan",
-          "description": "Topographic maps for the state of Michigan",
+          "description": "Mapas topográficos de Michigan.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/michigan_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -378,7 +378,7 @@
           "id": "ohio",
           "version": "2025-12",
           "title": "Ohio",
-          "description": "Topographic maps for the state of Ohio",
+          "description": "Mapas topográficos de Ohio.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/ohio_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -386,16 +386,16 @@
           "id": "wisconsin",
           "version": "2025-12",
           "title": "Wisconsin",
-          "description": "Topographic maps for the state of Wisconsin",
+          "description": "Mapas topográficos de Wisconsin.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/wisconsin_2025-12.pmtiles",
           "size_mb": 400
         }
       ]
     },
     {
-      "name": "Mid-Atlantic",
+      "name": "EUA: Atlântico Central",
       "slug": "mid-atlantic",
-      "description": "Map assets for the Mid-Atlantic region, including New Jersey, New York, and Pennsylvania.",
+      "description": "Mapas de New Jersey, New York e Pennsylvania.",
       "icon": "IconMap",
       "language": "en",
       "resources": [
@@ -403,7 +403,7 @@
           "id": "new_jersey",
           "version": "2025-12",
           "title": "New_Jersey",
-          "description": "Topographic maps for the state of New_Jersey",
+          "description": "Mapas topográficos de New_Jersey.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/new_jersey_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -411,7 +411,7 @@
           "id": "new_york",
           "version": "2025-12",
           "title": "New_York",
-          "description": "Topographic maps for the state of New_York",
+          "description": "Mapas topográficos de New_York.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/new_york_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -419,16 +419,16 @@
           "id": "pennsylvania",
           "version": "2025-12",
           "title": "Pennsylvania",
-          "description": "Topographic maps for the state of Pennsylvania",
+          "description": "Mapas topográficos de Pennsylvania.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/pennsylvania_2025-12.pmtiles",
           "size_mb": 400
         }
       ]
     },
     {
-      "name": "New England",
+      "name": "EUA: Nova Inglaterra",
       "slug": "new-england",
-      "description": "Map assets for the New England region, including Connecticut, Maine, Massachusetts, New Hampshire, Rhode Island, and Vermont.",
+      "description": "Mapas de Connecticut, Maine, Massachusetts, New Hampshire, Rhode Island e Vermont.",
       "icon": "IconMap",
       "language": "en",
       "resources": [
@@ -436,7 +436,7 @@
           "id": "connecticut",
           "version": "2025-12",
           "title": "Connecticut",
-          "description": "Topographic maps for the state of Connecticut",
+          "description": "Mapas topográficos de Connecticut.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/connecticut_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -444,7 +444,7 @@
           "id": "maine",
           "version": "2025-12",
           "title": "Maine",
-          "description": "Topographic maps for the state of Maine",
+          "description": "Mapas topográficos de Maine.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/maine_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -452,7 +452,7 @@
           "id": "massachusetts",
           "version": "2025-12",
           "title": "Massachusetts",
-          "description": "Topographic maps for the state of Massachusetts",
+          "description": "Mapas topográficos de Massachusetts.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/massachusetts_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -460,7 +460,7 @@
           "id": "new_hampshire",
           "version": "2025-12",
           "title": "New_Hampshire",
-          "description": "Topographic maps for the state of New_Hampshire",
+          "description": "Mapas topográficos de New_Hampshire.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/new_hampshire_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -468,7 +468,7 @@
           "id": "rhode_island",
           "version": "2025-12",
           "title": "Rhode_Island",
-          "description": "Topographic maps for the state of Rhode_Island",
+          "description": "Mapas topográficos de Rhode_Island.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/rhode_island_2025-12.pmtiles",
           "size_mb": 400
         },
@@ -476,7 +476,7 @@
           "id": "vermont",
           "version": "2025-12",
           "title": "Vermont",
-          "description": "Topographic maps for the state of Vermont",
+          "description": "Mapas topográficos de Vermont.",
           "url": "https://github.com/Crosstalk-Solutions/project-nomad-maps/raw/refs/heads/master/pmtiles/vermont_2025-12.pmtiles",
           "size_mb": 400
         }

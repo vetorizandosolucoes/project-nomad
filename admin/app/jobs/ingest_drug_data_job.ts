@@ -171,7 +171,7 @@ export class IngestDrugDataJob {
     if (existing) {
       const state = await existing.getState()
       if (state === 'active' || state === 'waiting' || state === 'delayed') {
-        return { job: existing, created: false, message: 'Drug label ingest already running' }
+        return { job: existing, created: false, message: 'A indexação das bulas já está em andamento' }
       }
       try {
         await existing.remove()
@@ -192,12 +192,12 @@ export class IngestDrugDataJob {
           removeOnFail: { count: 5 },
         }
       )
-      return { job, created: true, message: 'Drug label ingest dispatched' }
+      return { job, created: true, message: 'Indexação das bulas iniciada' }
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error)
       if (msg.includes('job already exists')) {
         const stillThere = await queue.getJob(this.jobId)
-        return { job: stillThere, created: false, message: 'Drug label ingest already running' }
+        return { job: stillThere, created: false, message: 'A indexação das bulas já está em andamento' }
       }
       throw error
     }

@@ -94,8 +94,17 @@ export class DocsService {
   }
 
   private static readonly TITLE_OVERRIDES: Record<string, string> = {
-    'faq': 'FAQ',
-    'community-add-ons': 'Community Add-Ons',
+    'home': 'Início',
+    'getting-started': 'Primeiros passos',
+    'use-cases': 'Casos de uso',
+    'supply-depot-apps': 'Aplicativos da Loja',
+    'drug-reference': 'Referência de medicamentos',
+    'updates': 'Atualizações',
+    'faq': 'Perguntas frequentes',
+    'about': 'Sobre',
+    'release-notes': 'Notas de versão (em inglês)',
+    'api-reference': 'Referência da API (em inglês)',
+    'community-add-ons': 'Complementos da comunidade',
   }
 
   private prettify(filename: string) {
