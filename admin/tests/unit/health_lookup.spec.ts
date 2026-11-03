@@ -63,6 +63,8 @@ test('words inside other words and unrelated questions do not match', () => {
 test('red flags are detected so they never become a list of medicines', () => {
   assert.equal(hasRedFlag('estou com dor no peito'), true)
   assert.equal(hasRedFlag('Falta de ar e tontura'), true)
+  assert.equal(hasRedFlag('Fui picado por uma cobra'), true)
+  assert.equal(hasRedFlag('ele cobra caro'), false)
   assert.equal(hasRedFlag('dor de cabeça leve'), false)
 })
 

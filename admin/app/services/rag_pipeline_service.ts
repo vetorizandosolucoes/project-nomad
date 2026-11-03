@@ -21,13 +21,17 @@ import { planPrompt } from '../utils/context_budget.js'
 import { estimateMessagesTokens } from '../utils/token_estimate.js'
 import { resolveMinFinalScore } from '../utils/rag_relevance.js'
 import { resolveTasksModel } from '../utils/tasks_model.js'
-import { buildContextBlock, getContextLimitsForModel } from '../utils/rag_prompt.js'
+import {
+  asksAboutTheApp,
+  buildContextBlock,
+  getContextLimitsForModel,
+  isAppDocumentation,
+  isTravelGuide,
+  verifiedFacts,
+} from '../utils/rag_prompt.js'
 import { QUERIES_SCHEMA, pickQueries, resolveStructured } from '../utils/structured_output.js'
+import { solveArithmetic } from '../utils/quick_math.js'
 
-function isAppDocumentation(doc: RetrievedChunk): boolean {
-  const source = String(doc.metadata?.source ?? '')
-  return source.includes('/docs/') || source.endsWith('README.md')
-}
 
 /**
  * Everything that happens between "a user sent a message" and "a payload goes
@@ -98,6 +102,7 @@ export class RagPipelineService {
     const query: OllamaChatMessage =
       lastUserIndex >= 0 ? conversation[lastUserIndex] : { role: 'user', content: '' }
     const history = lastUserIndex >= 0 ? conversation.slice(0, lastUserIndex) : conversation
+    let promptQuery = query
 
     // Retrieval reads the conversation as the user wrote it — system prompts are
     // deliberately excluded. They used to be inside the rewrite window, where
@@ -151,7 +156,8 @@ export class RagPipelineService {
         const floor: RetrievalFloorStats = { candidates: 0, belowFloor: 0 }
         relevantDocs = await this.ragService.searchSimilarDocuments(
           retrievalQuery,
-          opts.topK ?? RAG_DEFAULT_TOP_K,
+          // A few extra, because the app's manual is filtered out further down.
+          opts.topK ?? (opts.skipHealthLookup ? RAG_DEFAULT_TOP_K : RAG_DEFAULT_TOP_K + 3),
           opts.scoreThreshold ?? RAG_DEFAULT_SCORE_THRESHOLD,
           opts.collection,
           undefined,
@@ -202,23 +208,40 @@ export class RagPipelineService {
         .slice(-2)
         .map((msg) => msg.content)
       const health = await this.healthLookup.lookupSafely(query.content, previousQuestions)
+      // Small models skip instructions in a system message, so what must not be missed
+      // goes right next to the question: gemma3:4b only obeyed these from there.
+      const notes: string[] = []
       if (health && health.urgency !== 'none') {
         systemBlocks.push({
           role: 'system',
           content:
             health.urgency === 'self-harm' ? SYSTEM_PROMPTS.health_self_harm : SYSTEM_PROMPTS.health_red_flag,
         })
-        // Nothing from the library belongs under this answer, not even as a source.
-        relevantDocs = []
-        trace.retrieved = []
       } else if (health && health.chunks.length > 0) {
         healthChunks = health.chunks
         systemBlocks.push({ role: 'system', content: SYSTEM_PROMPTS.health_context })
-        // The app's own manual only describes the screens, and it matches health
-        // words closely enough to crowd out the actual answer.
-        relevantDocs = relevantDocs.filter((doc) => !isAppDocumentation(doc))
-        trace.retrieved = [...healthChunks, ...relevantDocs]
+        notes.push('Não informe doses: este sistema não tem as bulas.')
       }
+      if (health) {
+        relevantDocs = relevantDocs.filter((doc) => !isTravelGuide(doc))
+      }
+
+      const solved = solveArithmetic(query.content)
+      if (solved.length > 0) {
+        notes.push(`Resultado exato, calculado pelo sistema: ${solved.join('; ')}. Responda com este resultado, sem refazer a conta.`)
+      }
+      if (notes.length > 0) {
+        promptQuery = { ...query, content: `${query.content}\n\n[${notes.join(' ')}]` }
+      }
+
+      systemBlocks.push({ role: 'system', content: verifiedFacts(new Date()) })
+
+      // The app's own manual only describes the screens, but its everyday words match
+      // anything: "um forte para visitar" retrieved advice on strong passwords.
+      if (!asksAboutTheApp(query.content)) {
+        relevantDocs = relevantDocs.filter((doc) => !isAppDocumentation(doc))
+      }
+      trace.retrieved = [...healthChunks, ...relevantDocs]
     }
 
     // --- Budgeted assembly -------------------------------------------------
@@ -241,7 +264,7 @@ export class RagPipelineService {
     const plan = planPrompt({
       systemBlocks,
       history,
-      query,
+      query: promptQuery,
       ragChunks: candidateDocs,
       renderRagBlock: (chunks) =>
         SYSTEM_PROMPTS.rag_context(buildContextBlock(chunks as RetrievedChunk[])),

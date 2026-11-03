@@ -312,3 +312,57 @@ html,
 body {
   overflow-x: clip;
 }
+
+/* Home list: the rows arrive once on load, then respond instantly to typing. */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.row-in {
+  animation: row-in 240ms var(--ease-out) backwards;
+  animation-delay: calc(var(--row-index, 0) * 35ms);
+}
+
+.row-link {
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.row-arrow {
+  opacity: 0;
+  transition: opacity 120ms ease, transform 160ms var(--ease-out);
+}
+
+.row-link[data-active='true'] .row-arrow {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row-link:hover .row-arrow {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes row-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .row-in {
+    animation-name: row-fade;
+    animation-delay: 0ms;
+  }
+
+  .row-arrow {
+    transition: opacity 120ms ease;
+  }
+}

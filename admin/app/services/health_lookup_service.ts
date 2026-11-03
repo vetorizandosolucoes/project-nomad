@@ -52,7 +52,13 @@ export class HealthLookupService {
     if (named.length === 0 && slugs.length === 0) return null
 
     const groups = named.length > 0 ? groupBySubstance(named) : medicinesForSituation(all, slugs[0])
-    const chunks = groups.slice(0, MAX_SUBSTANCES).map((group) => this.substanceChunk(group))
+    const chunks: RetrievedChunk[] = []
+    if (groups.length > 0) {
+      const link = named.length > 0
+        ? `/medicamentos?q=${encodeURIComponent(groups[0].substance.split(';')[0])}`
+        : `/medicamentos?situacao=${slugs[0]}`
+      chunks.push(this.medicinesChunk(groups.slice(0, MAX_SUBSTANCES), link))
+    }
     if (slugs.length > 0) {
       const remedies = await this.remediesChunk(slugs[0])
       if (remedies) chunks.push(remedies)
@@ -60,22 +66,25 @@ export class HealthLookupService {
     return { chunks, urgency: 'none' }
   }
 
-  private substanceChunk(group: SubstanceGroup): RetrievedChunk {
-    const substance = group.substance.replace(/;/g, ' + ')
-    const names = [...new Set(group.products.map((product) => product.name))]
-    const types = [...new Set(group.products.map((product) => product.type))]
+  /**
+   * One chunk for the whole list: the prompt holds only a few chunks, and one per
+   * substance would push out the library passages that explain what to actually do.
+   */
+  private medicinesChunk(groups: SubstanceGroup[], link: string): RetrievedChunk {
+    const lines = groups.map((group) => {
+      const names = [...new Set(group.products.map((product) => product.name))]
+      return (
+        `- ${group.substance.replace(/;/g, ' + ')} (${tarjaLabel(group.tarja)}). ` +
+        `Exemplos: ${names.slice(0, MAX_PRODUCT_EXAMPLES).join(', ')}.`
+      )
+    })
     return {
-      text: [
-        `Princípio ativo: ${substance}.`,
-        `Tarja: ${tarjaLabel(group.tarja)}.`,
-        `Tipos à venda: ${types.join(', ')}.`,
-        `Exemplos de produtos comercializados no Brasil: ${names.slice(0, MAX_PRODUCT_EXAMPLES).join(', ')}.`,
-      ].join(' '),
+      text: `Medicamentos comercializados no Brasil:\n${lines.join('\n')}`,
       score: 1,
       metadata: {
-        article_title: `Medicamentos no Brasil: ${substance}`,
+        article_title: 'Medicamentos no Brasil (lista CMED/Anvisa)',
         archive_date: this.medicines.info().version,
-        source: `/medicamentos?q=${encodeURIComponent(group.substance.split(';')[0])}`,
+        source: link,
       },
     }
   }

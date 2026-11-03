@@ -71,7 +71,7 @@ export default function AppLayout({
       <main className="mx-auto w-full max-w-7xl flex-1">{children}</main>
       <Footer />
 
-      {aiAssistantInstalled && (
+      {aiAssistantInstalled && !path.startsWith('/jarvis') && (
         <>
           <ChatButton onClick={() => setIsChatOpen(true)} />
           <ChatModal open={isChatOpen} onClose={() => setIsChatOpen(false)} />

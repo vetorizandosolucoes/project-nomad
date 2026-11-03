@@ -1,0 +1,27 @@
+# OpenJarvis as this system runs it: inside the Docker network, reachable only through
+# the admin panel. It runs only in online mode, and no tool can touch files or run commands.
+
+[engine]
+default = "ollama"
+
+[engine.ollama]
+host = "http://nomad_ollama:11434"
+
+[server]
+host = "0.0.0.0"
+port = 8000
+agent = "native_react"
+
+[agent]
+default_agent = "native_react"
+tools = "calculator,think,web_search"
+max_turns = 5
+context_from_memory = false
+default_system_prompt = "Você é o Jarvis, o assistente deste sistema, e roda localmente, sem internet. Responda em português do Brasil, com clareza e objetividade. Use as informações fornecidas pelo sistema quando houver. Se não souber, diga que não sabe."
+
+[analytics]
+enabled = false
+
+[security]
+enabled = true
+ssrf_protection = true

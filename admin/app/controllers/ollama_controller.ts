@@ -1,6 +1,6 @@
 import { ChatService } from '#services/chat_service'
 import { DockerService } from '#services/docker_service'
-import { OllamaService, type NomadChatUsage } from '#services/ollama_service'
+import { OllamaService, type NomadChatStreamChunk, type NomadChatUsage } from '#services/ollama_service'
 import { TokenCalibrationService } from '#services/token_calibration_service'
 import { RagPipelineService } from '#services/rag_pipeline_service'
 import { RagService } from '#services/rag_service'
@@ -17,6 +17,14 @@ import { resolveResponseStyle } from '../utils/response_style.js'
 import { resolveSamplerProfile } from '../utils/sampler.js'
 import type { PipelineTrace } from '../../types/rag.js'
 import { buildCitations } from '../utils/rag_prompt.js'
+import { AiConnectionsService } from '#services/ai_connections_service'
+import {
+  CLOUD_MODEL_PREFIX,
+  cloudModelId,
+  isCloudModel,
+  keepAliveForMode,
+  orderLocalModels,
+} from '../utils/ai_modes.js'
 import logger from '@adonisjs/core/services/logger'
 import { rm } from 'node:fs/promises'
 import {
@@ -37,7 +45,8 @@ export default class OllamaController {
     private ollamaService: OllamaService,
     private ragPipelineService: RagPipelineService,
     private ragService: RagService,
-    private tokenCalibration: TokenCalibrationService
+    private tokenCalibration: TokenCalibrationService,
+    private connections: AiConnectionsService
   ) { }
 
   async availableModels({ request }: HttpContext) {
@@ -125,6 +134,15 @@ export default class OllamaController {
       await cleanupUploadedImages()
     }
 
+    // A cloud model only generates the answer. Retrieval, prompt budgeting and titles
+    // keep using a local model, which is also what takes over if the cloud call fails.
+    const cloudModel = isCloudModel(reqData.model) ? cloudModelId(reqData.model) : null
+    if (cloudModel) {
+      const localModels = await this.ollamaService.getModels().catch(() => [])
+      const { effective } = await this.connections.mode()
+      reqData.model = orderLocalModels(localModels, effective)[0]?.name ?? reqData.model
+    }
+
     const modelCapabilities = await this.ollamaService.getModelCapabilities(reqData.model)
     if (
       normalizedImages.length > 0 &&
@@ -171,7 +189,10 @@ export default class OllamaController {
       // Keeping the model resident is what makes the KV cache worth building:
       // Ollama's default evicts after 5 minutes, which is well inside the time a
       // user spends reading an answer and typing the next question.
-      const keepAlive = (await KVStore.getValue('ai.keepAlive')) || DEFAULT_KEEP_ALIVE
+      // Offline mode overrides this to free the GPU soon after answering, to save battery.
+      const { effective: effectiveMode } = await this.connections.mode()
+      const keepAlive =
+        keepAliveForMode(effectiveMode) ?? ((await KVStore.getValue('ai.keepAlive')) || DEFAULT_KEEP_ALIVE)
 
       // Check if the model supports "thinking" capability for enhanced response generation.
       // Thinking is only enabled when the model supports it AND the user wants it: the explicit
@@ -228,7 +249,7 @@ export default class OllamaController {
         let doneReason: string | undefined
         let completionTokens: number | undefined
         try {
-          const stream = await this.ollamaService.chatStream({
+          const localRequest = {
             ...ollamaRequest,
             messages: upstreamMessages,
             think,
@@ -238,7 +259,10 @@ export default class OllamaController {
             keepAlive,
           sampler,
             signal: abortController.signal,
-          })
+          }
+          const stream = cloudModel
+            ? this._cloudStreamWithLocalFallback(cloudModel, localRequest)
+            : await this.ollamaService.chatStream(localRequest)
           for await (const chunk of stream) {
             if (chunk.message?.content) {
               fullContent += chunk.message.content
@@ -287,7 +311,7 @@ export default class OllamaController {
       // Non-streaming (legacy) path
       let result
       try {
-        result = await this.ollamaService.chat({
+        const localRequest = {
           ...ollamaRequest,
           messages: upstreamMessages,
           think,
@@ -296,7 +320,16 @@ export default class OllamaController {
           numPredict,
           keepAlive,
         sampler,
-        })
+        }
+        if (cloudModel) {
+          let content = ''
+          for await (const chunk of this._cloudStreamWithLocalFallback(cloudModel, localRequest)) {
+            content += chunk.message.content
+          }
+          result = { message: { content }, done: true, model: cloudModel }
+        } else {
+          result = await this.ollamaService.chat(localRequest)
+        }
       } catch (err) {
         // A backend that never advertised vision support rejecting a request that
         // carried images is the signal that it cannot see them. Recorded here and
@@ -553,7 +586,50 @@ export default class OllamaController {
     const capabilities = await Promise.all(
       models.map((m) => this.ollamaService.getModelCapabilities(m.name, m))
     )
-    return models.map((m, i) => ({ ...m, ...capabilities[i] }))
+    const local = models.map((m, i) => ({ ...m, ...capabilities[i] }))
+
+    // The chat opens on the first entry, so the current mode decides what that is.
+    const { effective } = await this.connections.mode()
+    const ordered = orderLocalModels(local, effective)
+    const cloud = await this.connections.usableCloudModel()
+    return cloud ? [{ name: `${CLOUD_MODEL_PREFIX}${cloud}`, size: 0 }, ...ordered] : ordered
+  }
+
+  /**
+   * Answers from the cloud and, if that fails before anything was said, from the local
+   * model with a note saying so. In an emergency a dropped connection must not mean no
+   * answer. A failure halfway through ends the answer with the same note, since restarting
+   * would repeat what the person already read.
+   */
+  private async *_cloudStreamWithLocalFallback(
+    cloudModel: string,
+    localRequest: Parameters<OllamaService['chatStream']>[0]
+  ): AsyncGenerator<NomadChatStreamChunk> {
+    let wroteAnything = false
+    try {
+      for await (const chunk of this.connections.streamOpenAi(
+        cloudModel,
+        localRequest.messages,
+        localRequest.signal
+      )) {
+        wroteAnything = wroteAnything || chunk.message.content.length > 0
+        yield chunk
+      }
+      return
+    } catch (error) {
+      if (localRequest.signal?.aborted) throw error
+      logger.warn(`[OllamaController] OpenAI failed: ${error instanceof Error ? error.message : error}`)
+    }
+
+    if (wroteAnything) {
+      yield { message: { content: '\n\n*A conexão com o GPT caiu e a resposta ficou incompleta.*' }, done: true }
+      return
+    }
+    yield {
+      message: { content: '*Não foi possível usar o GPT agora. Esta resposta vem da IA local.*\n\n' },
+      done: false,
+    }
+    yield* await this.ollamaService.chatStream(localRequest)
   }
 
 }

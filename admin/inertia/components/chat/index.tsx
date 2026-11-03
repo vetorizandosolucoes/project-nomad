@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { modelDisplayName } from '../../../app/utils/ai_modes'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import ChatSidebar from './ChatSidebar'
 import ChatInterface from './ChatInterface'
@@ -573,6 +574,18 @@ export default function Chat({
     [activeSessionId, messages, selectedModel, collectionFilter, chatMutation, queryClient, streamingEnabled, effectiveThinking, abortCurrentStream]
   )
 
+  // Opened from the home search with a question: send it once, then clean the URL.
+  useEffect(() => {
+    if (!enabled || !selectedModel) return
+    const params = new URLSearchParams(window.location.search)
+    const question = params.get('pergunta')
+    if (!question) return
+    params.delete('pergunta')
+    const rest = params.toString()
+    window.history.replaceState(null, '', `${window.location.pathname}${rest ? `?${rest}` : ''}`)
+    handleSendMessage(question.slice(0, 2000))
+  }, [enabled, selectedModel, handleSendMessage])
+
   return (
     <>
       {pendingModelSwitch && (
@@ -680,7 +693,7 @@ export default function Chat({
                   >
                     {installedModels.map((model) => (
                       <option key={model.name} value={model.name}>
-                        {model.name}
+                        {modelDisplayName(model.name)}
                         {model.size > 0 ? ` (${formatBytes(model.size)})` : ''}
                       </option>
                     ))}

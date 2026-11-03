@@ -16,7 +16,11 @@ import * as assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import {
+  asksAboutTheApp,
   buildContextBlock,
+  isAppDocumentation,
+  isTravelGuide,
+  verifiedFacts,
   getContextLimitsForModel,
   type ContextLimitTier,
 } from '../../app/utils/rag_prompt.js'
@@ -100,4 +104,30 @@ test('context block: never leaks the relevance score to the model', () => {
   const out = buildContextBlock([chunk('body', { source: 'f.md', semantic_score: 0.42 })])
   assert.ok(!out.includes('0.42'))
   assert.ok(!out.includes('42'))
+})
+
+test('questions about the world do not reach the app manual', () => {
+  assert.equal(asksAboutTheApp('procuro um forte para visitar'), false)
+  assert.equal(asksAboutTheApp('Queimei a mão com óleo quente'), false)
+  assert.equal(asksAboutTheApp('Como instalo um aplicativo na loja?'), true)
+  assert.equal(asksAboutTheApp('o Kiwix não abre'), true)
+})
+
+test('the app manual is told apart from the library by its path', () => {
+  assert.equal(isAppDocumentation({ text: '', metadata: { source: '/app/docs/faq.md' } }), true)
+  assert.equal(isAppDocumentation({ text: '', metadata: { source: '/app/README.md' } }), true)
+  assert.equal(isAppDocumentation({ text: '', metadata: { source: '/app/storage/zim/a.zim' } }), false)
+  assert.equal(isAppDocumentation({ text: '' }), false)
+})
+
+test('travel guides are recognized by their source', () => {
+  assert.equal(isTravelGuide({ text: '', metadata: { source: '/app/storage/zim/wikivoyage_pt_all.zim' } }), true)
+  assert.equal(isTravelGuide({ text: '', metadata: { source: '/app/storage/zim/wikipedia_pt.zim' } }), false)
+})
+
+test('verified facts carry the date and Brazilian emergency numbers', () => {
+  const facts = verifiedFacts(new Date('2026-11-03T12:00:00Z'))
+  assert.match(facts, /2026-11-03/)
+  assert.match(facts, /SAMU 192/)
+  assert.match(facts, /CVV 188/)
 })

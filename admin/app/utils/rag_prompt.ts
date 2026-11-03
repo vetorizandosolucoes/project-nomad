@@ -50,6 +50,61 @@ export function getContextLimitsForModel(
   return { maxResults: 5, maxTokens: 0 }
 }
 
+const APP_TERMS = [
+  'sistema',
+  'nomad',
+  'aplicativo',
+  'aplicativos',
+  'app',
+  'loja',
+  'painel',
+  'central de comando',
+  'configuracao',
+  'configuracoes',
+  'configurar',
+  'instalar',
+  'instalo',
+  'instalacao',
+  'desinstalar',
+  'atualizar',
+  'atualizacao',
+  'baixar',
+  'download',
+  'servidor',
+  'documentacao',
+  'base de conhecimento',
+  'biblioteca de informacoes',
+  'benchmark',
+  'kiwix',
+  'kolibri',
+  'ollama',
+  'jellyfin',
+  'vaultwarden',
+  'calibre',
+  'homebox',
+  'stirling',
+  'excalidraw',
+  'meshtastic',
+  'meshcore',
+  'flatnotes',
+]
+
+/** Whether a question could be about using this system rather than about the world. */
+export function asksAboutTheApp(question: string): boolean {
+  const normalized = ` ${question
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()} `
+  return APP_TERMS.some((term) => normalized.includes(` ${term} `))
+}
+
+export function isAppDocumentation(doc: BudgetableChunk): boolean {
+  const source = String(doc.metadata?.source ?? '')
+  return source.includes('/docs/') || source.endsWith('README.md')
+}
+
 /**
  * Render retrieved chunks into the block the rag_context prompt wraps.
  *
@@ -108,4 +163,15 @@ export function buildCitations(docs: BudgetableChunk[]): ChatSource[] {
   }
 
   return sources
+}
+
+/** Travel guides list other countries' emergency numbers: one came back as Brazil's. */
+export function isTravelGuide(doc: BudgetableChunk): boolean {
+  return /wikivoyage/i.test(String(doc.metadata?.source ?? ''))
+}
+
+/** Facts small models get wrong, stated by the system instead of left to them. */
+export function verifiedFacts(today: Date): string {
+  const date = today.toISOString().slice(0, 10)
+  return `Today is ${date}. Anything after this date has not happened yet: say so, and never invent a result. Emergency numbers in Brazil: SAMU 192, Bombeiros 193, Polícia 190, Defesa Civil 199, CVV 188. Give only these numbers, even if the context lists others, because the library covers other countries too.`
 }

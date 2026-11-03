@@ -1,6 +1,16 @@
 
 export const KV_STORE_SCHEMA = {
   'chat.suggestionsEnabled':    'boolean',
+  // Online services and battery mode. The keys are encrypted and deliberately left out
+  // of SETTINGS_KEYS, so the generic settings API can never read them back.
+  'ai.mode':                    'string',
+  'ai.lastEffectiveMode':       'string',
+  'ai.openaiKey':               'string',
+  'ai.openaiModel':             'string',
+  'voice.elevenLabsKey':        'string',
+  'voice.elevenLabsVoiceId':    'string',
+  'voice.elevenLabsVoiceName':  'string',
+  'voice.enabled':              'boolean',
   'chat.lastModel':             'string',
   'rag.docsEmbedded':           'boolean',
   'rag.defaultIngestPolicy':    'string',

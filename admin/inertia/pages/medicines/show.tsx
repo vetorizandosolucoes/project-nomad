@@ -27,7 +27,7 @@ export default function MedicineShow({ medicine }: { medicine: BrMedicine }) {
         <h1 className="text-3xl font-bold text-text-primary">{medicine.name}</h1>
         <p className="mt-1 text-text-secondary">{medicine.substance.replace(/;/g, ' + ')}</p>
 
-        <dl className="mt-6 grid gap-4 rounded-lg border border-border-subtle bg-surface-primary p-5 sm:grid-cols-2">
+        <dl className="mt-6 grid gap-x-10 gap-y-4 border-y border-border-subtle py-5 sm:grid-cols-2">
           <Detail label="Laboratório" value={medicine.lab} />
           <Detail label="Tipo" value={medicine.type} />
           <Detail label="Tarja" value={tarjaLabel(medicine.tarja)} />
@@ -37,15 +37,15 @@ export default function MedicineShow({ medicine }: { medicine: BrMedicine }) {
         </dl>
 
         <h2 className="mb-2 mt-6 text-lg font-semibold text-text-primary">Apresentações</h2>
-        <ul className="divide-y divide-border-subtle rounded-lg border border-border-subtle bg-surface-primary text-sm text-text-primary">
+        <ul className="divide-y divide-border-subtle text-sm text-text-primary">
           {medicine.presentations.map((presentation) => (
-            <li key={presentation} className="px-4 py-2">
+            <li key={presentation} className="py-2">
               {presentation}
             </li>
           ))}
         </ul>
 
-        <div className="mt-6 rounded-lg border border-border-subtle bg-surface-primary p-4 text-sm text-text-primary">
+        <div className="mt-6 border-l-2 border-desert-green pl-3 text-sm text-text-primary">
           <p className="font-semibold">Dose e avisos estão na bula</p>
           <p className="mt-1 text-text-secondary">
             Esta lista não inclui o texto das bulas. Leia a bula que acompanha o produto ou fale com um

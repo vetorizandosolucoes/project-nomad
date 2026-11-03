@@ -68,19 +68,19 @@ function SearchResults({ query, type }: { query: string; type: string }) {
         {data.total.toLocaleString('pt-BR')} {data.total === 1 ? 'resultado' : 'resultados'}
         {data.total > data.results.length && `, mostrando os ${data.results.length} primeiros`}
       </p>
-      <ul className="space-y-2">
+      <ul>
         {data.results.map((medicine) => (
           <li key={medicine.id}>
             <Link
               href={`/medicamentos/${medicine.id}`}
-              className="block rounded-lg border border-border-subtle bg-surface-primary p-4 transition hover:border-desert-green"
+              className="row-link block border-b border-border-subtle px-2 py-3 hover:bg-desert-green-lighter/50"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
                 <span className="font-semibold text-text-primary">{medicine.name}</span>
                 <span className="text-xs text-text-muted">{medicine.lab}</span>
               </div>
               <p className="mt-1 text-sm text-text-secondary">{medicine.substance.replace(/;/g, ' + ')}</p>
-              <div className="mt-2 flex flex-wrap gap-1.5">
+              <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
                 <Badge>{medicine.type}</Badge>
                 <Badge>{tarjaLabel(medicine.tarja)}</Badge>
                 {medicine.hospital && <Badge>Uso hospitalar</Badge>}
@@ -95,7 +95,7 @@ function SearchResults({ query, type }: { query: string; type: string }) {
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-full border border-border-subtle px-2 py-0.5 text-xs text-text-secondary">
+    <span className="text-xs text-text-muted">
       {children}
     </span>
   )
@@ -134,9 +134,9 @@ function SituationResults({ slug, label }: { slug: string; label: string }) {
 
 function SubstanceList({ groups }: { groups: SubstanceGroup[] }) {
   return (
-    <ul className="space-y-2">
+    <ul>
       {groups.map((group) => (
-        <li key={group.substance} className="rounded-lg border border-border-subtle bg-surface-primary p-4">
+        <li key={group.substance} className="border-b border-border-subtle px-2 py-3">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <span className="font-semibold text-text-primary">{group.substance.replace(/;/g, ' + ')}</span>
             <Badge>{tarjaLabel(group.tarja)}</Badge>
@@ -187,7 +187,7 @@ export default function MedicinesIndex({ situations, info }: { situations: Situa
           </div>
         </div>
 
-        <div className="mb-5 flex gap-3 rounded-lg border border-desert-orange/40 bg-desert-orange/10 p-3 text-sm text-text-primary">
+        <div className="mb-5 flex gap-3 border-l-2 border-desert-orange pl-3 text-sm text-text-secondary">
           <IconAlertTriangle size={20} className="mt-0.5 shrink-0 text-desert-orange" />
           <p>
             Lista informativa da CMED/Anvisa, publicada em {formatDate(info.version)}, com os

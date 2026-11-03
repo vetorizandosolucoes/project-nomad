@@ -79,6 +79,13 @@ const RED_FLAG_TERMS = [
   'overdose',
   'intoxicacao',
   'envenenamento',
+  'picado por uma cobra',
+  'picada por uma cobra',
+  'picada de cobra',
+  'mordido por uma cobra',
+  'picado por um escorpiao',
+  'picada de escorpiao',
+  'picada de aranha',
 ]
 
 const SELF_HARM_TERMS = ['suicidio', 'me matar', 'tirar minha vida', 'me machucar', 'nao quero mais viver']

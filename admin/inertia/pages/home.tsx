@@ -4,6 +4,7 @@ import {
   IconHelp,
   IconMapRoute,
   IconPill,
+  IconRobot,
   IconSettings,
   IconWifiOff,
 } from '@tabler/icons-react'
@@ -12,21 +13,24 @@ import AppLayout from '~/layouts/AppLayout'
 import { getServiceLink } from '~/lib/navigation'
 import { ServiceSlim } from '../../types/services'
 import DynamicIcon, { DynamicIconName } from '~/components/DynamicIcon'
-import { useUpdateAvailable } from '~/hooks/useUpdateAvailable'
 import { useSystemSetting } from '~/hooks/useSystemSetting'
 import {
   useBenchmarkRerunBanner,
   BENCHMARK_RERUN_BANNER_QUERY_KEY,
 } from '~/hooks/useBenchmarkRerunBanner'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import api from '~/lib/api'
 import Alert from '~/components/Alert'
 import WhatsNewBanner from '~/components/WhatsNewBanner'
 import { SERVICE_NAMES } from '../../constants/service_names'
 import LinkTileModal from '~/components/LinkTileModal'
-import { IconPlus, IconPencil, IconTrash, IconExternalLink, IconSearch } from '@tabler/icons-react'
+import { IconArrowRight, IconExternalLink, IconPencil, IconPlus, IconSearch, IconSparkles, IconTrash } from '@tabler/icons-react'
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import AiModeSwitch, { useAiStatus } from '~/components/AiModeSwitch'
+import useInternetStatus from '~/hooks/useInternetStatus'
+import useServiceInstalledStatus from '~/hooks/useServiceInstalledStatus'
+import { tarjaLabel, type BrMedicine } from '../../app/utils/br_medicines'
 import { linkTileColor } from '../../constants/link_tile_colors'
 
 // Maps is a Core Capability (display_order: 4)
@@ -113,16 +117,36 @@ interface DashboardItem {
   linkTile?: ServiceSlim
 }
 
+/** One line of the list: an app, a medicine, or the question for the AI. */
+interface ResultRow {
+  key: string
+  label: string
+  description: string
+  icon: React.ReactNode
+  href: string
+  external?: boolean
+  item?: DashboardItem
+}
+
+const normalize = (text: string) =>
+  text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+
+function greeting() {
+  const hour = new Date().getHours()
+  if (hour < 5) return 'Boa noite'
+  if (hour < 12) return 'Bom dia'
+  return hour < 18 ? 'Boa tarde' : 'Boa noite'
+}
+
 export default function Home(props: {
   system: {
     services: ServiceSlim[]
   }
-  // Server-computed: true when the offline FDA drug dataset is installed or
-  // installing (curated Medicine tier). Gates the two medical-reference tiles
-  // below so they only appear once the data exists.
 }) {
   const items: DashboardItem[] = []
-  const updateInfo = useUpdateAvailable();
   const rerunBanner = useBenchmarkRerunBanner()
   const queryClient = useQueryClient()
   const { aiAssistantName } = usePage<{ aiAssistantName: string }>().props
@@ -135,6 +159,37 @@ export default function Home(props: {
   const [pendingDelete, setPendingDelete] = useState<string | null>(null)
   const [linkError, setLinkError] = useState<string | null>(null)
   const [query, setQuery] = useState('')
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [debouncedQuery, setDebouncedQuery] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+  // The rows arrive with a stagger on load only. While typing they must just be there.
+  const enteringRef = useRef(true)
+  const { isOnline } = useInternetStatus()
+  const { data: aiStatus } = useAiStatus()
+  const aiInstalled = useServiceInstalledStatus(SERVICE_NAMES.OLLAMA)
+
+  useEffect(() => {
+    enteringRef.current = false
+    // Not on touch screens, where this would pop the keyboard over the list.
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) inputRef.current?.focus()
+  }, [])
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(query.trim()), 150)
+    return () => clearTimeout(timer)
+  }, [query])
+
+  const { data: medicines } = useQuery({
+    queryKey: ['home-medicines', debouncedQuery],
+    enabled: debouncedQuery.length >= 3,
+    placeholderData: (previous) => (debouncedQuery.length >= 3 ? previous : undefined),
+    queryFn: async () => {
+      const response = await fetch(`/api/medicamentos/search?q=${encodeURIComponent(debouncedQuery)}`, {
+        headers: { Accept: 'application/json' },
+      })
+      return (await response.json()) as { results: BrMedicine[]; total: number }
+    },
+  })
 
   const refreshServices = () => router.reload({ only: ['system'] })
 
@@ -213,6 +268,20 @@ export default function Home(props: {
 
   items.push(DRUG_REFERENCE_ITEM)
 
+  // The agent shows up once its service exists on this machine.
+  if (aiStatus?.jarvisInstalled) {
+    items.push({
+      label: 'Jarvis',
+      to: '/jarvis',
+      target: '',
+      description: 'Agente que pesquisa, calcula e ajuda em projetos. Fica ligado no modo Online',
+      icon: <IconRobot />,
+      installed: true,
+      displayOrder: 1,
+      poweredBy: 'OpenJarvis',
+    })
+  }
+
   // Add system items
   items.push(...SYSTEM_ITEMS)
 
@@ -220,11 +289,6 @@ export default function Home(props: {
   items.sort((a, b) => a.displayOrder - b.displayOrder)
 
   // Search across names and descriptions, then split apps from system shortcuts.
-  const normalize = (text: string) =>
-    text
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '')
   const term = normalize(query.trim())
   const visibleItems = term
     ? items.filter((item) => normalize(`${item.label} ${item.description}`).includes(term))
@@ -232,224 +296,297 @@ export default function Home(props: {
   const appItems = visibleItems.filter((item) => item.displayOrder < 50 || item.displayOrder > 53)
   const systemItems = visibleItems.filter((item) => item.displayOrder >= 50 && item.displayOrder <= 53)
 
-  const renderTile = (item: DashboardItem) => {
-    const isEasySetup = item.label === 'Configuração rápida'
-    const shouldHighlight = isEasySetup && shouldHighlightEasySetup
+  // What typing offers besides apps: the question itself, and matching medicines.
+  const trimmed = query.trim()
+  const askRow: ResultRow | null =
+    trimmed && aiInstalled
+      ? {
+          key: 'ask',
+          label: `Perguntar à IA: “${trimmed}”`,
+          description: 'Responde com a biblioteca e a lista de medicamentos, sem internet',
+          icon: <IconSparkles />,
+          href: `/chat?pergunta=${encodeURIComponent(trimmed)}`,
+        }
+      : null
+  const medicineRows: ResultRow[] = (medicines?.results ?? []).slice(0, 3).map((medicine) => ({
+    key: `medicine-${medicine.id}`,
+    label: medicine.name,
+    description: `${medicine.substance.replace(/;/g, ' + ')} · ${tarjaLabel(medicine.tarja)}`,
+    icon: <IconPill />,
+    href: `/medicamentos/${medicine.id}`,
+  }))
+  const allMedicinesRow: ResultRow | null =
+    (medicines?.total ?? 0) > 3
+      ? {
+          key: 'medicines-all',
+          label: `Ver os ${medicines!.total.toLocaleString('pt-BR')} resultados em Medicamentos`,
+          description: 'Com filtro por tipo',
+          icon: <IconPill />,
+          href: `/medicamentos?q=${encodeURIComponent(trimmed)}`,
+        }
+      : null
 
-    const isLinkTile = Boolean(item.linkTile)
-    // A flat surface color read as a stark white card next to the filled
-    // app tiles. Tint from the brand palette instead, user-chosen.
-    const tileColor = linkTileColor(item.linkTile?.link_color)
+  const toRow = (item: DashboardItem): ResultRow => ({
+    key: item.label,
+    label: item.label,
+    description: item.description,
+    icon: item.icon,
+    href: item.to,
+    external: item.target === '_blank',
+    item,
+  })
+  const appRows = appItems.map(toRow)
+  const systemRows = systemItems.map(toRow)
+  const medicineGroup = allMedicinesRow ? [...medicineRows, allMedicinesRow] : medicineRows
+  // A question goes first; a word that names something shows that something first.
+  const looksLikeQuestion = trimmed.includes('?') || trimmed.split(/\s+/).length >= 3
+  const nothingNamed = appRows.length + systemRows.length + medicineGroup.length === 0
+  const askFirst = looksLikeQuestion || nothingNamed
+  const flatRows: ResultRow[] = term
+    ? [
+        ...(askFirst && askRow ? [askRow] : []),
+        ...appRows,
+        ...medicineGroup,
+        ...systemRows,
+        ...(!askFirst && askRow ? [askRow] : []),
+      ]
+    : []
+  const activeRow = flatRows[Math.min(activeIndex, flatRows.length - 1)]
 
-    // Link tiles are deliberately not styled like managed apps: outlined
-    // rather than filled, with an external-link marker. If they looked the
-    // same, users would expect Start/Stop/Update and file bugs when those
-    // controls are not there.
-    const tileContent = (
-      <div
-        className={classNames(
-          'relative flex h-full cursor-pointer items-start gap-3 rounded-xl p-4 text-left transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md',
-          isLinkTile
-            ? `border-2 border-dashed ${tileColor.border} ${tileColor.bg} text-text-primary`
-            : 'border border-border-subtle bg-surface-primary text-text-primary shadow-sm hover:border-desert-green'
-        )}
-      >
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-desert-green-lighter text-desert-green [&_svg]:!size-6">
-          {item.icon}
+  const openRow = (row: ResultRow) => {
+    if (row.external) window.open(row.href, '_blank', 'noopener,noreferrer')
+    else router.visit(row.href)
+  }
+
+  const handleSearchKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      if (flatRows.length === 0) return
+      event.preventDefault()
+      const step = event.key === 'ArrowDown' ? 1 : -1
+      setActiveIndex((index) => (index + step + flatRows.length) % flatRows.length)
+    } else if (event.key === 'Enter' && activeRow) {
+      event.preventDefault()
+      openRow(activeRow)
+    } else if (event.key === 'Escape') {
+      setQuery('')
+    }
+  }
+
+  const renderRow = (row: ResultRow, index: number) => {
+    const item = row.item
+    const tile = item?.linkTile
+    const isEasySetup = item?.label === 'Configuração rápida'
+    const active = term !== '' && row === activeRow
+    const staggerClass = enteringRef.current && !term ? 'row-in' : ''
+    const rowClass = classNames(
+      'row-link flex items-center gap-4 border-b border-border-subtle px-2 py-3.5 text-left text-text-primary hover:bg-desert-green-lighter/50',
+      active && 'bg-desert-green-lighter/70'
+    )
+    const content = (
+      <>
+        <span
+          className={classNames(
+            'flex shrink-0 items-center text-desert-green [&_svg]:!size-6',
+            tile && linkTileColor(tile.link_color).marker
+          )}
+        >
+          {row.icon}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="flex items-center gap-1.5">
-            <span className="truncate text-base font-semibold">{item.label}</span>
-            {isLinkTile && (
-              <span
-                className={`shrink-0 ${tileColor.marker}`}
-                title="Um atalho que você adicionou. O sistema não gerencia este item."
-              >
-                <IconExternalLink size={14} />
-              </span>
+          <span className="flex items-center gap-2">
+            <span className="truncate font-medium">{row.label}</span>
+            {tile && <IconExternalLink size={14} className="shrink-0 text-text-muted" aria-label="Atalho seu" />}
+            {isEasySetup && shouldHighlightEasySetup && (
+              <span className="shrink-0 text-xs font-semibold text-desert-orange">Comece aqui</span>
             )}
           </span>
-          <span className="mt-0.5 line-clamp-2 block text-sm text-text-secondary">{item.description}</span>
-          {item.poweredBy && (
-            <span className="mt-1 block text-xs text-text-muted">Com tecnologia de {item.poweredBy}</span>
-          )}
-        </span>
-        {shouldHighlight && (
-          <span className="absolute -top-2 right-3 rounded-full bg-desert-orange-light px-2.5 py-0.5 text-xs font-semibold text-white shadow-sm">
-            Comece aqui!
+          <span
+            className="block truncate text-sm text-text-secondary"
+            title={item?.poweredBy ? `Com tecnologia de ${item.poweredBy}` : undefined}
+          >
+            {row.description}
           </span>
-        )}
-      </div>
+        </span>
+        <IconArrowRight size={18} aria-hidden="true" className="row-arrow shrink-0 text-desert-green" />
+      </>
     )
 
-    if (isLinkTile) {
-      const tile = item.linkTile!
-      const confirming = pendingDelete === tile.service_name
-
-      return (
-        <div key={item.label} className="group relative">
-          <a href={item.to} target="_blank" rel="noopener noreferrer" className="block h-full">
-            {tileContent}
-          </a>
-
-          {confirming ? (
-            <div className="absolute top-2 right-2 flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => handleDeleteTile(tile.service_name)}
-                className="rounded bg-desert-red px-2 py-1 text-xs font-medium text-white hover:brightness-110"
-              >
-                Remover
-              </button>
-              <button
-                type="button"
-                onClick={() => setPendingDelete(null)}
-                className="rounded border border-border-default bg-surface-primary px-2 py-1 text-xs text-text-secondary hover:bg-surface-secondary"
-              >
-                Cancelar
-              </button>
-            </div>
-          ) : (
-            <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingTile(tile)
-                  setLinkModalOpen(true)
-                }}
-                title="Editar este link"
-                aria-label="Editar este link"
-                className="rounded p-1 text-text-muted hover:bg-surface-secondary hover:text-text-primary"
-              >
-                <IconPencil size={16} />
-              </button>
-              <button
-                type="button"
-                onClick={() => setPendingDelete(tile.service_name)}
-                title="Remover este link"
-                aria-label="Remover este link"
-                className="rounded p-1 text-text-muted hover:bg-surface-secondary hover:text-desert-red"
-              >
-                <IconTrash size={16} />
-              </button>
-            </div>
-          )}
-        </div>
-      )
-    }
-
-    return item.target === '_blank' ? (
-      <a key={item.label} href={item.to} target="_blank" rel="noopener noreferrer" className="block">
-        {tileContent}
+    const link = row.external ? (
+      <a href={row.href} target="_blank" rel="noopener noreferrer" data-active={active} className={rowClass}>
+        {content}
       </a>
     ) : (
-      <Link key={item.label} href={item.to} className="block">
-        {tileContent}
+      <Link href={row.href} data-active={active} className={rowClass}>
+        {content}
       </Link>
+    )
+
+    return (
+      <li
+        key={row.key}
+        className={classNames('group relative', staggerClass)}
+        style={{ '--row-index': Math.min(index, 12) } as React.CSSProperties}
+        onMouseEnter={term ? () => setActiveIndex(flatRows.indexOf(row)) : undefined}
+      >
+        {link}
+        {tile && (
+          <div className="absolute right-8 top-1/2 flex -translate-y-1/2 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+            {pendingDelete === tile.service_name ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteTile(tile.service_name)}
+                  className="rounded bg-desert-red px-2 py-1 text-xs font-medium text-white hover:brightness-110"
+                >
+                  Remover
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPendingDelete(null)}
+                  className="rounded bg-surface-primary px-2 py-1 text-xs text-text-secondary hover:bg-surface-secondary"
+                >
+                  Cancelar
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingTile(tile)
+                    setLinkModalOpen(true)
+                  }}
+                  title="Editar este link"
+                  aria-label="Editar este link"
+                  className="rounded p-1 text-text-muted hover:bg-surface-secondary hover:text-text-primary"
+                >
+                  <IconPencil size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPendingDelete(tile.service_name)}
+                  title="Remover este link"
+                  aria-label="Remover este link"
+                  className="rounded p-1 text-text-muted hover:bg-surface-secondary hover:text-desert-red"
+                >
+                  <IconTrash size={16} />
+                </button>
+              </>
+            )}
+          </div>
+        )}
+      </li>
     )
   }
 
   return (
     <AppLayout>
       <Head title="Central de Comando" />
-      {
-        updateInfo?.updateAvailable && (
-          <div className='flex justify-center items-center p-4 w-full'>
-            <Alert
-              title="Há uma atualização disponível!"
-              type="info-inverted"
-              variant="solid"
-              className="w-full"
-              buttonProps={{
-                variant: 'primary',
-                children: 'Ir para configurações',
-                icon: 'IconSettings',
-                onClick: () => router.visit('/settings/update'),
-              }}
-            />
-          </div>
-        )
-      }
       <WhatsNewBanner />
-      {
-        rerunBanner?.show && (
-          <div className='flex justify-center items-center px-4 pt-4 w-full'>
-            <Alert
-              title="Seu benchmark pode ser recalculado com o Score v2"
-              message="Atualizamos o sistema de pontuação do benchmark. Execute o benchmark de novo para obter um resultado Score v2 atualizado no ranking da comunidade."
-              type="info-inverted"
-              variant="solid"
-              className="w-full"
-              dismissible
-              onDismiss={handleDismissRerunBanner}
-              buttonProps={{
-                variant: 'primary',
-                children: 'Executar o benchmark de novo',
-                icon: 'IconRefresh',
-                onClick: () => router.visit('/settings/benchmark'),
-              }}
-            />
-          </div>
-        )
-      }
-      <div className="px-4 pt-6 pb-2 sm:flex sm:items-end sm:justify-between sm:gap-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-text-primary">Central de Comando</h1>
-          <p className="mt-1 text-sm text-text-secondary">Seus aplicativos e conteúdos, disponíveis mesmo sem internet.</p>
-        </div>
-        <div className="relative mt-3 sm:mt-0 sm:w-80">
-          <IconSearch size={18} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Buscar aplicativo..."
-            aria-label="Buscar aplicativo"
-            className="w-full rounded-lg border border-border-default bg-surface-primary py-2 pl-9 pr-3 text-sm text-text-primary placeholder:text-text-muted focus:border-desert-green focus:outline-none"
+      {rerunBanner?.show && (
+        <div className="flex w-full items-center justify-center px-4 pt-4">
+          <Alert
+            title="Seu benchmark pode ser recalculado com o Score v2"
+            message="Atualizamos o sistema de pontuação do benchmark. Execute o benchmark de novo para obter um resultado Score v2 atualizado no ranking da comunidade."
+            type="info-inverted"
+            variant="solid"
+            className="w-full"
+            dismissible
+            onDismiss={handleDismissRerunBanner}
+            buttonProps={{
+              variant: 'primary',
+              children: 'Executar o benchmark de novo',
+              icon: 'IconRefresh',
+              onClick: () => router.visit('/settings/benchmark'),
+            }}
           />
         </div>
-      </div>
-
-      {appItems.length > 0 && (
-        <section aria-label="Aplicativos" className="px-4 pt-4">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Aplicativos</h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">{appItems.map(renderTile)}</div>
-        </section>
       )}
 
-      {systemItems.length > 0 && (
-        <section aria-label="Sistema" className="px-4 pt-6">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Sistema</h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">{systemItems.map(renderTile)}</div>
-        </section>
-      )}
+      <div className="mx-auto w-full max-w-5xl px-4 pb-10 pt-8 sm:pt-12">
+        <p className="flex items-center gap-2 text-sm text-text-secondary">
+          {greeting()}
+          <span aria-hidden="true">·</span>
+          <span
+            className={classNames('size-2 rounded-full', isOnline ? 'bg-emerald-500' : 'bg-desert-orange')}
+            aria-hidden="true"
+          />
+          {isOnline ? 'Conectado à internet' : 'Sem internet, e tudo aqui continua funcionando'}
+        </p>
 
-      {visibleItems.length === 0 && (
-        <p className="px-4 py-10 text-center text-sm text-text-muted">Nenhum aplicativo encontrado para essa busca.</p>
-      )}
-
-      {!term && (
-        <div className="px-4 pt-3 pb-6">
-          <button
-            type="button"
-            onClick={() => {
-              setEditingTile(null)
-              setLinkModalOpen(true)
+        <label className="mt-3 flex items-center gap-3 border-b-2 border-border-default pb-2 transition-colors focus-within:border-desert-green">
+          <IconSearch size={26} aria-hidden="true" className="shrink-0 text-text-muted" />
+          <span className="sr-only">Buscar ou perguntar</span>
+          <input
+            ref={inputRef}
+            type="search"
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value)
+              setActiveIndex(0)
             }}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border-default px-4 py-3 text-sm font-medium text-text-secondary transition-colors hover:border-desert-green hover:text-text-primary"
-          >
-            <IconPlus size={18} aria-hidden="true" />
-            Adicionar um link
-            <span className="hidden font-normal text-text-muted sm:inline">— um atalho para outro endereço da sua rede</span>
-          </button>
-        </div>
-      )}
+            onKeyDown={handleSearchKey}
+            placeholder="Do que você precisa?"
+            className="w-full !rounded-none border-0 bg-transparent p-0 text-2xl font-semibold text-text-primary placeholder:font-normal placeholder:text-text-muted focus:outline-none focus:ring-0 sm:text-3xl"
+          />
+        </label>
+        {!term && (
+          <p className="mt-2 text-sm text-text-muted">
+            Digite um aplicativo, um medicamento ou uma pergunta para a IA.
+          </p>
+        )}
+        {!term && (
+          <div className="mt-3">
+            <AiModeSwitch />
+          </div>
+        )}
 
-      {linkError && (
-        <div className="px-4 pb-4">
-          <Alert title={linkError} type="error" variant="solid" className="w-full" />
-        </div>
-      )}
+        {term ? (
+          <div className="mt-4">
+            {flatRows.length > 0 ? (
+              <ul aria-label="Resultados">{flatRows.map(renderRow)}</ul>
+            ) : (
+              <p className="py-10 text-center text-sm text-text-muted">Nada encontrado para essa busca.</p>
+            )}
+            <p className="mt-3 hidden text-xs text-text-muted sm:block">
+              ↑ ↓ para escolher · Enter para abrir · Esc para limpar
+            </p>
+          </div>
+        ) : (
+          <>
+            <ul aria-label="Aplicativos" className="mt-6 grid grid-cols-1 gap-x-10 md:grid-cols-2">
+              {appRows.map(renderRow)}
+            </ul>
+            <nav aria-label="Sistema" className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+              {systemItems.map((item) => (
+                <Link key={item.label} href={item.to} className="text-text-secondary hover:text-desert-green">
+                  {item.label}
+                  {item.label === 'Configuração rápida' && shouldHighlightEasySetup && (
+                    <span className="ml-1.5 text-xs font-semibold text-desert-orange">Comece aqui</span>
+                  )}
+                </Link>
+              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingTile(null)
+                  setLinkModalOpen(true)
+                }}
+                className="flex items-center gap-1 text-text-secondary hover:text-desert-green"
+              >
+                <IconPlus size={15} aria-hidden="true" />
+                Adicionar um link
+              </button>
+            </nav>
+          </>
+        )}
+
+        {linkError && (
+          <div className="pt-4">
+            <Alert title={linkError} type="error" variant="solid" className="w-full" />
+          </div>
+        )}
+      </div>
 
       <LinkTileModal
         open={linkModalOpen}

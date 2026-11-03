@@ -12,6 +12,7 @@ import ConditionsController from '#controllers/conditions_controller'
 import DocsController from '#controllers/docs_controller'
 import DrugReferenceController from '#controllers/drug_reference_controller'
 import MedicinesController from '#controllers/medicines_controller'
+import AiConnectionsController from '#controllers/ai_connections_controller'
 import DownloadsController from '#controllers/downloads_controller'
 import EasySetupController from '#controllers/easy_setup_controller'
 import HomeController from '#controllers/home_controller'
@@ -843,6 +844,26 @@ router
     })
   })
   .prefix('/api/benchmark')
+
+// Battery mode, the online services and the Jarvis agent. Keys go in here and never come back.
+router.get('/jarvis', [AiConnectionsController, 'page'])
+router
+  .group(() => {
+    router.get('/status', [AiConnectionsController, 'status'])
+    router.put('/mode', [AiConnectionsController, 'setMode'])
+    router.post('/openai/key', [AiConnectionsController, 'saveOpenAiKey'])
+    router.delete('/openai/key', [AiConnectionsController, 'removeOpenAiKey'])
+    router.get('/openai/models', [AiConnectionsController, 'openAiModels'])
+    router.put('/openai/model', [AiConnectionsController, 'setOpenAiModel'])
+    router.post('/voice/key', [AiConnectionsController, 'saveVoiceKey'])
+    router.delete('/voice/key', [AiConnectionsController, 'removeVoiceKey'])
+    router.get('/voice/voices', [AiConnectionsController, 'voices'])
+    router.put('/voice/voice', [AiConnectionsController, 'setVoice'])
+    router.put('/voice/enabled', [AiConnectionsController, 'setVoiceEnabled'])
+    router.post('/voice/speak', [AiConnectionsController, 'speak'])
+    router.post('/jarvis/chat', [AiConnectionsController, 'jarvisChat'])
+  })
+  .prefix('/api/ai')
 
 // Medicines sold in Brazil, read from the file bundled with the app.
 router.get('/medicamentos', [MedicinesController, 'index'])
