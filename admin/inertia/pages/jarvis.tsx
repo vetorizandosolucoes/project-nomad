@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {
   IconBookmark,
+  IconMicrophone,
   IconPlayerPlay,
   IconPlugConnected,
   IconRobot,
@@ -14,6 +15,7 @@ import {
 } from '@tabler/icons-react'
 import AppLayout from '~/layouts/AppLayout'
 import AiModeSwitch, { AI_STATUS_KEY, aiRequest, useAiStatus } from '~/components/AiModeSwitch'
+import JarvisVoice from '~/components/JarvisVoice'
 
 type Source = { title: string; date?: string; source?: string }
 type Turn = { role: 'user' | 'assistant'; content: string; sources?: Source[] }
@@ -226,6 +228,7 @@ export default function JarvisPage({ available }: { available: boolean }) {
   const [input, setInput] = useState('')
   const [speak, setSpeak] = useState(readSpeakPreference)
   const [savedAt, setSavedAt] = useState<number | null>(null)
+  const [talking, setTalking] = useState(false)
   const endRef = useRef<HTMLDivElement>(null)
   const online = status?.effective === 'online'
 
@@ -306,17 +309,35 @@ export default function JarvisPage({ available }: { available: boolean }) {
   return (
     <AppLayout compact>
       <Head title="Jarvis" />
+      {talking && (
+        <JarvisVoice
+          turns={turns}
+          setTurns={setTurns}
+          useCloudVoice={!!status?.voice.configured && !!status.voice.enabled}
+          onClose={() => setTalking(false)}
+        />
+      )}
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pt-6">
         <div className="flex items-center gap-3">
           <IconRobot size={30} className="text-desert-green" aria-hidden="true" />
           <h1 className="text-2xl font-semibold text-text-primary">Jarvis</h1>
+          {available && online && (
+            <button
+              type="button"
+              onClick={() => setTalking(true)}
+              className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-desert-green px-3 py-1.5 text-sm font-medium text-white hover:opacity-90"
+            >
+              <IconMicrophone size={18} aria-hidden="true" />
+              Conversar por voz
+            </button>
+          )}
           <button
             type="button"
             onClick={toggleSpeak}
             aria-pressed={speak}
             title={speak ? 'Desligar a voz' : 'Ouvir as respostas'}
             aria-label={speak ? 'Desligar a voz' : 'Ouvir as respostas'}
-            className="ml-auto text-text-secondary hover:text-desert-green"
+            className={`${available && online ? '' : 'ml-auto '}text-text-secondary hover:text-desert-green`}
           >
             {speak ? <IconVolume size={22} /> : <IconVolumeOff size={22} />}
           </button>

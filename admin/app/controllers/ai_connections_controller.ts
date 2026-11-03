@@ -108,6 +108,6 @@ export default class AiConnectionsController {
     if (!Array.isArray(messages) || messages.length === 0) {
       return response.status(422).send({ message: 'Envie uma mensagem.' })
     }
-    return this.guarded(response, () => this.jarvis.chat(messages))
+    return this.guarded(response, () => this.jarvis.chat(messages, { spoken: request.input('spoken') === true }))
   }
 }

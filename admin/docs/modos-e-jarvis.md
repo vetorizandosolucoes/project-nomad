@@ -56,3 +56,22 @@ Os modelos foram escolhidos em um teste com 18 perguntas de emergência e pela l
 Você pode escolher outro modelo na lista do Assistente de IA. Ao trocar de modo, a escolha volta ao modelo recomendado.
 
 Nenhum desses modelos substitui um profissional. O sistema entrega contas, a data de hoje e os telefones de emergência do Brasil já prontos, mas o restante vem do modelo e pode ter erros.
+
+## Programa para Windows
+
+O atalho **Vetorizando NOMAD**, na Área de Trabalho e no menu Iniciar, liga o sistema e abre tudo em uma janela própria. Ele fica como um ícone perto do relógio:
+
+- **Abrir:** abre a janela, ligando o sistema se precisar.
+- **Desligar o sistema:** desliga os serviços e o Ubuntu para poupar bateria. O sistema só volta quando você abrir o programa de novo.
+- **Fechar este ícone:** tira o ícone, e o sistema continua ligado.
+
+O programa precisa do sistema já instalado neste computador. Para recriá-lo, rode `install/windows/build.ps1`.
+
+## Conversa por voz
+
+Na tela do Jarvis, toque em **Conversar por voz** e libere o microfone. Depois é só falar: ele responde em voz alta, em poucas frases. Para interromper, fale por cima ou toque no círculo. O círculo fica azul quando ouve, âmbar quando pensa e claro quando fala.
+
+- **Precisa de internet:** a fala é reconhecida pelo serviço do navegador, então o áudio passa por esse serviço (Microsoft no Edge, Google no Chrome). Sem microfone ou sem esse serviço, dá para digitar na mesma tela.
+- **Velocidade:** com a chave da OpenAI, a conversa falada usa o GPT, e as perguntas e os trechos consultados vão para a OpenAI. Sem a chave, usa o modelo local.
+- **Voz:** com a chave da ElevenLabs e uma voz escolhida, ele fala com essa voz. Sem elas, usa a voz do navegador.
+- **Emergências:** ele continua dando todos os passos essenciais, mesmo sendo uma conversa curta. Não substitui o SAMU (192).
