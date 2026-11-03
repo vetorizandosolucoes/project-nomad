@@ -1,0 +1,10 @@
+[Unit]
+Description=Devolve ao Windows a memoria usada so como cache
+
+[Service]
+Type=oneshot
+# Files stay on disk and running programs keep what they have mapped. Measured: Windows got more
+# than 1 GB back within 30 s, which WSL otherwise holds on to until Windows runs short.
+ExecStart=/bin/sh -c 'sync; echo 1 > /proc/sys/vm/drop_caches'
+Nice=19
+IOSchedulingClass=idle

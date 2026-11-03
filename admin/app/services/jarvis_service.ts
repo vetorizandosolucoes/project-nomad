@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core'
 import logger from '@adonisjs/core/services/logger'
 import { AiConnectionsService, ConnectionError } from '#services/ai_connections_service'
 import { DockerService } from '#services/docker_service'
+import { JarvisMemoryService } from '#services/jarvis_memory_service'
 import { OllamaService } from '#services/ollama_service'
 import { RagPipelineService } from '#services/rag_pipeline_service'
 import KVStore from '#models/kv_store'
@@ -21,6 +22,8 @@ import {
   urgentSpokenPrompt,
 } from '../utils/jarvis.js'
 import { hasRedFlag, hasSelfHarmRisk } from '../utils/health_lookup.js'
+import { asksWhatItKnows, forgetCommand, isSensitive, memoryPrompt, rememberCommand } from '../utils/jarvis_memory.js'
+import { greetingFor, normalizePersona, parsePersona, preferenceCommand, type Persona } from '../utils/jarvis_persona.js'
 import { classifyLookup, lookUp, type LookupKind } from '../utils/web_lookup.js'
 import { buildCitations } from '../utils/rag_prompt.js'
 import type { EffectiveAiMode } from '../utils/ai_modes.js'
@@ -32,8 +35,9 @@ const MAX_SPOKEN_ANSWER_TOKENS = 400
 const MAX_SPOKEN_HISTORY = 12
 const SPOKEN_TOP_K = 3
 const RECENT_QUESTIONS_FOR_RISK = 3
-// Loading a model takes 10 to 15 s, so it stays in memory between one sentence and the next.
-const SPOKEN_KEEP_ALIVE = '15m'
+// Loading a model takes 10 to 15 s, so it stays in memory during a conversation. Not much longer:
+// it holds about 2 GB of RAM, and calling Jarvis starts loading it again before the first question.
+const SPOKEN_KEEP_ALIVE = '5m'
 
 export type TalkEvent =
   | { lookup: LookupKind }
@@ -50,6 +54,7 @@ export class JarvisService {
   constructor(
     private connections: AiConnectionsService,
     private docker: DockerService,
+    private memory: JarvisMemoryService,
     private ollama: OllamaService,
     private pipeline: RagPipelineService
   ) {}
@@ -83,6 +88,50 @@ export class JarvisService {
       await new Promise((resolve) => setTimeout(resolve, 1000))
     }
     throw new ConnectionError('O Jarvis não respondeu. Tente de novo em instantes.')
+  }
+
+  async persona(): Promise<Persona> {
+    return parsePersona(await KVStore.getValue('jarvis.persona'))
+  }
+
+  async savePersona(value: unknown): Promise<Persona> {
+    const persona = normalizePersona(value)
+    await KVStore.setValue('jarvis.persona', JSON.stringify(persona))
+    return persona
+  }
+
+  async greeting(): Promise<string | null> {
+    const hour = Number(new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit' }))
+    return greetingFor(await this.persona(), hour)
+  }
+
+  /** What's said in so many words doesn't go through a model, so it can't be misunderstood. */
+  private async memoryOrder(question: string): Promise<string | null> {
+    const preference = preferenceCommand(question)
+    if (preference) {
+      await this.savePersona({ ...(await this.persona()), ...preference.patch })
+      return preference.reply
+    }
+    const remember = rememberCommand(question)
+    if (remember) {
+      if (isSensitive(remember)) {
+        return 'Isso eu prefiro não guardar sozinho. Se quiser mesmo, adicione na tela do Jarvis.'
+      }
+      await this.memory.add('fact', remember, 'user')
+      return 'Pode deixar, vou lembrar disso.'
+    }
+    const forget = forgetCommand(question)
+    if (forget) {
+      const erased = await this.memory.forget(forget)
+      return erased ? `Pronto, esqueci: ${erased}` : 'Não encontrei nada parecido na minha memória.'
+    }
+    if (asksWhatItKnows(question)) {
+      const known = await this.memory.list().limit(8)
+      return known.length > 0
+        ? `O que eu lembro: ${known.map((memory) => memory.content).join(' ')}`
+        : 'Ainda não guardei nada sobre você.'
+    }
+    return null
   }
 
   private async spokenModel(): Promise<string> {
@@ -128,7 +177,24 @@ export class JarvisService {
     // A crisis doesn't end with the sentence that revealed it, so recent questions count too.
     const crisis = questions.slice(-RECENT_QUESTIONS_FOR_RISK).some(hasSelfHarmRisk)
     const urgent = crisis || hasRedFlag(question)
-    const system: OllamaChatMessage[] = [{ role: 'system', content: urgent ? urgentSpokenPrompt(now) : spokenPrompt(now) }]
+    const model = await this.spokenModel()
+
+    if (!urgent) {
+      const order = await this.memoryOrder(question)
+      if (order) {
+        yield { delta: order }
+        yield { done: true, model, sources: [] }
+        return
+      }
+    }
+
+    const system: OllamaChatMessage[] = [
+      { role: 'system', content: urgent ? urgentSpokenPrompt(now) : spokenPrompt(now, await this.persona()) },
+    ]
+    if (!urgent) {
+      const remembered = memoryPrompt(await this.memory.relevantTo(question))
+      if (remembered) system.push({ role: 'system', content: remembered })
+    }
     if (hasSelfHarmRisk(question)) yield { delta: CRISIS_OPENING }
 
     // Small models only obey what sits right next to the question.
@@ -145,7 +211,6 @@ export class JarvisService {
       system.push({ role: 'system', content: await lookUp(kind, question) })
     }
 
-    const model = await this.spokenModel()
     const ragEnabled = (await KVStore.getValue('rag.enabled')) ?? true
     const trace = await this.pipeline.buildPrompt([...system, ...conversation] as OllamaChatMessage[], model, {
       // Live data answers a lookup, and passages from the library would only get in its way.
@@ -190,6 +255,8 @@ export class JarvisService {
       }
     }
     yield { done: true, model: usedModel, sources }
+
+    if (!crisis && !urgent) void this.memory.learnFrom(question, model, trace.numCtx, SPOKEN_KEEP_ALIVE)
   }
 
   async chat(rawMessages: unknown[]) {

@@ -1,10 +1,13 @@
 #!/bin/bash
 # What the "Desligar Vetorizando NOMAD" shortcut runs. Stopping the Docker daemon, not the
 # containers, closes the databases cleanly and brings back on the next start what was on.
-export WSL_INTEROP="${WSL_INTEROP:-$(ls -t /run/WSL/*_interop 2>/dev/null | head -1)}"
+. "$(dirname "$(readlink -f "$0")")/interop.sh"
 
-read -r -p "Desligar o sistema, a IA e o Ubuntu? (s/n) " answer
-[ "$answer" = "s" ] || [ "$answer" = "S" ] || exit 0
+# The icon by the clock has already asked.
+if [ "$1" != "--confirmado" ]; then
+  read -r -p "Desligar o sistema, a IA e o Ubuntu? (s/n) " answer
+  [ "$answer" = "s" ] || [ "$answer" = "S" ] || exit 0
+fi
 
 echo "Desligando..."
 cd /mnt/c/Windows || exit 1

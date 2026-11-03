@@ -1,6 +1,8 @@
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
+import logger from '@adonisjs/core/services/logger'
 import { AiConnectionsService, ConnectionError } from '#services/ai_connections_service'
+import { JarvisMemoryService } from '#services/jarvis_memory_service'
 import { JarvisService } from '#services/jarvis_service'
 import { parseAiMode } from '../utils/ai_modes.js'
 
@@ -8,7 +10,8 @@ import { parseAiMode } from '../utils/ai_modes.js'
 export default class AiConnectionsController {
   constructor(
     private connections: AiConnectionsService,
-    private jarvis: JarvisService
+    private jarvis: JarvisService,
+    private memory: JarvisMemoryService
   ) {}
 
   /** Runs an action that talks to an online service, turning its failures into a 502. */
@@ -103,8 +106,67 @@ export default class AiConnectionsController {
     })
   }
 
+  async persona() {
+    return this.jarvis.persona()
+  }
+
+  async savePersona({ request }: HttpContext) {
+    return this.jarvis.savePersona(request.only(['mode', 'name', 'address', 'humor', 'formality', 'detail', 'voiceSpeed', 'greets', 'showHeard', 'showAnswer']))
+  }
+
+  async greeting() {
+    return { text: await this.jarvis.greeting() }
+  }
+
+  async memories() {
+    return { enabled: await this.memory.isEnabled(), memories: await this.memory.list() }
+  }
+
+  async addMemory({ request, response }: HttpContext) {
+    const content = String(request.input('content', '')).trim().slice(0, 300)
+    if (!content) return response.status(422).send({ message: 'Escreva o que devo lembrar.' })
+    return this.memory.add('fact', content, 'user')
+  }
+
+  async removeMemory({ params, response }: HttpContext) {
+    return (await this.memory.remove(Number(params.id)))
+      ? { success: true }
+      : response.status(404).send({ message: 'Memória não encontrada.' })
+  }
+
+  async clearMemories() {
+    await this.memory.clear()
+    return { success: true }
+  }
+
+  async setMemoryEnabled({ request }: HttpContext) {
+    await this.memory.setEnabled(request.input('enabled') === true)
+    return { success: true }
+  }
+
+  /** Everything the listener in Ubuntu needs, asked every few seconds. */
   async wakeState() {
-    return { listen: await this.connections.shouldListen() }
+    const { showHeard, showAnswer, voiceSpeed } = await this.jarvis.persona()
+    return {
+      listen: await this.connections.shouldListen(),
+      wakeEnabled: await this.connections.wakeEnabled(),
+      showHeard,
+      showAnswer,
+      voiceSpeed,
+    }
+  }
+
+  /** The icon by the clock changes one option at a time. */
+  async setWakeOptions({ request }: HttpContext) {
+    const { wakeEnabled, showHeard, showAnswer } = request.only(['wakeEnabled', 'showHeard', 'showAnswer'])
+    if (typeof wakeEnabled === 'boolean') await this.connections.setWakeEnabled(wakeEnabled)
+    const persona = await this.jarvis.persona()
+    await this.jarvis.savePersona({
+      ...persona,
+      ...(typeof showHeard === 'boolean' ? { showHeard } : {}),
+      ...(typeof showAnswer === 'boolean' ? { showAnswer } : {}),
+    })
+    return { success: true }
   }
 
   async setWakeEnabled({ request }: HttpContext) {
@@ -144,6 +206,7 @@ export default class AiConnectionsController {
       }
     } catch (error) {
       if (!abort.signal.aborted) {
+        if (!(error instanceof ConnectionError)) logger.error(`[Jarvis] Talk failed: ${error}`)
         const message = error instanceof ConnectionError ? error.message : 'Não consegui responder agora.'
         stream.write(`${JSON.stringify({ error: message })}\n`)
       }

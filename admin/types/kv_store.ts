@@ -12,6 +12,8 @@ export const KV_STORE_SCHEMA = {
   'voice.elevenLabsVoiceName':  'string',
   'voice.enabled':              'boolean',
   'voice.wakeEnabled':          'boolean',
+  'jarvis.persona':             'string',
+  'jarvis.memoryEnabled':       'boolean',
   'chat.lastModel':             'string',
   'rag.docsEmbedded':           'boolean',
   'rag.defaultIngestPolicy':    'string',

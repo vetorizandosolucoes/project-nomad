@@ -1,5 +1,5 @@
 [Unit]
-Description=Escuta da palavra "Jarvis"
+Description=Assistente de voz Jarvis
 After=docker.service
 
 [Service]
@@ -7,7 +7,6 @@ Environment=PULSE_SERVER=unix:/mnt/wslg/PulseServer
 ExecStart=/opt/project-nomad/wake/venv/bin/python /opt/project-nomad/wake/listener.py
 Restart=always
 RestartSec=5
-Nice=10
 
 [Install]
 WantedBy=multi-user.target

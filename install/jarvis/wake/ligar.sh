@@ -1,7 +1,7 @@
 #!/bin/bash
 # What the "Vetorizando NOMAD" shortcut runs: turns everything on, waits for it, opens the window.
 here="$(dirname "$(readlink -f "$0")")"
-export WSL_INTEROP="${WSL_INTEROP:-$(ls -t /run/WSL/*_interop 2>/dev/null | head -1)}"
+. "$here/interop.sh"
 
 cd /mnt/c/Windows || exit 1
 # "Desligar" turns these off, and opening the system again turns them back on.

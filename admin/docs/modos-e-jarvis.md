@@ -59,7 +59,7 @@ Nenhum desses modelos substitui um profissional. O sistema entrega contas, a dat
 
 ## Aplicativo no Windows
 
-O sistema pode ser instalado como aplicativo, com janela, ícone e entrada próprios no menu Iniciar. Na tela inicial, toque em **Instalar como aplicativo**. Depois disso, a palavra "Jarvis" abre a conversa dentro dele.
+O sistema pode ser instalado como aplicativo, com janela, ícone e entrada próprios no menu Iniciar. Na tela inicial, toque em **Instalar como aplicativo**. 
 
 - **Vetorizando NOMAD:** abre o aplicativo. O sistema já liga junto com o Windows.
 - **Ligar Vetorizando NOMAD:** liga o sistema depois de um desligamento e abre o aplicativo.
@@ -67,7 +67,31 @@ O sistema pode ser instalado como aplicativo, com janela, ícone e entrada próp
 
 Os atalhos de ligar e desligar são criados por `install/jarvis/wake/install_wake.sh`.
 
-## Conversa por voz
+## Falar com o Jarvis de qualquer lugar
+
+Diga "Jarvis" e faça uma pausa, como com a Alexa. Você ouve um sinal, e uma animação sem fundo aparece no canto da tela, por cima do que estiver aberto, sem tirar o foco do que você está fazendo. Fale: o que você diz vai aparecendo enquanto você fala, e ele responde em voz alta, com a legenda. Depois da resposta, ele fica ouvindo por alguns segundos; se ninguém falar, a animação some.
+
+O Jarvis fica no ícone perto do relógio, mesmo com o aplicativo fechado. Pelo ícone, você abre o aplicativo, fala com ele, liga ou desliga a escuta, escolhe se quer ver o que você fala e a resposta, e finaliza tudo.
+
+- **Interromper:** diga "Jarvis" enquanto ele fala, ou clique na animação para encerrar. Para encerrar por voz, diga "obrigado" ou "tchau".
+- **Privacidade:** a palavra, a sua fala e a voz dele são processadas no próprio computador, e o áudio não sai dele. O texto da pergunta só sai quando você usa o GPT ou pede notícias, clima e cotações.
+- **Quando funciona:** nos modos Online e Automático com internet. Dá para desligar na tela do Jarvis.
+- **Emergências:** ele dá todos os passos essenciais, mas não substitui o SAMU (192).
+
+## Personalidade e memória
+
+Na tela do Jarvis, em **Personalidade e memória**, você escolhe o modo (Mordomo elegante, Amigável, Profissional, Engraçado, Futurista, Gênio da tecnologia, Assistente corporativo ou Coach motivacional), o nome dele, como ele chama você, o humor, a formalidade, o tamanho das respostas e a velocidade da voz. Em emergências, ele deixa o estilo de lado.
+
+Também dá para pedir falando: "me chame de Ana", "fale mais devagar", "responda mais curto", "seja mais formal", "sem piadas" ou "mude para o modo futurista". O pedido vale para as próximas conversas. A palavra para chamar continua sendo "Jarvis", mesmo se você mudar o nome dele.
+
+O Jarvis lembra de você entre as conversas:
+
+- **Pedindo:** diga "lembre que..." para guardar, "esqueça que..." para apagar e "o que você sabe sobre mim?" para ouvir.
+- **Sozinho:** quando você conta algo duradouro sobre si, como o nome, um gosto ou um projeto, ele pode guardar. Às vezes ele guarda errado, então vale conferir a lista.
+- **Controle:** na mesma tela, você vê, adiciona e apaga tudo, ou desliga a memória.
+- **Privacidade:** fica só neste computador. Saúde, senhas, documentos e dados financeiros não são guardados sozinhos. Com o GPT ligado, as memórias ligadas à pergunta vão junto para a OpenAI.
+
+## Conversa por voz na tela
 
 Na tela do Jarvis, toque em **Conversar por voz** e libere o microfone. Depois é só falar: ele responde em voz alta, em poucas frases. Para interromper, fale por cima ou toque no círculo. O círculo fica azul quando ouve, âmbar quando pensa e claro quando fala.
 
@@ -75,5 +99,4 @@ Na tela do Jarvis, toque em **Conversar por voz** e libere o microfone. Depois �
 - **Velocidade:** a resposta é falada frase a frase, enquanto é gerada. A primeira resposta pode demorar uns 15 s, enquanto o modelo carrega. Com a chave da OpenAI, a conversa usa o GPT, e as perguntas e os trechos consultados vão para a OpenAI. Sem a chave, usa o modelo local.
 - **Notícias, clima e cotações:** ele consulta a internet na hora (Google Notícias, wttr.in e AwesomeAPI). Os termos da pergunta vão para esses serviços.
 - **Voz:** com a chave da ElevenLabs e uma voz escolhida, ele fala com essa voz. Sem elas, usa a voz mais natural do navegador; no Edge, ela é online, e o texto passa pela Microsoft.
-- **Chamando pelo nome:** diga "Jarvis" e faça uma pausa. Você ouve um sinal, e a conversa abre. A palavra é reconhecida no próprio computador, sem enviar áudio. Ela fecha depois de 45 segundos sem ninguém falar; só enquanto ela está aberta a fala passa pelo serviço do navegador. Funciona nos modos Online e Automático com internet, e dá para desligar na tela do Jarvis.
 - **Emergências:** ele continua dando todos os passos essenciais, mesmo sendo uma conversa curta. Não substitui o SAMU (192).

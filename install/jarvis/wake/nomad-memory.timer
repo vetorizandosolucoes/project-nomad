@@ -1,0 +1,9 @@
+[Unit]
+Description=Devolve a memoria parada ao Windows a cada 3 minutos
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=3min
+
+[Install]
+WantedBy=timers.target

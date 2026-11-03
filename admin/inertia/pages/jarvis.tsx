@@ -15,6 +15,7 @@ import {
 } from '@tabler/icons-react'
 import AppLayout from '~/layouts/AppLayout'
 import AiModeSwitch, { AI_STATUS_KEY, aiRequest, useAiStatus } from '~/components/AiModeSwitch'
+import JarvisProfile from '~/components/JarvisProfile'
 import JarvisVoice from '~/components/JarvisVoice'
 
 type Source = { title: string; date?: string; source?: string }
@@ -237,7 +238,7 @@ function WakeSwitch() {
         disabled={toggle.isPending}
         onChange={(event) => toggle.mutate(event.target.checked)}
       />
-      Ouvir "Jarvis" em segundo plano (no próprio computador, sem enviar áudio)
+      Atender quando eu disser "Jarvis" (no próprio computador, sem enviar áudio)
     </label>
   )
 }
@@ -374,6 +375,7 @@ export default function JarvisPage({ available }: { available: boolean }) {
           <AiModeSwitch />
         </div>
         {available && <WakeSwitch />}
+        <JarvisProfile />
         <Connections />
 
         {!available ? (
