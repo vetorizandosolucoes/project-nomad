@@ -20,6 +20,7 @@ import type { PipelineOptions, PipelineTrace, RetrievalFloorStats, RetrievedChun
 import { planPrompt } from '../utils/context_budget.js'
 import { estimateMessagesTokens } from '../utils/token_estimate.js'
 import { resolveMinFinalScore } from '../utils/rag_relevance.js'
+import { firstAidNote } from '../utils/health_lookup.js'
 import { resolveTasksModel } from '../utils/tasks_model.js'
 import {
   asksAboutTheApp,
@@ -225,6 +226,9 @@ export class RagPipelineService {
       if (health) {
         relevantDocs = relevantDocs.filter((doc) => !isTravelGuide(doc))
       }
+
+      const firstAid = firstAidNote(query.content)
+      if (firstAid) notes.push(firstAid)
 
       const solved = solveArithmetic(query.content)
       if (solved.length > 0) {

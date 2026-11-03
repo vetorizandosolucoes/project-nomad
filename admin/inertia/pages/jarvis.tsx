@@ -222,13 +222,37 @@ function Connections() {
   )
 }
 
+function WakeSwitch() {
+  const queryClient = useQueryClient()
+  const { data: status } = useAiStatus()
+  const toggle = useMutation({
+    mutationFn: (enabled: boolean) => aiRequest('PUT', '/jarvis/wake-enabled', { enabled }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: AI_STATUS_KEY }),
+  })
+  return (
+    <label className="mt-3 flex items-center gap-2 text-sm text-text-secondary">
+      <input
+        type="checkbox"
+        checked={status?.voice.wakeEnabled ?? true}
+        disabled={toggle.isPending}
+        onChange={(event) => toggle.mutate(event.target.checked)}
+      />
+      Ouvir "Jarvis" em segundo plano (no próprio computador, sem enviar áudio)
+    </label>
+  )
+}
+
 export default function JarvisPage({ available }: { available: boolean }) {
   const { data: status } = useAiStatus()
   const [turns, setTurns] = useState<Turn[]>([])
   const [input, setInput] = useState('')
   const [speak, setSpeak] = useState(readSpeakPreference)
   const [savedAt, setSavedAt] = useState<number | null>(null)
-  const [talking, setTalking] = useState(false)
+  // Opened by the word "Jarvis": the conversation starts by itself and closes itself afterwards.
+  const [calledByVoice] = useState(
+    () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('voz') === '1'
+  )
+  const [talking, setTalking] = useState(calledByVoice)
   const endRef = useRef<HTMLDivElement>(null)
   const online = status?.effective === 'online'
 
@@ -314,7 +338,11 @@ export default function JarvisPage({ available }: { available: boolean }) {
           turns={turns}
           setTurns={setTurns}
           useCloudVoice={!!status?.voice.configured && !!status.voice.enabled}
-          onClose={() => setTalking(false)}
+          handsFree={calledByVoice}
+          onClose={() => {
+            setTalking(false)
+            if (calledByVoice) window.close()
+          }}
         />
       )}
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pt-6">
@@ -345,6 +373,7 @@ export default function JarvisPage({ available }: { available: boolean }) {
         <div className="mt-3">
           <AiModeSwitch />
         </div>
+        {available && <WakeSwitch />}
         <Connections />
 
         {!available ? (

@@ -57,21 +57,23 @@ Você pode escolher outro modelo na lista do Assistente de IA. Ao trocar de modo
 
 Nenhum desses modelos substitui um profissional. O sistema entrega contas, a data de hoje e os telefones de emergência do Brasil já prontos, mas o restante vem do modelo e pode ter erros.
 
-## Programa para Windows
+## Aplicativo no Windows
 
-O atalho **Vetorizando NOMAD**, na Área de Trabalho e no menu Iniciar, liga o sistema e abre tudo em uma janela própria. Ele fica como um ícone perto do relógio:
+O sistema pode ser instalado como aplicativo, com janela, ícone e entrada próprios no menu Iniciar. Na tela inicial, toque em **Instalar como aplicativo**. Depois disso, a palavra "Jarvis" abre a conversa dentro dele.
 
-- **Abrir:** abre a janela, ligando o sistema se precisar.
-- **Desligar o sistema:** desliga os serviços e o Ubuntu para poupar bateria. O sistema só volta quando você abrir o programa de novo.
-- **Fechar este ícone:** tira o ícone, e o sistema continua ligado.
+- **Vetorizando NOMAD:** abre o aplicativo. O sistema já liga junto com o Windows.
+- **Ligar Vetorizando NOMAD:** liga o sistema depois de um desligamento e abre o aplicativo.
+- **Desligar Vetorizando NOMAD:** desliga os serviços e o Ubuntu para poupar bateria. Pede confirmação, e o sistema só volta com o atalho **Ligar**.
 
-O programa precisa do sistema já instalado neste computador. Para recriá-lo, rode `install/windows/build.ps1`.
+Os atalhos de ligar e desligar são criados por `install/jarvis/wake/install_wake.sh`.
 
 ## Conversa por voz
 
 Na tela do Jarvis, toque em **Conversar por voz** e libere o microfone. Depois é só falar: ele responde em voz alta, em poucas frases. Para interromper, fale por cima ou toque no círculo. O círculo fica azul quando ouve, âmbar quando pensa e claro quando fala.
 
 - **Precisa de internet:** a fala é reconhecida pelo serviço do navegador, então o áudio passa por esse serviço (Microsoft no Edge, Google no Chrome). Sem microfone ou sem esse serviço, dá para digitar na mesma tela.
-- **Velocidade:** com a chave da OpenAI, a conversa falada usa o GPT, e as perguntas e os trechos consultados vão para a OpenAI. Sem a chave, usa o modelo local.
-- **Voz:** com a chave da ElevenLabs e uma voz escolhida, ele fala com essa voz. Sem elas, usa a voz do navegador.
+- **Velocidade:** a resposta é falada frase a frase, enquanto é gerada. A primeira resposta pode demorar uns 15 s, enquanto o modelo carrega. Com a chave da OpenAI, a conversa usa o GPT, e as perguntas e os trechos consultados vão para a OpenAI. Sem a chave, usa o modelo local.
+- **Notícias, clima e cotações:** ele consulta a internet na hora (Google Notícias, wttr.in e AwesomeAPI). Os termos da pergunta vão para esses serviços.
+- **Voz:** com a chave da ElevenLabs e uma voz escolhida, ele fala com essa voz. Sem elas, usa a voz mais natural do navegador; no Edge, ela é online, e o texto passa pela Microsoft.
+- **Chamando pelo nome:** diga "Jarvis" e faça uma pausa. Você ouve um sinal, e a conversa abre. A palavra é reconhecida no próprio computador, sem enviar áudio. Ela fecha depois de 45 segundos sem ninguém falar; só enquanto ela está aberta a fala passa pelo serviço do navegador. Funciona nos modos Online e Automático com internet, e dá para desligar na tela do Jarvis.
 - **Emergências:** ele continua dando todos os passos essenciais, mesmo sendo uma conversa curta. Não substitui o SAMU (192).

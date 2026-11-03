@@ -103,11 +103,59 @@ export default class AiConnectionsController {
     })
   }
 
+  async wakeState() {
+    return { listen: await this.connections.shouldListen() }
+  }
+
+  async setWakeEnabled({ request }: HttpContext) {
+    await this.connections.setWakeEnabled(request.input('enabled') === true)
+    return { success: true }
+  }
+
+  async conversationPing({ request }: HttpContext) {
+    this.connections.noteConversation(request.input('open') === true)
+    return { success: true }
+  }
+
+  async jarvisWarmUp({ response }: HttpContext) {
+    return this.guarded(response, async () => {
+      await this.jarvis.warmUp()
+      return { success: true }
+    })
+  }
+
+  /** One JSON event per line, so the browser can start speaking the first finished sentence. */
+  async jarvisTalk({ request, response }: HttpContext) {
+    const messages = request.input('messages')
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return response.status(422).send({ message: 'Envie uma mensagem.' })
+    }
+
+    const stream = response.response
+    stream.setHeader('Content-Type', 'application/x-ndjson')
+    stream.setHeader('Cache-Control', 'no-cache')
+    stream.flushHeaders()
+
+    const abort = new AbortController()
+    stream.on('close', () => abort.abort())
+    try {
+      for await (const event of this.jarvis.talk(messages, abort.signal)) {
+        stream.write(`${JSON.stringify(event)}\n`)
+      }
+    } catch (error) {
+      if (!abort.signal.aborted) {
+        const message = error instanceof ConnectionError ? error.message : 'Não consegui responder agora.'
+        stream.write(`${JSON.stringify({ error: message })}\n`)
+      }
+    }
+    stream.end()
+  }
+
   async jarvisChat({ request, response }: HttpContext) {
     const messages = request.input('messages')
     if (!Array.isArray(messages) || messages.length === 0) {
       return response.status(422).send({ message: 'Envie uma mensagem.' })
     }
-    return this.guarded(response, () => this.jarvis.chat(messages, { spoken: request.input('spoken') === true }))
+    return this.guarded(response, () => this.jarvis.chat(messages))
   }
 }

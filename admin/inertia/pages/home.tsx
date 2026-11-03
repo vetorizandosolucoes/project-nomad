@@ -28,6 +28,7 @@ import { IconArrowRight, IconExternalLink, IconPencil, IconPlus, IconSearch, Ico
 import classNames from 'classnames'
 import { useEffect, useRef, useState } from 'react'
 import AiModeSwitch, { useAiStatus } from '~/components/AiModeSwitch'
+import InstallAppButton from '~/components/InstallAppButton'
 import useInternetStatus from '~/hooks/useInternetStatus'
 import useServiceInstalledStatus from '~/hooks/useServiceInstalledStatus'
 import { tarjaLabel, type BrMedicine } from '../../app/utils/br_medicines'
@@ -538,6 +539,7 @@ export default function Home(props: {
         {!term && (
           <div className="mt-3">
             <AiModeSwitch />
+            <InstallAppButton />
           </div>
         )}
 

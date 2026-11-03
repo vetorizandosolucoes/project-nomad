@@ -1,18 +1,37 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { IconMicrophone, IconMicrophoneOff, IconSend, IconX } from '@tabler/icons-react'
-import { aiRequest } from '~/components/AiModeSwitch'
 import JarvisReactor, { type ReactorState } from '~/components/JarvisReactor'
-import { isBargeIn, isEcho, splitSentences, textForSpeech } from '../../app/utils/voice_turn'
+import { isBargeIn, isEcho, pickVoice, takeSentences, textForSpeech } from '../../app/utils/voice_turn'
 
 export type VoiceTurn = { role: 'user' | 'assistant'; content: string; sources?: { title: string }[] }
 
-type JarvisAnswer = { content: string; sources: { title: string }[] }
+type TalkEvent = {
+  lookup?: 'news' | 'weather' | 'money'
+  delta?: string
+  sources?: { title: string }[]
+  error?: string
+}
+
+const ECHO_WINDOW_MS = 2500
+// Past this, a conversation nobody asked to keep going stops sending the room's audio out.
+const HANDS_FREE_IDLE_MS = 45_000
+// While the pings keep coming, the listener in Ubuntu lets go of the microphone.
+const CONVERSATION_PING_MS = 10_000
+
+const GREETINGS = ['Oi, pode falar.', 'Pode falar.', 'Tô ouvindo.', 'Pois não?']
+
+// Said at once, because a lookup takes a few seconds and silence feels like nothing happened.
+const LOOKUP_REPLIES = {
+  news: 'Deixa eu dar uma olhada no que tá rolando.',
+  weather: 'Vou ver aqui como tá o tempo.',
+  money: 'Vou conferir a cotação de agora.',
+}
 
 const STATUS: Record<ReactorState, string> = {
   idle: 'Microfone desligado',
-  listening: 'Estou ouvindo',
-  thinking: 'Pensando',
-  speaking: 'Falando. Fale ou toque no círculo para interromper',
+  listening: 'Ouvindo',
+  thinking: 'Só um instante',
+  speaking: 'Falando',
 }
 
 // Minimal types: the browser's speech recognition isn't in the TypeScript DOM library.
@@ -45,17 +64,20 @@ export default function JarvisVoice({
   turns,
   setTurns,
   useCloudVoice,
+  handsFree,
   onClose,
 }: {
   turns: VoiceTurn[]
   setTurns: (turns: VoiceTurn[]) => void
   useCloudVoice: boolean
+  handsFree: boolean
   onClose: () => void
 }) {
   const [state, setState] = useState<ReactorState>('idle')
   const [heard, setHeard] = useState('')
   const [notice, setNotice] = useState<string | null>(null)
   const [typed, setTyped] = useState('')
+  const [caption, setCaption] = useState('')
   const [micActive, setMicActive] = useState(false)
 
   const stateRef = useRef<ReactorState>('idle')
@@ -70,7 +92,13 @@ export default function JarvisVoice({
   const micStream = useRef<MediaStream | null>(null)
   const micAnalyser = useRef<AnalyserNode | null>(null)
   const voiceAnalyser = useRef<AnalyserNode | null>(null)
-  const speechWatchdog = useRef<number | undefined>(undefined)
+  const forgetAnswer = useRef<number | undefined>(undefined)
+  const queue = useRef<string[]>([])
+  const pumping = useRef(false)
+  const streamDone = useRef(false)
+  const answerRequest = useRef<AbortController | null>(null)
+  const stopPlayback = useRef<(() => void) | null>(null)
+  const answerSoFar = useRef('')
   turnsRef.current = turns
 
   const changeState = useCallback((next: ReactorState) => {
@@ -86,98 +114,135 @@ export default function JarvisVoice({
   const restingState = useCallback((): ReactorState => (micOn.current ? 'listening' : 'idle'), [])
 
   const silence = useCallback(() => {
-    window.clearTimeout(speechWatchdog.current)
+    window.clearTimeout(forgetAnswer.current)
+    queue.current = []
+    streamDone.current = false
+    answerRequest.current?.abort()
+    answerRequest.current = null
     window.speechSynthesis?.cancel()
-    if (audio.current) {
-      audio.current.onended = null
-      audio.current.pause()
-      audio.current = null
-    }
+    audio.current?.pause()
+    audio.current = null
+    stopPlayback.current?.()
+    stopPlayback.current = null
     voiceAnalyser.current = null
   }, [])
+
+  /**
+   * After an interruption the history keeps only what really got said. A question left without
+   * an answer would make the model answer it again along with the next one.
+   */
+  const settleHistory = useCallback(() => {
+    const history = turnsRef.current
+    if (history[history.length - 1]?.role !== 'user') return
+    const settled: VoiceTurn[] = answerSoFar.current.trim()
+      ? [...history, { role: 'assistant', content: answerSoFar.current }]
+      : history.slice(0, -1)
+    answerSoFar.current = ''
+    turnsRef.current = settled
+    setTurns(settled)
+  }, [setTurns])
 
   /** Stops whatever is under way and goes back to listening. */
   const interrupt = useCallback(() => {
     askId.current++
     silence()
+    settleHistory()
     changeState(restingState())
-  }, [changeState, restingState, silence])
+  }, [changeState, restingState, settleHistory, silence])
 
-  const finishSpeaking = useCallback(
-    (id: number) => {
-      if (id !== askId.current) return
+  const playWithBrowser = useCallback(
+    (sentence: string) =>
+      new Promise<void>((resolve) => {
+        if (!('speechSynthesis' in window)) return resolve()
+        // A system with no voice installed may never report the end of the speech.
+        const watchdog = window.setTimeout(resolve, sentence.length * 150 + 4000)
+        const done = () => {
+          window.clearTimeout(watchdog)
+          resolve()
+        }
+        const utterance = new SpeechSynthesisUtterance(sentence)
+        const voice = pickVoice(window.speechSynthesis.getVoices())
+        if (voice) utterance.voice = voice
+        utterance.lang = 'pt-BR'
+        utterance.rate = 1.05
+        utterance.onend = done
+        utterance.onerror = done
+        stopPlayback.current = done
+        window.speechSynthesis.speak(utterance)
+      }),
+    []
+  )
+
+  const playWithElevenLabs = useCallback(async (sentence: string, id: number): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/ai/voice/speak', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: sentence }),
+      })
+      if (!response.ok) return false
+      const url = URL.createObjectURL(await response.blob())
+      if (id !== askId.current) return true
+
+      const player = new Audio(url)
+      audio.current = player
+      const context = audioContext.current
+      if (context) {
+        const analyser = context.createAnalyser()
+        analyser.fftSize = 256
+        const source = context.createMediaElementSource(player)
+        source.connect(analyser)
+        analyser.connect(context.destination)
+        voiceAnalyser.current = analyser
+      }
+      await new Promise<void>((resolve, reject) => {
+        player.onended = () => resolve()
+        player.onerror = () => reject(new Error('audio'))
+        stopPlayback.current = resolve
+        player.play().catch(reject)
+      })
+      URL.revokeObjectURL(url)
+      return true
+    } catch {
+      return false
+    }
+  }, [])
+
+  /** Speaks the queue in order. New sentences join it while the answer is still being generated. */
+  const pump = useCallback(async () => {
+    if (pumping.current) return
+    pumping.current = true
+    const id = askId.current
+    while (id === askId.current && queue.current.length > 0) {
+      const sentence = queue.current.shift()!
+      changeState('speaking')
+      const played = useCloudVoice && (await playWithElevenLabs(sentence, id))
+      if (!played && id === askId.current) await playWithBrowser(sentence)
+    }
+    pumping.current = false
+
+    if (queue.current.length > 0) {
+      pump()
+    } else if (id === askId.current && streamDone.current) {
       silence()
       changeState(restingState())
-    },
-    [changeState, restingState, silence]
-  )
+      // His last words can still reach the recognizer for a moment, but after that a question
+      // that happens to share his words has to count as a question.
+      forgetAnswer.current = window.setTimeout(() => {
+        lastAnswer.current = ''
+      }, ECHO_WINDOW_MS)
+    }
+  }, [changeState, playWithBrowser, playWithElevenLabs, restingState, silence, useCloudVoice])
+  const pumpRef = useRef(pump)
+  pumpRef.current = pump
 
-  const speakWithBrowser = useCallback(
-    (text: string, id: number) => {
-      if (!('speechSynthesis' in window)) return finishSpeaking(id)
-      const sentences = splitSentences(text)
-      if (sentences.length === 0) return finishSpeaking(id)
-      // A system with no voice installed may never report the end of the speech.
-      speechWatchdog.current = window.setTimeout(() => finishSpeaking(id), text.length * 150 + 5000)
-      sentences.forEach((sentence, index) => {
-        const utterance = new SpeechSynthesisUtterance(sentence)
-        utterance.lang = 'pt-BR'
-        if (index === sentences.length - 1) {
-          utterance.onend = () => finishSpeaking(id)
-          utterance.onerror = () => finishSpeaking(id)
-        }
-        window.speechSynthesis.speak(utterance)
-      })
-    },
-    [finishSpeaking]
-  )
-
-  const speakWithElevenLabs = useCallback(
-    async (text: string, id: number): Promise<boolean> => {
-      try {
-        const response = await fetch('/api/ai/voice/speak', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text }),
-        })
-        if (!response.ok) return false
-        const url = URL.createObjectURL(await response.blob())
-        if (id !== askId.current) return true
-
-        const player = new Audio(url)
-        audio.current = player
-        player.onended = () => {
-          URL.revokeObjectURL(url)
-          finishSpeaking(id)
-        }
-        const context = audioContext.current
-        if (context) {
-          const analyser = context.createAnalyser()
-          analyser.fftSize = 256
-          const source = context.createMediaElementSource(player)
-          source.connect(analyser)
-          analyser.connect(context.destination)
-          voiceAnalyser.current = analyser
-        }
-        await player.play()
-        return true
-      } catch {
-        return false
-      }
-    },
-    [finishSpeaking]
-  )
-
-  const say = useCallback(
-    async (answer: string, id: number) => {
-      const text = textForSpeech(answer)
-      lastAnswer.current = text
-      changeState('speaking')
-      if (useCloudVoice && (await speakWithElevenLabs(text, id))) return
-      if (id === askId.current) speakWithBrowser(text, id)
-    },
-    [changeState, speakWithBrowser, speakWithElevenLabs, useCloudVoice]
-  )
+  const enqueue = useCallback((text: string) => {
+    const sentence = textForSpeech(text)
+    if (!/[\p{L}\p{N}]/u.test(sentence)) return
+    lastAnswer.current = `${lastAnswer.current} ${sentence}`
+    queue.current.push(sentence)
+    pumpRef.current()
+  }, [])
 
   const ask = useCallback(
     async (content: string) => {
@@ -185,29 +250,74 @@ export default function JarvisVoice({
       if (!question) return
       const id = ++askId.current
       silence()
+      settleHistory()
       setHeard('')
       setNotice(null)
+      setCaption('')
+      lastAnswer.current = ''
       const next: VoiceTurn[] = [...turnsRef.current, { role: 'user', content: question }]
       turnsRef.current = next
       setTurns(next)
       changeState('thinking')
+
+      const request = new AbortController()
+      answerRequest.current = request
+      let answer = ''
+      let pending = ''
+      let sources: VoiceTurn['sources'] = []
       try {
-        const data = await aiRequest<JarvisAnswer>('POST', '/jarvis/chat', {
-          spoken: true,
-          messages: next.map(({ role, content: text }) => ({ role, content: text })),
+        const response = await fetch('/api/ai/jarvis/talk', {
+          method: 'POST',
+          signal: request.signal,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: next.map(({ role, content: text }) => ({ role, content: text })) }),
         })
+        if (!response.ok || !response.body) throw new Error('Não consegui responder agora.')
+
+        const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
+        let buffer = ''
+        while (true) {
+          const { value, done } = await reader.read()
+          if (done || id !== askId.current) break
+          buffer += value
+          const lines = buffer.split('\n')
+          buffer = lines.pop() ?? ''
+          for (const line of lines) {
+            if (!line.trim()) continue
+            const event = JSON.parse(line) as TalkEvent
+            if (event.error) throw new Error(event.error)
+            if (event.lookup) enqueue(LOOKUP_REPLIES[event.lookup])
+            if (event.sources) sources = event.sources
+            if (event.delta) {
+              answer += event.delta
+              answerSoFar.current = answer
+              pending += event.delta
+              setCaption(textForSpeech(answer))
+              const { sentences, rest } = takeSentences(pending)
+              pending = rest
+              sentences.forEach(enqueue)
+            }
+          }
+        }
         if (id !== askId.current || closed.current) return
-        const withAnswer: VoiceTurn[] = [...next, { role: 'assistant', content: data.content, sources: data.sources }]
+
+        if (!answer.trim()) throw new Error('Não consegui responder agora.')
+        enqueue(pending)
+        const withAnswer: VoiceTurn[] = [...next, { role: 'assistant', content: answer, sources }]
         turnsRef.current = withAnswer
         setTurns(withAnswer)
-        await say(data.content, id)
+        answerSoFar.current = ''
+        streamDone.current = true
+        pumpRef.current()
       } catch (error) {
         if (id !== askId.current || closed.current) return
-        setNotice(error instanceof Error ? error.message : 'O Jarvis não conseguiu responder agora.')
+        setNotice(error instanceof Error ? error.message : 'Não consegui responder agora.')
+        silence()
+        settleHistory()
         changeState(restingState())
       }
     },
-    [changeState, restingState, say, setTurns, silence]
+    [changeState, enqueue, restingState, setTurns, settleHistory, silence]
   )
 
   const askRef = useRef(ask)
@@ -308,6 +418,9 @@ export default function JarvisVoice({
     closed.current = false
     audioContext.current = new AudioContext()
     startMicrophone()
+    // Best effort: if it fails, the first answer just takes longer.
+    fetch('/api/ai/jarvis/warm', { method: 'POST' }).catch(() => {})
+    window.speechSynthesis?.getVoices()
     return () => {
       closed.current = true
       askId.current++
@@ -317,6 +430,34 @@ export default function JarvisVoice({
       audioContext.current = null
     }
   }, [silence, startMicrophone, stopMicrophone])
+
+  useEffect(() => {
+    const report = (open: boolean) =>
+      fetch('/api/ai/jarvis/conversation', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ open }),
+      }).catch(() => {})
+    report(true)
+    const ping = window.setInterval(() => report(true), CONVERSATION_PING_MS)
+    return () => {
+      window.clearInterval(ping)
+      report(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!handsFree) return
+    streamDone.current = true
+    enqueue(GREETINGS[Math.floor(Math.random() * GREETINGS.length)])
+  }, [enqueue, handsFree])
+
+  useEffect(() => {
+    if (!handsFree || state === 'thinking' || state === 'speaking') return
+    const timer = window.setTimeout(onClose, HANDS_FREE_IDLE_MS)
+    return () => window.clearTimeout(timer)
+  }, [handsFree, heard, onClose, state])
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -361,7 +502,6 @@ export default function JarvisVoice({
   }, [])
 
   const lastUser = [...turns].reverse().find((turn) => turn.role === 'user')?.content
-  const lastJarvis = turns[turns.length - 1]?.role === 'assistant' ? turns[turns.length - 1].content : null
 
   return (
     <div
@@ -414,7 +554,7 @@ export default function JarvisVoice({
           ) : (
             <>
               {lastUser && <p className="text-sm text-sky-200/70">{lastUser}</p>}
-              {lastJarvis && <p className="mt-1 text-lg leading-snug text-white">{textForSpeech(lastJarvis)}</p>}
+              {caption && <p className="mt-1 text-lg leading-snug text-white">{caption}</p>}
             </>
           )}
         </div>

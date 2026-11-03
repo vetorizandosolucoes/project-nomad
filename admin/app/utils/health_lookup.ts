@@ -88,7 +88,25 @@ const RED_FLAG_TERMS = [
   'picada de aranha',
 ]
 
-const SELF_HARM_TERMS = ['suicidio', 'me matar', 'tirar minha vida', 'me machucar', 'nao quero mais viver']
+const SELF_HARM_TERMS = [
+  'suicidio',
+  'me matar',
+  'tirar minha vida',
+  'tirar a minha vida',
+  'acabar com a minha vida',
+  'acabar com tudo',
+  'me machucar',
+  'me cortar',
+  'nao quero mais viver',
+  'nao quero viver',
+  'quero morrer',
+  'quero desaparecer',
+  'quero sumir',
+  'nao aguento mais viver',
+  'nao aguento mais essa vida',
+  'nao aguento mais isso tudo',
+  'melhor sem mim',
+]
 
 const MEDICINE_INTENT_TERMS = [
   'remedio',
@@ -124,6 +142,14 @@ function containsPhrase(normalized: string, phrase: string): boolean {
 export function hasRedFlag(text: string): boolean {
   const normalized = normalizeHealthText(text)
   return RED_FLAG_TERMS.some((term) => containsPhrase(normalized, term))
+}
+
+/** Small models get this one wrong from memory: they said warm water when asked directly. */
+export function firstAidNote(text: string): string | null {
+  const burn = /queimadura|queim\w*\b.*\b(mao|pele|braco|perna|pe|rosto|dedo|corpo|oleo|agua quente|fogo|ferro|panela)\b/
+  return burn.test(normalizeHealthText(text))
+    ? 'Em queimadura, a orientação é água corrente fria ou em temperatura ambiente por 10 a 20 minutos, nunca água morna nem gelo.'
+    : null
 }
 
 export function hasSelfHarmRisk(text: string): boolean {

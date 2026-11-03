@@ -17,10 +17,13 @@ const ELEVENLABS_API = 'https://api.elevenlabs.io'
 const ELEVENLABS_MODEL = 'eleven_multilingual_v2'
 const MAX_SPEECH_CHARS = 1500
 const INTERNET_CACHE_MS = 30_000
+// The page pings every 10 s, so a window that closed abruptly doesn't hold the listener off for long.
+const CONVERSATION_PING_TIMEOUT_MS = 25_000
 
 type SecretKey = 'ai.openaiKey' | 'voice.elevenLabsKey'
 
 let internetCache: { value: boolean; expiresAt: number } | null = null
+let lastConversationPing = 0
 
 export class ConnectionError extends Error {}
 
@@ -82,8 +85,30 @@ export class AiConnectionsService {
         enabled: (await KVStore.getValue('voice.enabled')) ?? false,
         voiceId: (await KVStore.getValue('voice.elevenLabsVoiceId')) ?? null,
         voiceName: (await KVStore.getValue('voice.elevenLabsVoiceName')) ?? null,
+        wakeEnabled: await this.wakeEnabled(),
       },
     }
+  }
+
+  // ---------------------------------------------------- Listening for "Jarvis"
+
+  async wakeEnabled(): Promise<boolean> {
+    return (await KVStore.getValue('voice.wakeEnabled')) ?? true
+  }
+
+  async setWakeEnabled(enabled: boolean) {
+    await KVStore.setValue('voice.wakeEnabled', enabled)
+  }
+
+  noteConversation(open: boolean) {
+    lastConversationPing = open ? Date.now() : 0
+  }
+
+  /** Asked every few seconds by the listener in Ubuntu, which holds the microphone only on a yes. */
+  async shouldListen(): Promise<boolean> {
+    if (Date.now() - lastConversationPing < CONVERSATION_PING_TIMEOUT_MS) return false
+    if (!(await this.wakeEnabled())) return false
+    return (await this.mode()).effective === 'online'
   }
 
   // ---------------------------------------------------------------- OpenAI

@@ -7,14 +7,38 @@ import { RagPipelineService } from '#services/rag_pipeline_service'
 import KVStore from '#models/kv_store'
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions.js'
 import type { OllamaChatMessage } from '../../types/ollama.js'
-import { cleanJarvisAnswer, jarvisSystemPrompt, keepChatRoles, pickJarvisModel } from '../utils/jarvis.js'
+import {
+  asksDateOrTime,
+  cleanJarvisAnswer,
+  CRISIS_OPENING,
+  isSmallTalk,
+  JARVIS_IDENTITY,
+  keepChatRoles,
+  pickJarvisModel,
+  pickSpokenModel,
+  spokenDate,
+  spokenPrompt,
+  urgentSpokenPrompt,
+} from '../utils/jarvis.js'
+import { hasRedFlag, hasSelfHarmRisk } from '../utils/health_lookup.js'
+import { classifyLookup, lookUp, type LookupKind } from '../utils/web_lookup.js'
 import { buildCitations } from '../utils/rag_prompt.js'
 import type { EffectiveAiMode } from '../utils/ai_modes.js'
 
 const CONTAINER_NAME = 'nomad_jarvis'
 const CHAT_TIMEOUT_MS = 300_000
 const MAX_ANSWER_TOKENS = 1024
-const MAX_SPOKEN_ANSWER_TOKENS = 500
+const MAX_SPOKEN_ANSWER_TOKENS = 400
+const MAX_SPOKEN_HISTORY = 12
+const SPOKEN_TOP_K = 3
+const RECENT_QUESTIONS_FOR_RISK = 3
+// Loading a model takes 10 to 15 s, so it stays in memory between one sentence and the next.
+const SPOKEN_KEEP_ALIVE = '15m'
+
+export type TalkEvent =
+  | { lookup: LookupKind }
+  | { delta: string }
+  | { done: true; model: string; sources: ReturnType<typeof buildCitations> }
 
 /**
  * The Jarvis agent (OpenJarvis), running in its own container and reachable only from here.
@@ -61,23 +85,114 @@ export class JarvisService {
     throw new ConnectionError('O Jarvis não respondeu. Tente de novo em instantes.')
   }
 
-  /** A spoken conversation can't wait on a local model, so it uses GPT when there is a key. */
-  private async askCloud(messages: Array<{ role: string; content: string }>): Promise<{ content: string; model: string } | null> {
-    const model = await this.connections.usableCloudModel()
-    if (!model) return null
-    try {
-      let content = ''
-      for await (const chunk of this.connections.streamOpenAi(model, messages as ChatCompletionMessageParam[])) {
-        content += chunk.message.content
-      }
-      return content.trim() ? { content: content.trim(), model } : null
-    } catch (error) {
-      logger.warn(`[Jarvis] GPT failed, using the local model: ${error instanceof Error ? error.message : error}`)
-      return null
+  private async spokenModel(): Promise<string> {
+    const installed = await this.ollama.getModels()
+    const model = pickSpokenModel(installed.map((entry) => entry.name))
+    if (!model) throw new ConnectionError('Nenhum modelo de IA instalado para o Jarvis.')
+    return model
+  }
+
+  /** Called when the conversation opens, so the first answer doesn't wait for the model to load. */
+  async warmUp() {
+    const model = await this.spokenModel()
+    // With a different context size Ollama would load the model all over again for the question.
+    const { numCtx } = await this.pipeline.buildPrompt([{ role: 'user', content: '' }], model, { skipRetrieval: true })
+    const stream = await this.ollama.chatStream({
+      model,
+      messages: [],
+      think: false,
+      thinkingCapable: await this.ollama.checkModelHasThinking(model),
+      numCtx,
+      keepAlive: SPOKEN_KEEP_ALIVE,
+    })
+    for await (const _ of stream) {
+      // Only the loading matters.
     }
   }
 
-  async chat(rawMessages: unknown[], { spoken = false }: { spoken?: boolean } = {}) {
+  /**
+   * The spoken conversation goes straight to the model, without the agent: its loop and the
+   * model's reasoning were what kept people waiting. It streams, so speech can start at once.
+   */
+  async *talk(rawMessages: unknown[], signal: AbortSignal): AsyncGenerator<TalkEvent> {
+    const { effective } = await this.connections.mode()
+    if (effective !== 'online') {
+      throw new ConnectionError('No modo Offline, o Jarvis fica desligado para poupar bateria. Use o Assistente de IA.')
+    }
+
+    const conversation = keepChatRoles(rawMessages).slice(-MAX_SPOKEN_HISTORY)
+    const questions = conversation.filter((message) => message.role === 'user').map((message) => message.content)
+    const question = questions.at(-1) ?? ''
+    const now = new Date()
+
+    // A crisis doesn't end with the sentence that revealed it, so recent questions count too.
+    const crisis = questions.slice(-RECENT_QUESTIONS_FOR_RISK).some(hasSelfHarmRisk)
+    const urgent = crisis || hasRedFlag(question)
+    const system: OllamaChatMessage[] = [{ role: 'system', content: urgent ? urgentSpokenPrompt(now) : spokenPrompt(now) }]
+    if (hasSelfHarmRisk(question)) yield { delta: CRISIS_OPENING }
+
+    // Small models only obey what sits right next to the question.
+    if (asksDateOrTime(question)) {
+      conversation[conversation.length - 1] = {
+        role: 'user',
+        content: `${question}\n\n[${spokenDate(now)} Responda com esta informação.]`,
+      }
+    }
+
+    const kind = urgent ? null : classifyLookup(question)
+    if (kind) {
+      yield { lookup: kind }
+      system.push({ role: 'system', content: await lookUp(kind, question) })
+    }
+
+    const model = await this.spokenModel()
+    const ragEnabled = (await KVStore.getValue('rag.enabled')) ?? true
+    const trace = await this.pipeline.buildPrompt([...system, ...conversation] as OllamaChatMessage[], model, {
+      // Live data answers a lookup, and passages from the library would only get in its way.
+      skipRetrieval: !urgent && (!ragEnabled || !!kind || isSmallTalk(question)),
+      skipQueryRewrite: true,
+      relevanceCheckModel: null,
+      topK: SPOKEN_TOP_K,
+    })
+    const sources = buildCitations(trace.injected)
+
+    const cloudModel = await this.connections.usableCloudModel()
+    let usedModel = model
+    let answered = false
+    if (cloudModel) {
+      try {
+        const stream = this.connections.streamOpenAi(cloudModel, trace.messages as ChatCompletionMessageParam[], signal)
+        for await (const chunk of stream) {
+          if (!chunk.message.content) continue
+          answered = true
+          usedModel = cloudModel
+          yield { delta: chunk.message.content }
+        }
+      } catch (error) {
+        if (signal.aborted || answered) throw error
+        logger.warn(`[Jarvis] GPT failed, using the local model: ${error instanceof Error ? error.message : error}`)
+      }
+    }
+
+    if (!answered) {
+      const stream = await this.ollama.chatStream({
+        model,
+        messages: trace.messages as ChatCompletionMessageParam[],
+        think: false,
+        thinkingCapable: await this.ollama.checkModelHasThinking(model),
+        numCtx: trace.numCtx,
+        numPredict: MAX_SPOKEN_ANSWER_TOKENS,
+        keepAlive: SPOKEN_KEEP_ALIVE,
+        signal,
+      })
+      for await (const chunk of stream) {
+        if (chunk.message.content) yield { delta: chunk.message.content }
+      }
+    }
+    yield { done: true, model: usedModel, sources }
+  }
+
+  async chat(rawMessages: unknown[]) {
     if (!this.isInstalled()) throw new ConnectionError('O Jarvis não está instalado neste sistema.')
 
     const { effective } = await this.connections.mode()
@@ -93,13 +208,7 @@ export class JarvisService {
     const trace = await this.pipeline.buildPrompt(keepChatRoles(rawMessages) as OllamaChatMessage[], model, {
       skipRetrieval: !ragEnabled,
     })
-    const messages = [{ role: 'system', content: jarvisSystemPrompt(spoken) }, ...trace.messages]
-    const sources = buildCitations(trace.injected)
-
-    if (spoken) {
-      const answer = await this.askCloud(messages)
-      if (answer) return { ...answer, sources }
-    }
+    const messages = [{ role: 'system', content: JARVIS_IDENTITY }, ...trace.messages]
 
     await this.syncWithMode('online')
     await this.waitUntilHealthy()
@@ -113,7 +222,7 @@ export class JarvisService {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${process.env.OPENJARVIS_API_KEY}`,
         },
-        body: JSON.stringify({ model, messages, max_tokens: spoken ? MAX_SPOKEN_ANSWER_TOKENS : MAX_ANSWER_TOKENS }),
+        body: JSON.stringify({ model, messages, max_tokens: MAX_ANSWER_TOKENS }),
       })
     } catch (error) {
       logger.warn(`[Jarvis] Request failed: ${error instanceof Error ? error.message : error}`)
@@ -128,7 +237,7 @@ export class JarvisService {
     return {
       content: cleanJarvisAnswer(data.choices?.[0]?.message?.content ?? ''),
       model,
-      sources,
+      sources: buildCitations(trace.injected),
     }
   }
 }

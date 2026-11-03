@@ -8,7 +8,7 @@ export type AiStatus = {
   hasInternet: boolean
   jarvisInstalled: boolean
   openai: { configured: boolean; model: string | null }
-  voice: { configured: boolean; enabled: boolean; voiceId: string | null; voiceName: string | null }
+  voice: { configured: boolean; enabled: boolean; voiceId: string | null; voiceName: string | null; wakeEnabled: boolean }
 }
 
 export const AI_STATUS_KEY = ['ai-status']

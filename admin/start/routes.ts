@@ -862,6 +862,11 @@ router
     router.put('/voice/enabled', [AiConnectionsController, 'setVoiceEnabled'])
     router.post('/voice/speak', [AiConnectionsController, 'speak'])
     router.post('/jarvis/chat', [AiConnectionsController, 'jarvisChat'])
+    router.post('/jarvis/talk', [AiConnectionsController, 'jarvisTalk'])
+    router.post('/jarvis/warm', [AiConnectionsController, 'jarvisWarmUp'])
+    router.get('/jarvis/wake-state', [AiConnectionsController, 'wakeState'])
+    router.put('/jarvis/wake-enabled', [AiConnectionsController, 'setWakeEnabled'])
+    router.post('/jarvis/conversation', [AiConnectionsController, 'conversationPing'])
   })
   .prefix('/api/ai')
 
